@@ -7,4 +7,5 @@ public class MenuRequest
     public string Link { get; set; }
     public int IdModulo { get; set; }
     public string DescricaoMenu { get; set; }
+    public bool OnlyAdmin { get; set; }
 }

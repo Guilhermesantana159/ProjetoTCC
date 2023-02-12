@@ -59,12 +59,12 @@ public class EstruturaMenuController : DefaultController
     
     [HttpGet]
     [Authorize]
-    [Route("ConsultarEstruturaMenus")]
-    public JsonResult ConsultarEstruturaMenus()
+    [Route("ConsultarEstruturaMenus/{idUsuario}")]
+    public JsonResult ConsultarEstruturaMenus(int idUsuario)
     {
         try
         {
-            var integracao = App.ConsultarEstruturaMenus();
+            var integracao = App.ConsultarEstruturaMenus(idUsuario);
 
             return ResponderSucesso(integracao);
         }

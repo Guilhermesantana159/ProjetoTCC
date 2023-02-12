@@ -23,5 +23,6 @@ export interface Menu
 {
     nome: string,
     link: string,
-    descricaoMenu: string
+    descricaoMenu: string,
+    onlyAdmin: boolean
 }

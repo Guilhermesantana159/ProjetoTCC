@@ -11,5 +11,4 @@ public class UsuarioGridResponse
     public string? DataNascimento { get; set; }
     public string Perfil { get; set; }
     public string ImagemUsuario { get; set; }
-    public int Dedicacao { get; set; }
 }

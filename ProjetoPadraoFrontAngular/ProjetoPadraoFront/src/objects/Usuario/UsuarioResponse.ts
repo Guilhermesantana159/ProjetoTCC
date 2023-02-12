@@ -16,7 +16,6 @@ export interface DataUsuarioResponse
     telefone: string,
     senha: string,
     perfilAdministrador: boolean,
-    dedicacao: number,
     cep: string,
     estado: string,
     cidade: string,
@@ -27,10 +26,7 @@ export interface DataUsuarioResponse
     nomeMae: string,
     nomePai: string,
     observacao: string,
-    rg: string,
     dataNascimento: string,
     genero: string,
-    idUsuarioCadastro: number,
-    idProfissao: string,
     lSkills: Array<Skill>
 }

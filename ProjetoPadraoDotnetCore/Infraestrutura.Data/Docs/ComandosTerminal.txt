@@ -1,5 +1,5 @@
 ﻿//Criar Migration
-dotnet ef migrations add AddColumnsDescMenusModulos
+dotnet ef migrations add AddCampoAdminTableMenu
 
 //Remover ultimo migration
 dotnet ef migrations remove AddTableNotificacao

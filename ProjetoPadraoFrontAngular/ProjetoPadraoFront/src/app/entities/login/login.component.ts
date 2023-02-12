@@ -55,6 +55,7 @@ export class LoginComponent {
           window.localStorage.setItem('IdUsuario',response.data.idUsuario);
           window.localStorage.setItem('Token',response.data.sessionKey.acess_token);
           window.localStorage.setItem('Foto', response.data.foto);
+          window.localStorage.setItem('Perfil', response.data.perfil.toString());
           this.toastr.success('<small> Seja bem vindo <br>' + response.data.nome + '</small>', 'Mensagem:');   
           this.router.navigate(['/', 'main'])        
         }else
@@ -83,6 +84,7 @@ export class LoginComponent {
           window.localStorage.setItem('IdUsuario',response.data.idUsuario);
           window.localStorage.setItem('Token',response.data.sessionKey.acess_token);
           window.localStorage.setItem('Foto', response.data.foto);
+          window.localStorage.setItem('Perfil', response.data.perfil.toString());
           this.toastr.success('<small>' + 'Seja bem vindo de volta: <br>' + response.data.nome + '</small>', 'Mensagem:');   
           this.router.navigate(['/', 'main'])
         }

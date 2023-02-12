@@ -18,7 +18,6 @@ public class UsuarioMapping : IEntityTypeConfiguration<Usuario>
         builder.Property(t => t.Telefone).HasColumnName("Telefone");
         builder.Property(t => t.DataNascimento).HasColumnName("DataNascimento");
         builder.Property(t => t.PerfilAdministrador).HasColumnName("PerfilAdministrador");
-        builder.Property(t => t.Dedicacao).HasColumnName("Dedicacao");
         builder.Property(t => t.Cep).HasColumnName("Cep");
         builder.Property(t => t.Estado).HasColumnName("Estado");
         builder.Property(t => t.Bairro).HasColumnName("Cidade");
@@ -28,17 +27,10 @@ public class UsuarioMapping : IEntityTypeConfiguration<Usuario>
         builder.Property(t => t.NomeMae).HasColumnName("NomeMae");
         builder.Property(t => t.NomePai).HasColumnName("NomePai");
         builder.Property(t => t.Observacao).HasColumnName("Observacao");
-        builder.Property(t => t.Rg).HasColumnName("Rg");
         builder.Property(t => t.Genero).HasColumnName("Genero");
-        builder.Property(t => t.IdProfissao).HasColumnName("IdProfissao");
         builder.Property(t => t.DataRecuperacaoSenha).HasColumnName("DataRecuperacaoSenha");
         builder.Property(t => t.TentativasRecuperarSenha).HasColumnName("TentativasRecuperarSenha");
         builder.Property(t => t.CodigoRecuperarSenha).HasColumnName("CodigoRecuperarSenha");
-
-        builder
-            .HasOne(t => t.Profissao)
-            .WithMany(t => t.LUsuario)
-            .HasForeignKey(t => t.IdProfissao);
 
         builder
             .HasOne(t => t.UsuarioFk)

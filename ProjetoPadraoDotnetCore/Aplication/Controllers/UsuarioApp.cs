@@ -133,7 +133,8 @@ public class UsuarioApp : IUsuarioApp
                     ? usuario.Genero == EGenero.Masculino 
                         ? _configuration.GetSection("ImageDefaultUser:Masculino").Value 
                         : _configuration.GetSection("ImageDefaultUser:Feminino").Value     
-                    : usuario.Foto
+                    : usuario.Foto,
+                Perfil = usuario.PerfilAdministrador
             };
         }
 
@@ -213,7 +214,6 @@ public class UsuarioApp : IUsuarioApp
                             ? _configuration.GetSection("ImageDefaultUser:Masculino").Value 
                             : _configuration.GetSection("ImageDefaultUser:Feminino").Value     
                         : x.Foto,
-                    Dedicacao = x.Dedicacao 
                 }).ToList(),
             
             TotalItens = itens.Count()

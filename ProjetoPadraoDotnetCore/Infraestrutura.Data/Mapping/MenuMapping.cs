@@ -13,6 +13,7 @@ public class MenuMapping : IEntityTypeConfiguration<Menu>
         builder.HasKey(o => o.IdMenu);
         builder.Property(t => t.Nome).HasColumnName("Nome").IsRequired();
         builder.Property(t => t.Link).HasColumnName("Link").IsRequired();
+        builder.Property(t => t.OnlyAdmin).HasColumnName("OnlyAdmin").IsRequired();
         builder.Property(t => t.DescricaoMenu).HasColumnName("DescricaoMenu").IsRequired(false);
 
         builder

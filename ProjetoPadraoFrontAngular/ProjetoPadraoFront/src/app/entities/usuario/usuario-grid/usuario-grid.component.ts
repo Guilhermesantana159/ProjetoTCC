@@ -16,7 +16,7 @@ import { ETipoArquivo } from '../../../../enums/ETipoArquivo';
 export class UsuarioComponent{
   gridOptions: GridOptions;
   optionsEnumPerfil: Array<EnumBase>;
-  
+
   constructor(private gridService: GridService,public gridComponent: DataGridComponent,
     private router: Router){  
     this.optionsEnumPerfil = [
@@ -184,29 +184,6 @@ export class UsuarioComponent{
           StyleCell: undefined,
           ClassCell: undefined,
           CellGraphics: undefined,
-          CellImage: undefined,  
-        },
-        {
-          Field: 'dedicacao',
-          DisplayName: 'Dedicaçãp do usuário',
-          CellTemplate: undefined,
-          ActionButton: undefined, 
-          Type: TypeFilter.String,
-          EnumName: undefined,
-          ServerField: 'dedicacao',
-          Filter: false,
-          OrderBy: false,
-          StyleColuna: 'min-width: 40vh',
-          EnumOptions: undefined,
-          StyleCell: undefined,
-          ClassCell: undefined,
-          CellGraphics: {  
-            PropertyLink: 'dedicacao',
-            Tooltip: '%',
-            OnlyGraphics: true,
-            ClassGraphics: '',
-            StyleGraphics: undefined
-          },
           CellImage: undefined,  
         }
       ]

@@ -59,6 +59,7 @@ public class AuthApp : IAuthApp
                     ? _configuration.GetSection("ImageDefaultUser:Masculino").Value
                     : _configuration.GetSection("ImageDefaultUser:Feminino").Value
                 : usuario.Foto;
+            retorno.Perfil = usuario.PerfilAdministrador;
         }
 
         return retorno;

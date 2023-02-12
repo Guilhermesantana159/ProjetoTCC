@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Infraestrutura.Data\Infraestrutura.Data.csproj" />
+      <ProjectReference Include="..\Infraestrutura.Reports\Infraestrutura.Reports.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="LinqBuilder.OrderBy" Version="0.16.1" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Services\TipoNotificacaoService.cs" />
+      <Compile Remove="Interfaces\ITipoNotificacaoService.cs" />
+    </ItemGroup>
+
+</Project>

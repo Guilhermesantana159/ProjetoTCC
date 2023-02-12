@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap');
+
+:host {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding-top: 2%;
+    padding-bottom: 10%;
+}
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    font-weight: 300;
+}
+
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-signin label {
+    font-family: 'Bree Serif', serif;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-login{
+    background-color: rgba(169, 169, 184, 0.856);
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    margin: auto;
+    border-radius: 10pt;
+    box-shadow: 0.5px 0.5px #888888;
+}
+
+#nav-tab{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Bree Serif', serif;
+    font-weight: 400;
+    border-radius: 5pt;
+}
+
+#nav-login-tab{
+    font-size: 15pt;
+    padding: 5pt 30pt 5pt 30pt;
+    margin-right: 2pt;
+    color: rgb(87, 87, 87);
+}
+
+#nav-profile-tab{
+    font-size: 15pt;
+    padding: 5pt 25pt 5pt 25pt;
+    color: rgb(87, 87, 87);
+}
+
+.submit-login{
+    padding: 5pt 25pt 5pt 25pt;
+    font-size: 12pt;
+    background-color: blue;
+    color: white;
+    border-radius: 5pt;
+    border-color: blue;
+    border-width: 2pt;
+    font-weight: 500;
+    box-shadow: 0.5px 0.5px #888888;
+    width: 100%;
+    cursor: pointer;
+}
+
+.submit-login:hover{
+    transition: 1s;
+    box-shadow: 2px 2px #888888;
+}
+
+input{
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: 2px solid rgb(38, 0, 255);
+    font-weight: bold;
+    font-size: 4pt;
+}
+
+input:active{
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: 2px solid rgb(38, 0, 255);
+}
+
+input:focus {
+    transition: 0.5s;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: 3px solid rgb(231, 255, 18);
+    box-shadow: 0 0 0 0;
+    outline: 0;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .show > .nav-link {
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: 4px solid rgb(238, 255, 0);
+    box-shadow: 0 0 0 0;
+    outline: 0;
+}
+
+#LogoLogin{
+    width: 40%;
+    height: 25%;
+}
+
+.recoverPassword{
+    color: blue;
+    text-decoration: none;
+    font-weight: bold;
+}

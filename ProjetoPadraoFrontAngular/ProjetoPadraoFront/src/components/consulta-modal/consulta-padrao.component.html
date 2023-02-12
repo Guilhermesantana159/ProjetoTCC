@@ -1,0 +1,58 @@
+<div [class]="ParamsConsulta.Class">
+  <label class="input-label text-muted">{{ParamsConsulta.Label}}<span class="span-required" [hidden]="!ParamsConsulta.Required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
+  <div class="input-group">
+    <input *ngIf="!gridOptions.Parametros.MultiModal" type="text" class="form-control" [value]="ConsultaModal.SelectedText" disabled>
+    <div class="col-sm-8 col-xs-8 col-md-8 col-lg-8" *ngIf="gridOptions.Parametros.MultiModal">
+      <mat-form-field class="mat-form" >
+        <mat-chip-list #chipList aria-label="Fruit selection">
+          <mat-chip
+            *ngFor="let item of itens"
+            (removed)="Remove(item)">
+            {{item}}
+            <button matChipRemove>
+                <i class="bi bi-x-circle-fill"></i>                                
+            </button>
+          </mat-chip>
+          <input
+            disabled
+            #itensCtrl
+            [matChipInputFor]="chipList">
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+    <button 
+    [class]="!gridOptions.Parametros.MultiModal ? 'input-group-text' : 'btn'" 
+    id="addon-wrapping" 
+    (click)="ResetConsultaPadrao()" 
+    [disabled]="ParamsConsulta.Disabled" 
+    matTooltip="Limpar" matTooltipPosition="above">
+        <i class="bi bi-x-circle-fill"></i>
+    </button>
+    <button 
+      [class]="!gridOptions.Parametros.MultiModal ? 'input-group-text' : 'btn'" 
+      id="addon-wrapping" 
+      data-bs-toggle="modal" 
+      data-bs-target="#consulta-padrao" 
+      [disabled]="ParamsConsulta.Disabled"
+      matTooltip="Buscar" matTooltipPosition="above">
+        <i class="bi bi-search"></i>
+    </button>
+  </div>
+</div>
+<div class="modal fade" id="consulta-padrao" aria-labelledby="consulta-padrao" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ParamsConsulta.Title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body px-5" >
+        <data-grid [gridOptions]="gridOptions"></data-grid>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+    

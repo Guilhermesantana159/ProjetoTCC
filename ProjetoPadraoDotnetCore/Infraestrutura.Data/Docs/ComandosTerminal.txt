@@ -1,0 +1,13 @@
+﻿//Criar Migration
+dotnet ef migrations add AddColumnsDescMenusModulos
+
+//Remover ultimo migration
+dotnet ef migrations remove AddTableNotificacao
+
+//Update no banco
+dotnet ef database update
+
+//Desfazer o update no banco
+dotnet ef database drop
+
+

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="11.0.1" />
+      <PackageReference Include="LinqBuilder.OrderBy" Version="0.16.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="6.2.20" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="AutoMapper\ViewToDomain.cs" />
+      <Compile Remove="DTO\Grid\Order.cs" />
+      <Compile Remove="Enum\ETypeField.cs" />
+      <Compile Remove="Models\Grid\Order.cs" />
+    </ItemGroup>
+
+</Project>

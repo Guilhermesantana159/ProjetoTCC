@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Infraestrutura</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="IRepository\**" />
+      <Compile Remove="Repository\Interface\IBaseWriteRespository.cs" />
+      <Compile Remove="Migrations\20220913232913_Initial.cs" />
+      <Compile Remove="Migrations\20220913232913_Initial.Designer.cs" />
+      <Compile Remove="Migrations\20220918131710_Initial.cs" />
+      <Compile Remove="Migrations\20220918131710_Initial.Designer.cs" />
+      <Compile Remove="Migrations\20221005000609_AddTableModulo.cs" />
+      <Compile Remove="Migrations\20221005000609_AddTableModulo.Designer.cs" />
+      <Compile Remove="Migrations\20221006224007_TableMenu.cs" />
+      <Compile Remove="Migrations\20221006224007_TableMenu.Designer.cs" />
+      <Compile Remove="Migrations\20221028001455_AddColumnNascimento.cs" />
+      <Compile Remove="Migrations\20221028001455_AddColumnNascimento.Designer.cs" />
+      <Compile Remove="Migrations\20221029222007_AddColumnPerfil.cs" />
+      <Compile Remove="Migrations\20221029222007_AddColumnPerfil.Designer.cs" />
+      <Compile Remove="Migrations\20221107233334_AddTableSkill.cs" />
+      <Compile Remove="Migrations\20221107233334_AddTableSkill.Designer.cs" />
+      <Compile Remove="Migrations\20221108223116_ModifyEntity.cs" />
+      <Compile Remove="Migrations\20221108223116_ModifyEntity.Designer.cs" />
+      <Compile Remove="Migrations\20221108235643_ajustes.cs" />
+      <Compile Remove="Migrations\20221108235643_ajustes.Designer.cs" />
+      <Compile Remove="Migrations\20221108224751_ModifyParametrosUsuario.cs" />
+      <Compile Remove="Migrations\20221108224751_ModifyParametrosUsuario.Designer.cs" />
+      <Compile Remove="Migrations\20221106221810_AddTableProfissao.cs" />
+      <Compile Remove="Migrations\20221106221810_AddTableProfissao.Designer.cs" />
+      <Compile Remove="Migrations\20221110202648_Modifykill.cs" />
+      <Compile Remove="Migrations\20221110202648_Modifykill.Designer.cs" />
+      <Compile Remove="Migrations\20221111002506_Initial.cs" />
+      <Compile Remove="Migrations\20221111002506_Initial.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="IRepository\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="IRepository\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="IRepository\**" />
+      <Content Remove="appsettings.Development.json" />
+    </ItemGroup>
+
+</Project>

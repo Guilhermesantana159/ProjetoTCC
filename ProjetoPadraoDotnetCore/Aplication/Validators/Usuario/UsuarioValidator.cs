@@ -44,8 +44,6 @@ public class UsuarioValidator : IUsuarioValidator
             validation.LErrors.Add("Campo CPF é obrigatório!");
         if(!request.DataNascimento.HasValue)
             validation.LErrors.Add("Campo data de nascimento é obrigatório!");
-        if(!request.IdProfissao.HasValue)
-            validation.LErrors.Add("Campo profissão é obrigatório!");
         if(string.IsNullOrEmpty(request.Cep))
             validation.LErrors.Add("Campo cep obrigatório!");
         if(string.IsNullOrEmpty(request.Bairro))
@@ -56,10 +54,6 @@ public class UsuarioValidator : IUsuarioValidator
             validation.LErrors.Add("Campo estado obrigatório!");
         if(string.IsNullOrEmpty(request.Rua))
             validation.LErrors.Add("Campo rua obrigatório!");
-        if(request.IdUsuarioCadastro == 0 || !request.IdUsuarioCadastro.HasValue)
-            validation.LErrors.Add("Campo usuário de cadastro obrigatório!");
-        if(request.Dedicacao == 0)
-            validation.LErrors.Add("Campo deve ser maior que 0!");
         if(!Util.ValidatorCpf(request.Cpf ?? ""))
             validation.LErrors.Add("Campo CPF inválido!");
 

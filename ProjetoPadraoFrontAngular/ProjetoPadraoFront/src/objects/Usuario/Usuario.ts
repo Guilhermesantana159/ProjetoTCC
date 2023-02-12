@@ -10,7 +10,8 @@ export interface DataUsuario
     nome: string,
     idUsuario: string,
     sessionKey: token,
-    foto: string
+    foto: string,
+    perfil: boolean
 }
 
 export interface token

@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 py-1">
+                    <div class="col-sm-12 col-xs-3 col-md-3 col-lg-3 py-1">
                         <div class="input-group-sm">
                             <label class="form-label input-label text-muted">
                                 CPF<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
@@ -100,22 +100,6 @@
                     <div class="col-sm-12 col-xs-3 col-md-3 col-lg-3 py-1">
                         <div class="input-group-sm">
                             <label class="form-label input-label text-muted">
-                                Profissão<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
-                            </label>
-                            <mat-form-field class="mat-form">
-                                <mat-select formControlName="idProfissao">
-                                  <mat-option *ngFor="let option of options" [value]="option.value">{{option.description}}</mat-option>
-                                </mat-select>
-                            </mat-form-field>                        
-                        </div>
-                        <text-error-message  
-                        *ngIf="UserRegisterFormGroup.get('idProfissao')?.errors?.['required'] && submitRegister"
-                        text="Este campo é obrigatório">
-                        </text-error-message>
-                    </div>
-                    <div class="col-sm-12 col-xs-3 col-md-3 col-lg-3 py-1">
-                        <div class="input-group-sm">
-                            <label class="form-label input-label text-muted">
                                 Telefone
                             </label>
                             <input class="form-control input-form" [mask]= "'(00) 00000-0000'" type="text" formControlName="telefone"/>
@@ -125,9 +109,7 @@
                         text="Campo inválido!">
                       </text-error-message>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 py-1">
+                    <div class="col-sm-12 col-xs-3 col-md-3 col-lg-3 py-1">
                         <label class="form-label input-label text-muted">
                             Data de nascimento<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
                         </label>
@@ -159,18 +141,6 @@
                             <mat-radio-button class="px-1" checked value=0>Masculino</mat-radio-button>
                             <mat-radio-button class="px-1" value=1>Feminino</mat-radio-button>
                         </mat-radio-group>
-                    </div>
-                    <div class="col-sm-12 col-xs-3 col-md-3 col-lg-3">
-                        <div class="input-group-sm">
-                            <label class="form-label input-label text-muted">
-                                RG
-                            </label>
-                            <input class="form-control input-form" [mask]= "'00.000.000-0'" type="text" formControlName="rg"/>
-                        </div>
-                        <text-error-message  
-                            *ngIf="UserRegisterFormGroup.get('rg')?.errors?.['minlength'] && submitRegister"
-                            text="Campo inválido!">
-                        </text-error-message>
                     </div>
                 </div>
                 <div class="row">
@@ -343,42 +313,12 @@
                 <strong>Configuração</strong>
               </ng-template>
               <div class="card-body">
-                <div class="row">
+                <div class="row" *ngIf="IsAdmin == 'true'">
                     <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 align-self-end py-1">
                         <mat-slide-toggle formControlName="perfilAdministrador">
                             <label class="input-label text-muted">Perfil Administrador<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
                         </mat-slide-toggle>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 align-self-end py-1">
-                        <mat-slider
-                            formControlName="dedicacao"
-                            FormatLabel
-                            thumbLabel
-                            [displayWith]="FormatLabel"
-                            tickInterval="1"
-                            step="1"
-                            min="0"
-                            max="100"
-                            aria-label="units">
-                        </mat-slider>
-                        <label class="input-label text-muted">Dedicação do usuário<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
-                    </div>
-                    <text-error-message  
-                        *ngIf="UserRegisterFormGroup.get('dedicacao')?.errors?.['min'] && submitRegister"
-                        text="O valor mínimo deste campo é 1">
-                    </text-error-message>
-                </div> 
-                <div class="row py-1">
-                    <consulta-padrao 
-                        [ParamsConsulta]="paramsConsultaUsuario" 
-                        (valueChange)='ModalUsuarioChange($event)'>
-                    </consulta-padrao>
-                    <text-error-message  
-                        *ngIf="UserRegisterFormGroup.get('idUsuarioCadastro')?.errors?.['required'] && submitRegister"
-                        text="Este campo é obrigatório">
-                    </text-error-message>
                 </div>
                 <div class="row" [hidden]="!IsNew">
                     <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 align-self-end py-1">

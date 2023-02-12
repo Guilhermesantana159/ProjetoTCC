@@ -30,4 +30,8 @@
       <Content Remove="appsettings.Development.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Content\RecupereSuaSenha.html~" />
+    </ItemGroup>
+
 </Project>

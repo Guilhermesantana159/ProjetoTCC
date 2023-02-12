@@ -1,7 +1,5 @@
 ﻿using Aplication.Models.Request.ModuloMenu;
-using Aplication.Models.Request.Profissao;
 using Aplication.Models.Request.Usuario;
-using Aplication.Models.Response.Base;
 using Aplication.Models.Response.Menu;
 using Aplication.Models.Response.Usuario;
 using Aplication.Utils.HashCripytograph;
@@ -68,16 +66,6 @@ public class Mapping : Profile
                 map => map.MapFrom(src => src.uf))
             .ForMember(dst => dst.Rua,
                 map => map.MapFrom(src => src.logradouro));
-
-        CreateMap<ProfissaoCadastrarRequest, Profissao>();
-
-        CreateMap<ProfissaoEditarRequest, Profissao>();
-
-        CreateMap<Profissao, SelectBaseResponse>()
-            .ForMember(dst => dst.Description,
-                map => map.MapFrom(src => src.Descricao))
-            .ForMember(dst => dst.Value,
-                map => map.MapFrom(src => src.IdProfissao));
 
         #endregion
     }

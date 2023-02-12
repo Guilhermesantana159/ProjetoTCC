@@ -10,6 +10,6 @@ public interface IEstruturaMenuApp
 {
     public ValidationResult IntegrarModulo(ModuloRequest request);
     public ValidationResult IntegrarMenu(MenuRequest request);
-    public EstrututuraMenuResponse ConsultarEstruturaMenus();
+    public EstrututuraMenuResponse ConsultarEstruturaMenus(int idUsuario);
 
 }

@@ -12,7 +12,6 @@ public class Usuario
     public string? Telefone { get; set; }
     public string Senha { get; set; } = null!;
     public bool PerfilAdministrador { get; set; }
-    public int Dedicacao { get; set; }
     public string? Cep { get; set; } 
     public string? Estado { get; set; } 
     public string? Cidade { get; set; } 
@@ -23,17 +22,14 @@ public class Usuario
     public string? NomeMae { get; set; } 
     public string? NomePai { get; set; } 
     public string? Observacao { get; set; } 
-    public string? Rg { get; set; } 
     public DateTime? DataNascimento { get; set; }
     public EGenero Genero { get; set; }
     public int? IdUsuarioCadastro { get; set; }
     public int? CodigoRecuperarSenha { get; set; }
     public int? TentativasRecuperarSenha { get; set; }
     public DateTime? DataRecuperacaoSenha { get; set; }
-    public int? IdProfissao { get; set; }
 
     #region Relacionamento
-    public virtual Profissao Profissao { get; set; } = null!;
     public virtual IEnumerable<SkillUsuario> LSkillUsuarios { get; set; } = null!;
     public virtual IEnumerable<Notificacao> LNotificacaoUsuarios { get; set; } = null!;
     public virtual Usuario UsuarioFk {get; set; } = null!;

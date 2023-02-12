@@ -12,7 +12,6 @@ public class UsuarioCrudResponse
     public string? Telefone { get; set; }
     public string Senha { get; set; } = null!;
     public bool PerfilAdministrador { get; set; }
-    public int Dedicacao { get; set; }
     public string? Cep { get; set; } 
     public string? Estado { get; set; } 
     public string? Cidade { get; set; }
@@ -23,11 +22,7 @@ public class UsuarioCrudResponse
     public string? NomeMae { get; set; } 
     public string? NomePai { get; set; } 
     public string? Observacao { get; set; } 
-    public string? Rg { get; set; } 
     public string DataNascimento { get; set; } = null!;
     public string? Genero { get; set; }
-    
-    public int IdUsuarioCadastro { get; set; }
-    public int? IdProfissao { get; set; }
     public List<SkillRequest> lSkills { get; set; } = null!;
 }

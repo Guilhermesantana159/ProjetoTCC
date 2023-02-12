@@ -15,12 +15,14 @@ public class EstruturaMenuApp : IEstruturaMenuApp
     protected readonly IEstruturaMenuService Service;
     protected readonly IMapper Mapper;
     protected readonly IEstruturaMenuValidator Validation;
+    protected readonly IUsuarioService UsuarioService;
 
-    public EstruturaMenuApp(IEstruturaMenuService estruturaMenuService,IMapper mapper,IEstruturaMenuValidator validator)
+    public EstruturaMenuApp(IEstruturaMenuService estruturaMenuService,IMapper mapper,IEstruturaMenuValidator validator, IUsuarioService usuarioService)
     {
         Service = estruturaMenuService;
         Mapper = mapper;
         Validation = validator;
+        UsuarioService = usuarioService;
     }
     
     public ValidationResult IntegrarModulo(ModuloRequest request)
@@ -73,11 +75,30 @@ public class EstruturaMenuApp : IEstruturaMenuApp
         return validation;    
     }
 
-    public EstrututuraMenuResponse ConsultarEstruturaMenus()
+    public EstrututuraMenuResponse ConsultarEstruturaMenus(int idUsuario)
     {
-        return new EstrututuraMenuResponse()
+        var lMenus = Service.GetWithInclude()
+            .ProjectTo<ModuloResponse>(Mapper.ConfigurationProvider).ToList();
+        var usuario = UsuarioService.GetById(idUsuario);
+        
+        var retorno = new EstrututuraMenuResponse()
         {
-            lModulos = Service.GetWithInclude().ProjectTo<ModuloResponse>(Mapper.ConfigurationProvider).ToList()
+            lModulos = new List<ModuloResponse>()
         };
+
+        if (usuario == null)
+            return retorno;
+        
+        foreach (var item in lMenus)
+        {
+            if (!usuario.PerfilAdministrador)
+                item.lMenus = item.lMenus.AsQueryable().Where(x => x.OnlyAdmin == false).ToList();
+
+            if(item.lMenus.Any())
+                retorno.lModulos.Add(item);
+        }            
+        
+        
+        return retorno;
     }
 }

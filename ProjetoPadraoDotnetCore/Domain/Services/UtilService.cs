@@ -2,26 +2,20 @@
 using System.Text.Json;
 using Domain.DTO.Correios;
 using Domain.Interfaces;
-using Infraestrutura.Entity;
 using Infraestrutura.Repository.External;
-using Infraestrutura.Repository.Interface.Profissao;
 
 namespace Domain.Services;
 
 public class UtilService : IUtilsService
 {
     protected readonly IExternalRepository External;
-    protected readonly IProfissaoReadRepository ProfissaoReadRepository;
-    protected readonly IProfissaoWriteRepository ProfissaoWriteRepository;
 
 
     private readonly IConfiguration _configuration;
-    public UtilService(IExternalRepository external,IConfiguration config, IProfissaoReadRepository profissaoReadRepository, IProfissaoWriteRepository profissaoWriteRepository)
+    public UtilService(IExternalRepository external,IConfiguration config)
     {
         External = external;
         _configuration = config;
-        ProfissaoReadRepository = profissaoReadRepository;
-        ProfissaoWriteRepository = profissaoWriteRepository;
     }
     public async Task<EnderecoExternalReponse> ConsultarEnderecoCep(string cep)
     {
@@ -57,30 +51,5 @@ public class UtilService : IUtilsService
         }
 
         return retorno;
-    }
-
-    public IQueryable<Profissao> ConsultarProfissoes()
-    {
-        return ProfissaoReadRepository.GetAll();
-    }
-    
-    public void CadastrarProfissao(Profissao profissao)
-    { 
-        ProfissaoWriteRepository.Add(profissao);
-    }
-    
-    public void EditarProfissao(Profissao profissao)
-    { 
-        ProfissaoWriteRepository.Update(profissao);
-    }
-    
-    public Profissao? GetProfissaoById(int id)
-    { 
-        return ProfissaoReadRepository.GetById(id);
-    }
-    
-    public void DeletarProfissaoPorId(int id)
-    { 
-        ProfissaoWriteRepository.DeleteById(id);
     }
 }

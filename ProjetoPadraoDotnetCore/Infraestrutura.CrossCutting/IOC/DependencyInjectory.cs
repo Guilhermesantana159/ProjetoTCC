@@ -17,7 +17,6 @@ using Infraestrutura.Repository.Interface.Base;
 using Infraestrutura.Repository.Interface.Menu;
 using Infraestrutura.Repository.Interface.Modulo;
 using Infraestrutura.Repository.Interface.Notificacao;
-using Infraestrutura.Repository.Interface.Profissao;
 using Infraestrutura.Repository.Interface.SkillUsuario;
 using Infraestrutura.Repository.Interface.Usuario;
 using Infraestrutura.Repository.ReadRepository;
@@ -78,8 +77,6 @@ namespace CrossCutting.IOC
             services.AddScoped<IMenuReadRepository, MenuReadRepository>();
             services.AddScoped<IMenuWriteRepository, MenuWriteRepository>();
             services.AddScoped<IExternalRepository, ExternalRepository>();
-            services.AddScoped<IProfissaoReadRepository, ProfissaoReadRepository>();
-            services.AddScoped<IProfissaoWriteRepository, ProfissaoWriteRepository>();
             services.AddScoped<ISkillUsuarioReadRepository, SkillUsuarioReadRepository>();
             services.AddScoped<ISkillUsuarioWriteRepository, SkillUsuarioWriteRepository>();
             services.AddScoped<IUsuarioReadRepository, UsuarioReadRepository>();

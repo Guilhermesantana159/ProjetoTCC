@@ -29,22 +29,24 @@ export class MainComponent implements OnInit{
   quantidadeSemLer: number = 0;
 
   constructor(private toastr: ToastrService,private response: BaseService,private router: Router){
+    this.idUsuarioLogado = Number.parseInt(window.localStorage.getItem('IdUsuario') ?? '0');
     this.loading = true;
     this.usuarioNome = window.localStorage.getItem('NomeUsuario');
-    this.response.Get("EstruturaMenu","ConsultarEstruturaMenus").subscribe(
+    this.response.Get("EstruturaMenu","ConsultarEstruturaMenus/" + this.idUsuarioLogado.toString()).subscribe(
       (response: EstruturaMenu) =>{        
         if(response.sucesso){
-          for(var i=0;i<response.data.lModulos.length;i++){
-            this.estruturaMenu.push(response.data.lModulos[i]);
+          if(response.data.lModulos != null){
+            for(var i=0;i<response.data.lModulos.length;i++){
+              this.estruturaMenu.push(response.data.lModulos[i]);
+            }
           }
+          
           this.loading = false;
         }else{
           this.toastr.error('<small>' + response.mensagem + '</small>', 'Mensagem:');
         }
       }
     ); 
-
-    this.idUsuarioLogado = Number.parseInt(window.localStorage.getItem('IdUsuario') ?? '0');
 
     this.response.Get("Notificacao","GetNotificacoesByUser/" + this.idUsuarioLogado).subscribe(
       (response: NotificacaoResponse) =>{        

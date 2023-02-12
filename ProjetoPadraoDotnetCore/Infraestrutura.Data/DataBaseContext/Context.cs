@@ -16,7 +16,6 @@ public class Context : DbContext
     }
 
     //Injeção dos dataSets
-    public DbSet<Profissao> Profissao { get; set; } = null!;
     public DbSet<Usuario> Usuario { get; set; } = null!;
     public DbSet<SkillUsuario> SkillUsuario { get; set; } = null!;
     public DbSet<Modulo> Modulo { get; set; } = null!;

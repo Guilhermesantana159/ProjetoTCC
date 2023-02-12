@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { ConsultaModal } from 'src/objects/Consulta-Padrao/consulta-modal';
-import { ConsultaModalParams } from 'src/objects/Consulta-Padrao/ConsultaModalParams';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { BaseService } from 'src/factorys/base.service';
@@ -14,7 +12,6 @@ import { ValidateDataAniversario, ValidateSenha } from 'src/factorys/validators/
 import { Skill } from 'src/objects/Usuario/Skill';
 import { UsuarioResponse } from '../../../../objects/Usuario/UsuarioResponse';
 import { DefaultService } from 'src/factorys/default.service';
-import { ConsultaModalComponent } from 'src/components/consulta-modal/consulta-padrao.component';
 
 @Component({
   selector: 'usuario-crud-root',
@@ -23,9 +20,6 @@ import { ConsultaModalComponent } from 'src/components/consulta-modal/consulta-p
 })
 
 export class UsuarioCrudComponent{
-  @ViewChild(ConsultaModalComponent)
-  child!: ConsultaModalComponent;
-
   //Variaveis funcionais comportamento da tela tela
   loading = false;
   UserRegisterFormGroup: FormGroup;
@@ -34,7 +28,7 @@ export class UsuarioCrudComponent{
   IsNew = true;
 
   //Aba configurações
-  paramsConsultaUsuario: ConsultaModalParams;
+  IsAdmin: string = window.localStorage.getItem('Perfil') ?? "false";
 
   //Aba endereço
   disabledForApiCep: boolean = true;
@@ -50,23 +44,10 @@ export class UsuarioCrudComponent{
     
     this.loading = true;
 
-    this.paramsConsultaUsuario = {
-      Label: 'Usuário que cadastrou',
-      Title: 'Consulta de usuário',
-      Disabled: false,
-      Class: 'col-sm-12 col-xs-6 col-md-6 col-lg-6',
-      Required: true,
-      GridOptions: defaultService.Modal.ConsultaPadraoUsuario,
-      SelectedText: '',
-      SelectedValue: ''
-    };
-
     //Formulario builder
     this.UserRegisterFormGroup = this.formBuilder.group({
       idUsuario: [undefined],
       perfilAdministrador: [false],
-      dedicacao: [0, Validators.min(1)],
-      idUsuarioCadastro: ['', [Validators.required]],
       cep: [undefined, [Validators.required,Validators.minLength(8)]],
       pais: ['Brasil', [Validators.required]],
       estado: [undefined, [Validators.required]],
@@ -81,24 +62,12 @@ export class UsuarioCrudComponent{
       nomePai: [undefined],      
       cpf: [undefined, [Validators.required,Validators.minLength(11)]],
       observacao: [undefined],     
-      rg: [undefined, [Validators.minLength(9)]],
       telefone: [undefined, [Validators.minLength(11)]],
       genero: ['0', [Validators.required]],
       dataNascimento: [undefined, [Validators.required,ValidateDataAniversario]],
-      idProfissao: [undefined, [Validators.required]],
       lSkills: [[]],
       senha: ['', [Validators.required,ValidateSenha]]
     });
-
-    this.response.Get("Utils","ConsultarProfissoes").subscribe(
-      (response: SelectPadrao) =>{        
-        if(response.sucesso){
-          this.options = response.data;
-        }else{
-          this.toastr.error(response.mensagem, 'Mensagem:');
-        }
-      }
-    );
 
     this.route.params.subscribe(params => {
       //Load Edit
@@ -115,12 +84,6 @@ export class UsuarioCrudComponent{
           response.data.lSkills.forEach(element => {
             this.lSkill.push(element);
           });
-
-          //Modal
-          this.paramsConsultaUsuario.SelectedText = 'Sla';
-          this.paramsConsultaUsuario.SelectedValue = response.data.idUsuarioCadastro.toString();
-
-          this.child.LoadEdit(this.paramsConsultaUsuario);
           
           //Senha Imutavel quando edição
           this.UserRegisterFormGroup.controls['senha'].clearValidators();
@@ -258,11 +221,6 @@ export class UsuarioCrudComponent{
       this.UserRegisterFormGroup.get('foto')?.setValue(base64data);
     }
   };
-
-  //Modais
-  ModalUsuarioChange(event: ConsultaModal){
-    this.UserRegisterFormGroup.get('idUsuarioCadastro')?.setValue(event.SelectedValue);
-  }
 
   LimparCampoData(){
     this.UserRegisterFormGroup.get('dataNascimento')?.setValue(undefined);

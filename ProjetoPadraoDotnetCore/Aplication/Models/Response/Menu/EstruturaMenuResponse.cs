@@ -18,5 +18,6 @@ public class LMenu
     public string DescricaoMenu { get; set; }
     public string Nome { get; set; }
     public string Link { get; set; }
+    public bool OnlyAdmin { get; set; }
 }
 

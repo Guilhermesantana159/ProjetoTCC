@@ -11,14 +11,14 @@
         </div>
         <ul class="list-unstyled components" *ngIf="!loading">
             <li class="active">  
-                <a href="main">
+                <a class="text-nowrap" href="main">
                 <i class="bi bi-house-fill"></i>              
                 Principal
                 </a> 
             </li>
             <div *ngFor="let menu of estruturaMenu">
                 <li class="menu">   
-                    <a [href]="'#'+ menu.nome" role="button" data-bs-toggle="collapse" aria-expanded="false" 
+                    <a class="text-nowrap" [href]="'#'+ menu.nome" role="button" data-bs-toggle="collapse" aria-expanded="false" 
                     class="dropdown-toggle" [attr.aria-controls]="menu.nome" [matTooltip]="menu.descricaoModulo" matTooltipPosition="above">
                     <i [class]="menu.icone"></i>
                         {{ menu.descricaoLabel}}

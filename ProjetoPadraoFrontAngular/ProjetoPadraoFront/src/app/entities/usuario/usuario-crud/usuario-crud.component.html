@@ -22,7 +22,7 @@
       </div> 
     <mat-progress-bar mode="indeterminate" [hidden]="!loading"></mat-progress-bar>
     <form [formGroup]="UserRegisterFormGroup" autocomplete="off">
-        <mat-tab-group [selectedIndex]="indexTab" (selectedIndexChange)="ControleAbas($event)">
+        <mat-tab-group [selectedIndex]="indexTab" (selectedIndexChange)="ControleAbas($event)" color="accent">
             <mat-tab>
               <ng-template mat-tab-label>
                 <strong>Principal</strong>

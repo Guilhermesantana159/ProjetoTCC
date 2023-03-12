@@ -8,6 +8,5 @@ public class SkillUsuario
 
     #region Relacionamento
     public virtual Usuario Usuario { get; set; } = null!;
-
     #endregion
 }

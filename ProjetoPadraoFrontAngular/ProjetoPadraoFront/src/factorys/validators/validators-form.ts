@@ -29,3 +29,14 @@ export function ValidateSenha(control: AbstractControl) {
 
   return null;
 }
+
+export function ValidateDataAtual(control: AbstractControl) {
+  let dataAtual = new Date();
+  let data = new Date(control.value);
+  
+  if (data < dataAtual ) {
+    return { invalidData: true };
+  }
+
+  return null;
+}

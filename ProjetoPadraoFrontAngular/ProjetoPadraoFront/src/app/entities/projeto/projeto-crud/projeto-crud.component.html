@@ -1,0 +1,385 @@
+<div class="w-100 header-page-crud-image">
+</div>
+<div class="d-flex justify-content-center header-page-crud">
+    <img class="rounded-circle img-thumbnail image-perfil" [src]="ProjetoRegisterFormGroup.get('foto')?.value == null ? 'assets/Images/BackgroundProject.png' : ProjetoRegisterFormGroup.get('foto')?.value">
+    <button type="button" class="btn btn-light btn-sm rounded-circle btn-perfil" (click)="OpenFileUpload()">
+        <i class="bi bi-camera-fill"></i>    
+    </button>
+    <input type="file" hidden class="form-control form-control-sm" id="customFile" (change)="ChangeFoto($event)" accept="image/png, image/gif, image/jpeg" />  
+</div>
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+          <div class="d-flex justify-content-start text-header">
+            Cadastro de Projeto
+          </div>
+        </div>
+        <div class="row">
+          <div class="d-flex justify-content-end text-muted">
+            <span class="locale-text">Projetos > Cadastro de Projeto > <strong class="text-decoration-underline">{{IsNew != true ? 'Editar' : 'Novo'}}</strong></span>
+          </div>
+        </div>
+      </div> 
+    <mat-progress-bar mode="indeterminate" [hidden]="!loading"></mat-progress-bar>
+    <form [formGroup]="ProjetoRegisterFormGroup" autocomplete="off">
+        <mat-tab-group [selectedIndex]="indexTab" (selectedIndexChange)="ControleAbas($event)" color="accent">
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <strong>Principal</strong>
+              </ng-template>
+              <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 py-1">
+                        <div class="input-group-sm">
+                            <label class="form-label input-label text-muted">
+                                Titulo<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
+                            </label>
+                            <input class="form-control input-form" type="text" maxlength="100" formControlName="titulo"/>
+                        </div>
+                        <text-error-message  
+                            *ngIf="ProjetoRegisterFormGroup.get('titulo')?.errors?.['required'] && submitRegister"
+                            text="Este campo é obrigatório">
+                        </text-error-message>
+                    </div>
+                    <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 py-1">
+                        <label class="form-label input-label text-muted">
+                            Periodo Estimado<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
+                        </label>
+                        <mat-form-field class="mat-form">
+                            <mat-date-range-input [formGroup]="ProjetoRegisterFormGroup" [rangePicker]="from">
+                                <input matStartDate formControlName="dataInicio" readonly> 
+                                <input matEndDate formControlName="dataFim" readonly>
+                            </mat-date-range-input>                            
+                            <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+                            <mat-date-range-picker #from>
+                              <mat-datepicker-actions>
+                                <button mat-button matDatepickerCancel>Voltar</button>
+                                <button mat-button matDatepickerCancel (click)="LimparCampoDataProjeto()">Limpar</button>
+                                <button mat-raised-button color="primary" matDatepickerApply (click)="ChangeDataPrevisao()">Aplicar</button>
+                              </mat-datepicker-actions>
+                            </mat-date-range-picker>
+                        </mat-form-field>
+                        <text-error-message  
+                            *ngIf="ProjetoRegisterFormGroup.get('dataFim')?.errors?.['required'] && submitRegister"
+                            text="Data inicial e Data final obrigatório!">
+                        </text-error-message>
+                        <text-error-message  
+                            *ngIf="!ProjetoRegisterFormGroup.get('dataFim')?.errors?.['required'] && submitRegister
+                            && (ProjetoRegisterFormGroup.get('dataFim')?.errors?.['invalidData'] || ProjetoRegisterFormGroup.get('invalidData')?.errors?.['required'])"
+                            text="Informe algum periodo com a data inicial maior que a data atual!">
+                        </text-error-message>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 py-1">
+                        <label class="form-label input-label text-muted">
+                            Descrição
+                        </label>
+                        <mat-form-field class="mat-form">
+                            <textarea matInput maxlength="500" formControlName="descricao"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-outline-danger btn-sm mx-1" routerLink="/main/usuario/">
+                        <i class="bi bi-box-arrow-in-left"></i><strong>Voltar</strong>
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm" (click)="ButtonEventAba(+1)">
+                        <i class="bi bi-caret-right"></i><strong>Próximo</strong>
+                    </button>
+                </div>
+              </div>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <strong>Atividades / Tarefas</strong>
+                </ng-template>
+                <div class="card-body">
+                    <form [formGroup]="AtividadeRegisterFormGroup" autocomplete="off">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 py-1">
+                                <div class="input-group-sm">
+                                    <label class="form-label input-label text-muted">
+                                        Atividade<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
+                                    </label>
+                                    <input class="form-control input-form" formControlName="atividadeDescricao" type="text"/>
+                                </div>
+                                <text-error-message  
+                                    *ngIf="AtividadeRegisterFormGroup.get('atividadeDescricao')?.errors?.['required'] && submitAtv"
+                                    text="Preencha o campo corretamente">
+                                </text-error-message>
+                            </div>
+                            <div class="col-sm-12 col-xs-6 col-md-6 col-lg- py-1">
+                                <label class="form-label input-label text-muted">
+                                    Periodo Estimado da Atividade<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
+                                </label>
+                                <mat-form-field class="mat-form">
+                                    <mat-date-range-input [formGroup]="AtividadeRegisterFormGroup" [rangePicker]="Atv">
+                                        <input matStartDate formControlName="dataInicioAtv" readonly>
+                                        <input matEndDate formControlName="dataFimAtv" readonly>
+                                    </mat-date-range-input>                            
+                                    <mat-datepicker-toggle matSuffix [for]="Atv"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #Atv>
+                                    <mat-datepicker-actions>
+                                        <button mat-button matDatepickerCancel>Voltar</button>
+                                        <button mat-button matDatepickerCancel (click)="LimparCampoDataAtividade()">Limpar</button>
+                                        <button mat-raised-button color="primary" matDatepickerApply>Aplicar</button>
+                                    </mat-datepicker-actions>
+                                    </mat-date-range-picker>
+                                </mat-form-field>
+                                <text-error-message  
+                                    *ngIf="AtividadeRegisterFormGroup.get('dataFimAtv')?.errors?.['required'] && submitAtv"
+                                    text="Preencha o campo corretamente">
+                                </text-error-message>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 py-1">
+                                <label class="form-label input-label text-muted">
+                                    Tarefas
+                                </label>
+                                <mat-form-field class="mat-form">
+                                    <mat-chip-list #chipList aria-label="Tarefa selection">
+                                        <mat-chip *ngFor="let option of lTarefa" (removed)="Remove(option)">
+                                        {{option.descricao}}
+                                        <button matChipRemove>
+                                            <i class="bi bi-x-circle-fill"></i>
+                                        </button>
+                                        </mat-chip>
+                                        <input 
+                                                [matChipInputFor]="chipList"
+                                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                [matChipInputAddOnBlur]="addOnBlur"
+                                                (matChipInputTokenEnd)="Add($event)">
+                                    </mat-chip-list>
+                                </mat-form-field>
+                                <text-error-message  
+                                    *ngIf="AtividadeRegisterFormGroup.get('lTarefas')?.errors?.['required'] && submitAtv"
+                                    text="Preencha o campo corretamente">
+                                 </text-error-message>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 py-3">
+                                <div class="separator">Atividades cadastradas</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-success btn-sm" (click)="AdicionarGridAtividade(AtividadeRegisterFormGroup)">
+                                        <i class="bi bi-plus-circle py-1"></i>
+                                        <strong style="margin-left: 2pt;">{{editTarefa ? 'Editar' : 'Adicionar'}}</strong>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row py-2">
+                        <mat-form-field>
+                            <label class="form-label input-label text-muted">
+                               Filtrar
+                            </label>                            
+                            <input matInput (keyup)="applyFilterAtividades($event)" #input>
+                        </mat-form-field>
+                        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 py-1">
+                            <div class="table-responsive toggle-history">
+                                <table class="table-exibition table table-sm table-expanded" mat-table [dataSource]="dataSource" multiTemplateDataRows>
+                                    <ng-container  *ngFor="let column of columnsToDisplay">
+                                        <ng-container [matColumnDef]="column.columnBody">
+                                            <div *ngIf="column.columnBody != 'actions'">
+                                                <th mat-header-cell *matHeaderCellDef> {{column.columnName}} </th>
+                                                <td mat-cell *matCellDef="let element"> {{element[column.columnBody]}} </td>
+                                            </div>
+                                            <div *ngIf="column.columnBody == 'actions'">
+                                                <th mat-header-cell *matHeaderCellDef>Ações</th>
+                                                <td mat-cell *matCellDef="let element">     
+                                                    <button class="btn btn-sm btn-danger mx-1" [disabled]="editTarefa" (click)="DeletarAtividade(element)">
+                                                        <i class="bi bi-trash3-fill"></i>
+                                                    </button> 
+                                                    <button class="btn btn-sm btn-info mx-1" [disabled]="editTarefa" (click)="EditarAtividade(element)">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
+                                                </td>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container> 
+                                    <ng-container matColumnDef="expand">
+                                        <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                                            <i *ngIf="expandedElement !== element" class="bi bi-caret-down-fill"></i>
+                                            <i *ngIf="expandedElement === element" class="bi bi-caret-up-fill"></i>
+                                            </button>
+                                        </td>
+                                    </ng-container>         
+                                    <ng-container matColumnDef="expandedDetail">
+                                        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                                            <div class="element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                                                <strong>Tarefas a serem executadas:</strong>
+                                                <div class="list-tarefas" *ngFor="let tarefa of element.listTarefas">
+                                                    <li class="list-inline-item">&bull;{{tarefa.descricao}}</li>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+                                    <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+                                        class="element-row"
+                                        [class.expanded-row]="expandedElement === element"
+                                        (click)="expandedElement = expandedElement === element ? null : element">
+                                    </tr>
+                                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+                                </table>
+                                <div class="text-muted text-sm-center fw-bold" *ngIf="dataSource.data.length == 0">
+                                    Você não possui registros!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-outline-danger btn-sm mx-1" (click)="ButtonEventAba(-1)">
+                            <i class="bi bi-box-arrow-in-left"></i><strong>Voltar</strong>
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm" (click)="ButtonEventAba(+1)">
+                            <i class="bi bi-caret-right"></i><strong>Próximo</strong>
+                        </button>
+                    </div>
+                </div>
+            </mat-tab> 
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <strong>Equipe / Funções</strong>
+                </ng-template>
+                <div class="card-body">
+                    <form [formGroup]="FuncoesRegisterFormGroup" autocomplete="off">
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-8 col-md-8 col-lg-8 py-1">
+                                <consulta-padrao *ngIf="true" 
+                                    selectedText="responsavel"   
+                                    selectedValue="idResponsavel"                                                                     
+                                    [ParamsConsulta]="paramsConsultaUsuario">
+                                </consulta-padrao>
+                                <text-error-message  
+                                    *ngIf="FuncoesRegisterFormGroup.get('responsavel')?.errors?.['required'] && submitFuncoes"
+                                    text="Este campo é obrigatório">
+                                </text-error-message>
+                            </div>
+                            <div class="col-sm-12 col-xs-4 col-md-4 col-lg-4 py-1">
+                                <div class="input-group-sm">
+                                    <label class="form-label input-label text-muted">
+                                        Tarefa<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
+                                    </label>
+                                    <mat-form-field class="mat-form"  >
+                                        <mat-select formControlName="listTarefas" multiple>
+                                            <mat-optgroup *ngFor="let group of dataSource.data" [label]="group.atividade">
+                                              <mat-option *ngFor="let tarefa of group.listTarefas" [value]="{Tarefa: tarefa.descricao,Atividade: group.atividade}">
+                                                {{tarefa.descricao}}
+                                              </mat-option>
+                                            </mat-optgroup>                                        
+                                        </mat-select>
+                                    </mat-form-field>                        
+                                </div>
+                                <text-error-message  
+                                    *ngIf="FuncoesRegisterFormGroup.get('listTarefas')?.errors?.['required'] && submitFuncoes"
+                                    text="Este campo é obrigatório">
+                                </text-error-message>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 py-3">
+                                <div class="separator">Divisão de Tarefas</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-success btn-sm" (click)="AdicionarTarefaEquipe(FuncoesRegisterFormGroup)">
+                                        <i class="bi bi-plus-circle py-1"></i>
+                                        <strong style="margin-left: 2pt;">{{editTarefaEquipe ? 'Editar' : 'Adicionar'}}</strong>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form> 
+                    <div class="row py-2">
+                        <mat-form-field>
+                            <label class="form-label input-label text-muted">
+                               Filtrar
+                            </label>                            
+                            <input matInput (keyup)="applyFilterTarefaEquipe($event)" #input>
+                        </mat-form-field>
+                        <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 py-1">
+                            <div class="table-responsive toggle-history">
+                                <table class="table-exibition table table-sm" mat-table [dataSource]="dataSourcelTarefaFuncoes" multiTemplateDataRows>
+                                    <ng-container matColumnDef="responsavel">
+                                        <th mat-header-cell *matHeaderCellDef>Responsável técnico</th>
+                                        <td mat-cell *matCellDef="let element"> {{element['responsavel']}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="listTarefas">
+                                        <th mat-header-cell *matHeaderCellDef>Tarefas</th>
+                                        <td mat-cell *matCellDef="let element"> 
+                                            <div class="list-tarefas" *ngFor="let tarefa of element.listTarefas">
+                                                <li class="list-inline-item" [matTooltip]="'Atvividade '+ tarefa.Atividade" matTooltipPosition="left">&bull;{{tarefa.Tarefa}}</li>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="actions">
+                                        <th mat-header-cell *matHeaderCellDef>Ações</th>
+                                        <td mat-cell *matCellDef="let element"> 
+                                            <button class="btn btn-sm btn-danger mx-1" [disabled]="editTarefaEquipe" (click)="DeletarTarefaEquipe(element)">
+                                                <i class="bi bi-trash3-fill"></i>
+                                            </button> 
+                                            <button class="btn btn-sm btn-info mx-1" [disabled]="editTarefaEquipe" (click)="EditarTarefaEquipe(element)">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                        </td>
+                                    </ng-container>                                
+                                    <tr mat-header-row *matHeaderRowDef="columnslTarefaFuncoes"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: columnslTarefaFuncoes;"></tr>                                
+                                </table>
+                                <div class="text-muted text-sm-center fw-bold" *ngIf="dataSourcelTarefaFuncoes.data.length == 0">
+                                    Você não possui registros!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-outline-danger btn-sm mx-1" (click)="ButtonEventAba(-1)">
+                            <i class="bi bi-box-arrow-in-left"></i><strong>Voltar</strong>
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm" (click)="ButtonEventAba(+1)">
+                            <i class="bi bi-caret-right"></i><strong>Próximo</strong>
+                        </button>
+                    </div>
+                </div>   
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <strong>Configuração</strong>
+              </ng-template>
+              <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12 col-xs-6 col-md-6 col-lg-6 align-self-end py-1">
+                        <mat-slide-toggle formControlName="listarAtvProjeto">
+                            <label class="input-label text-muted">Listar Atividades para os participantes do projeto</label>
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-outline-danger btn-sm mx-1" (click)="ButtonEventAba(-1)">
+                        <i class="bi bi-box-arrow-in-left"></i><strong>Voltar</strong>
+                    </button>
+                    <button type="submit" class="btn btn-outline-success btn-sm" [disabled]="loading" (click)="Salvar(ProjetoRegisterFormGroup)">
+                        <i class="bi bi-caret-right"></i><strong>{{IsNew != true ? 'Editar' : 'Salvar'}}</strong>
+                    </button>
+                </div>
+              </div>
+            </mat-tab>
+        </mat-tab-group>
+    </form>
+</div>

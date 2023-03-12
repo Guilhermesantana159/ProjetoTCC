@@ -5,6 +5,8 @@ import { UsuarioComponent } from 'src/app/entities/usuario/usuario-grid/usuario-
 import { LoginComponent } from '../../app/entities/login/login.component';
 import { MainComponent } from '../../app/entities/main/main.component';
 import { RecoverPasswordComponent } from '../../app/entities/recoverPassword/recoverPassword.component';
+import { ProjetoComponent } from 'src/app/entities/projeto/projeto-grid/projeto-grid.component';
+import { ProjetoCrudComponent } from 'src/app/entities/projeto/projeto-crud/projeto-crud.component';
 
 const routes: Routes = [
   {path: 'main',component: MainComponent, 
@@ -20,6 +22,18 @@ const routes: Routes = [
       { 
         path: 'usuario/registro/novo', 
         component: UsuarioCrudComponent 
+      },
+      { 
+        path: 'projeto', 
+        component: ProjetoComponent 
+      },
+      { 
+        path: 'projeto/:id/editar', 
+        component: ProjetoCrudComponent 
+      },
+      { 
+        path: 'projeto/registro/novo', 
+        component: ProjetoCrudComponent 
       }
     ]
   },

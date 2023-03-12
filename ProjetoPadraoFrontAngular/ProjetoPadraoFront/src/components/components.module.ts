@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { DataGridComponent } from './data-grid/data-grid.component';
 import { TextErrorMessageComponent } from './text-error-message/text-error-message.component';
-import {MatTableModule} from '@angular/material/table';
 import { BrowserModule } from '@angular/platform-browser';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
@@ -21,6 +20,8 @@ import { ConsultaModalComponent } from './consulta-modal/consulta-padrao.compone
 import {MatChipsModule} from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CodeInputComponent } from './code-input/code-input.component';
+import { MatTableModule } from '@angular/material/table'  
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -33,7 +34,6 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
     providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
     exports: [ TextErrorMessageComponent,DataGridComponent,ConsultaModalComponent,CodeInputComponent],
     imports: [  
-                MatTableModule,
                 BrowserModule,
                 MatPaginatorModule,
                 MatSortModule,
@@ -41,7 +41,10 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
                 MatDatepickerModule,
                 MatNativeDateModule,
                 MatInputModule,
+                MatTableModule,
                 MatButtonModule,
+                FormsModule,
+                ReactiveFormsModule,
                 MatFormFieldModule,
                 MatIconModule,
                 MatSelectModule,

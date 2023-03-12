@@ -52,15 +52,6 @@ login-root{
     align-items: center;
 }
 
-.header-page-crud-image{
-    height: 35vh;
-    border-radius: 5pt;
-    box-shadow: 0.5px 0.5px 2pt black;
-    background-image: url('https://www.auvergne-numerique.fr/wp-content/uploads/2019/04/Acteur-priv2-1114x432-c-default.jpg?x34428');
-    background-size: cover;
-    background-position: center;
-}
-
 .header-aba{
     background-color: rgba(128, 128, 128, 0.699);
 }
@@ -98,7 +89,7 @@ login-root{
 
 .mat-form{
     width: 100%;
-    margin-top: -15pt;
+    margin-top: -10pt;
 }
 
 .input-group-text{
@@ -124,7 +115,7 @@ textarea{
 .form-control:focus{
     transition: 0.3s;
     border: none;
-    border: 1.5px solid rgba(51, 133, 228, 0.815);
+    border: 1.5px solid rgb(252, 255, 62);
     box-shadow: 0 0 0 0;
     outline: 0;
 }
@@ -144,7 +135,7 @@ textarea{
 }
 ::-webkit-scrollbar-thumb {
     border-radius: 8px;
-    border: 2px solid white; /* should match background, can't be transparent */
+    border: 2px solid white; 
     background-color: rgba(0, 0, 0, .5);
 }
 ::-webkit-scrollbar-track {
@@ -177,4 +168,62 @@ textarea{
 
 recover-password-root{
     background-image: url('assets/Images/WallPaperLogin.png') ;
+}
+
+.table-exibition {
+    text-align: center !important;
+    width: 100%;
+    vertical-align: middle;
+    border: 0.5pt solid rgba(0, 0, 0, 0.123);
+}
+
+.table-exibition th{
+    padding: 5pt;
+    min-width: 30vh;
+    background-color: rgba(0, 119, 255, 0.952);
+    font-weight: bold;
+    font-size: 12pt;
+    vertical-align: middle;
+    color: #fff;
+    text-align: center !important;
+    box-shadow: 1pt 1pt 1pt 1pt rgb(202, 202, 202);
+    border: 1pt rgba(255, 253, 253, 0.733);
+    text-shadow: 1pt 1pt 0.5pt rgb(0, 0, 0);
+}
+
+.table-expanded td{
+    cursor: pointer;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #a7a7a7d2;
+    font-size: 15pt;
+    text-shadow: 1pt 1pt 1pt white;
+    font-weight: bold;
+  }
+  
+.separator::before, 
+.separator::after {
+content: '';
+    flex: 1;
+    border-bottom: 1px solid #a7a7a7d2;
+}
+
+.separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .25em;
+}
+
+.mat-form-field-wrapper{
+    margin-bottom: -15pt !important;
+}
+
+.mat-chip-input{
+    width: 100% !important;
 }

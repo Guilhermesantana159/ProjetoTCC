@@ -1,0 +1,38 @@
+.header-page-crud-image{
+    height: 35vh;
+    border-radius: 5pt;
+    box-shadow: 0.5px 0.5px 2pt black;
+    background-image: url('../../../assets/Images/BackgroundProjeto.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+tr.detail-row {
+    height: 0;
+}
+
+tr.element-row:not(.expanded-row):hover {
+    background: whitesmoke;
+}
+
+tr.element-row:not(.expanded-row):active {
+    background: #efefef;
+}
+
+.element-row td {
+    border-bottom-width: 0;
+}
+
+.element-detail {
+    overflow: hidden;
+    display: flex;
+    vertical-align: middle;
+    font-family: 'Bree Serif', serif;
+    border-radius: 5pt;
+    font-size: small;
+}
+.list-tarefas{
+    margin-left: 3pt;
+}
+  
+

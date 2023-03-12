@@ -208,7 +208,7 @@ export class DataGridComponent implements OnInit{
     );
   }
 
-  @debounce(500)
+  @debounce(300)
   FiltrarGrid(filter?: Filter){
     this.ConsultarGrid(undefined,undefined,filter);
   }

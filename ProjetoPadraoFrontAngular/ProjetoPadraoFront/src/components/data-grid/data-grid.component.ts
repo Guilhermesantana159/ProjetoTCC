@@ -30,6 +30,10 @@ export class DataGridComponent implements OnInit{
 
   //GridEvents
   @Output() Editar: EventEmitter<any> = new EventEmitter;
+  @Output() Concluir: EventEmitter<any> = new EventEmitter;
+  @Output() Encerrar: EventEmitter<any> = new EventEmitter;
+  @Output() Deletar: EventEmitter<any> = new EventEmitter;
+  @Output() Visualizar: EventEmitter<any> = new EventEmitter;
 
   //variaveis grid
   displayedColumnsHeader: string[] = [];
@@ -197,6 +201,8 @@ export class DataGridComponent implements OnInit{
               response.data.itens.forEach(cell =>
                 cell[element.Field] = element.CellTemplate);
             }
+
+            this.data.filter = "";
             
             this.loading = false;
           });
@@ -219,11 +225,31 @@ export class DataGridComponent implements OnInit{
 
     if(action.TypeActionButton == TypeActionButton.Editar){
       this.Editar.emit(data);
-    }  
+    } 
+    
+    if(action.TypeActionButton == TypeActionButton.Concluir){
+      this.Concluir.emit(data);
+    } 
+
+    if(action.TypeActionButton == TypeActionButton.Cancelar){
+      this.Encerrar.emit(data);
+    } 
+
+    if(action.TypeActionButton == TypeActionButton.Deletar){
+      this.Deletar.emit(data);
+    }
+
+    if(action.TypeActionButton == TypeActionButton.Visualizar){
+      this.Visualizar.emit(data);
+    }
     
     if(action.TypeActionButton == TypeActionButton.Selecionar){
       this.gridService.SelecionarModal(data);
     }  
+  }
+
+  VisualizarProjeto(){
+    
   }
 
   EmitirRelatorio(tipo: ETipoArquivo){

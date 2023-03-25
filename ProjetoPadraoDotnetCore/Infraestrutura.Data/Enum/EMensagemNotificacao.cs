@@ -5,5 +5,8 @@ namespace Infraestrutura.Enum;
 public enum EMensagemNotificacao
 {
     [Description("MensagemBemVindo")]
-    MensagemBemVindo = 0
+    MensagemBemVindo = 0,
+        
+    [Description("ParticipacaoProjeto")]
+    ParticipacaoProjeto = 1
 }

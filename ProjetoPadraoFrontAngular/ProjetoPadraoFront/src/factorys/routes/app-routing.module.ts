@@ -7,6 +7,8 @@ import { MainComponent } from '../../app/entities/main/main.component';
 import { RecoverPasswordComponent } from '../../app/entities/recoverPassword/recoverPassword.component';
 import { ProjetoComponent } from 'src/app/entities/projeto/projeto-grid/projeto-grid.component';
 import { ProjetoCrudComponent } from 'src/app/entities/projeto/projeto-crud/projeto-crud.component';
+import { AtvidadeComponent } from 'src/app/entities/atividade/atividade-grid/atividade-grid.component';
+import { AtividadeKanbanComponent } from 'src/app/entities/atividade/atividade-kanban/atividade-kanban.component';
 
 const routes: Routes = [
   {path: 'main',component: MainComponent, 
@@ -34,6 +36,14 @@ const routes: Routes = [
       { 
         path: 'projeto/registro/novo', 
         component: ProjetoCrudComponent 
+      },
+      { 
+        path: 'atividade', 
+        component: AtvidadeComponent 
+      },
+      { 
+        path: 'atividade/projeto/:id', 
+        component: AtividadeKanbanComponent 
       }
     ]
   },

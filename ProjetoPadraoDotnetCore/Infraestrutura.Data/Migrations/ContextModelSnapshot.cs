@@ -22,67 +22,13 @@ namespace Infraestrutura.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("AtividadeAtividadeTarefa", b =>
-                {
-                    b.Property<int>("AtividadeIdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LAtividadeTarefaIdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LAtividadeTarefaIdTarefa")
-                        .HasColumnType("int");
-
-                    b.HasKey("AtividadeIdAtividade", "LAtividadeTarefaIdAtividade", "LAtividadeTarefaIdTarefa");
-
-                    b.HasIndex("LAtividadeTarefaIdAtividade", "LAtividadeTarefaIdTarefa");
-
-                    b.ToTable("AtividadeAtividadeTarefa");
-                });
-
-            modelBuilder.Entity("AtividadeProjetoAtividade", b =>
-                {
-                    b.Property<int>("AtividadeIdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LProjetoAtividadeIdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LProjetoAtividadeIdProjeto")
-                        .HasColumnType("int");
-
-                    b.HasKey("AtividadeIdAtividade", "LProjetoAtividadeIdAtividade", "LProjetoAtividadeIdProjeto");
-
-                    b.HasIndex("LProjetoAtividadeIdAtividade", "LProjetoAtividadeIdProjeto");
-
-                    b.ToTable("AtividadeProjetoAtividade");
-                });
-
-            modelBuilder.Entity("AtividadeTarefaTarefa", b =>
-                {
-                    b.Property<int>("TarefaIdTarefa")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LAtividadeTarefaIdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LAtividadeTarefaIdTarefa")
-                        .HasColumnType("int");
-
-                    b.HasKey("TarefaIdTarefa", "LAtividadeTarefaIdAtividade", "LAtividadeTarefaIdTarefa");
-
-                    b.HasIndex("LAtividadeTarefaIdAtividade", "LAtividadeTarefaIdTarefa");
-
-                    b.ToTable("AtividadeTarefaTarefa");
-                });
-
             modelBuilder.Entity("Infraestrutura.Entity.Atividade", b =>
                 {
-                    b.Property<int>("IdAtividade")
+                    b.Property<int?>("IdAtividade")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAtividade"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdAtividade"), 1L, 1);
 
                     b.Property<DateTime>("DataFim")
                         .HasColumnType("datetime2");
@@ -90,26 +36,18 @@ namespace Infraestrutura.Migrations
                     b.Property<DateTime>("DataInicial")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("IdProjeto")
+                        .HasColumnType("int");
+
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdAtividade");
 
+                    b.HasIndex("IdProjeto");
+
                     b.ToTable("Atividade", (string)null);
-                });
-
-            modelBuilder.Entity("Infraestrutura.Entity.AtividadeTarefa", b =>
-                {
-                    b.Property<int>("IdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdTarefa")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdAtividade", "IdTarefa");
-
-                    b.ToTable("AtividadeTarefa", (string)null);
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Menu", b =>
@@ -246,11 +184,17 @@ namespace Infraestrutura.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("IdUsuarioCadastro")
                         .HasColumnType("int");
 
                     b.Property<bool>("ListarParaParticipantes")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -261,19 +205,6 @@ namespace Infraestrutura.Migrations
                     b.HasIndex("IdUsuarioCadastro");
 
                     b.ToTable("Projeto", (string)null);
-                });
-
-            modelBuilder.Entity("Infraestrutura.Entity.ProjetoAtividade", b =>
-                {
-                    b.Property<int>("IdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdProjeto")
-                        .HasColumnType("int");
-
-                    b.HasKey("IdAtividade", "IdProjeto");
-
-                    b.ToTable("ProjetoAtividade", (string)null);
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.SkillUsuario", b =>
@@ -301,30 +232,37 @@ namespace Infraestrutura.Migrations
 
             modelBuilder.Entity("Infraestrutura.Entity.Tarefa", b =>
                 {
-                    b.Property<int>("IdTarefa")
+                    b.Property<int?>("IdTarefa")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTarefa"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdTarefa"), 1L, 1);
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IdAtividade")
+                        .HasColumnType("int");
+
                     b.HasKey("IdTarefa");
+
+                    b.HasIndex("IdAtividade");
 
                     b.ToTable("Tarefa", (string)null);
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.TarefaUsuario", b =>
                 {
-                    b.Property<int>("IdUsuario")
+                    b.Property<int?>("IdTarefa")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdTarefa")
+                    b.Property<int?>("IdUsuario")
                         .HasColumnType("int");
 
-                    b.HasKey("IdUsuario", "IdTarefa");
+                    b.HasKey("IdTarefa", "IdUsuario");
+
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("TarefaUsuario", (string)null);
                 });
@@ -439,103 +377,15 @@ namespace Infraestrutura.Migrations
                     b.ToTable("Usuario", (string)null);
                 });
 
-            modelBuilder.Entity("ProjetoProjetoAtividade", b =>
+            modelBuilder.Entity("Infraestrutura.Entity.Atividade", b =>
                 {
-                    b.Property<int>("ProjetoIdProjeto")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LProjetoAtividadeIdAtividade")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LProjetoAtividadeIdProjeto")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjetoIdProjeto", "LProjetoAtividadeIdAtividade", "LProjetoAtividadeIdProjeto");
-
-                    b.HasIndex("LProjetoAtividadeIdAtividade", "LProjetoAtividadeIdProjeto");
-
-                    b.ToTable("ProjetoProjetoAtividade");
-                });
-
-            modelBuilder.Entity("TarefaTarefaUsuario", b =>
-                {
-                    b.Property<int>("TarefaIdTarefa")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LTarefaUsuarioIdUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LTarefaUsuarioIdTarefa")
-                        .HasColumnType("int");
-
-                    b.HasKey("TarefaIdTarefa", "LTarefaUsuarioIdUsuario", "LTarefaUsuarioIdTarefa");
-
-                    b.HasIndex("LTarefaUsuarioIdUsuario", "LTarefaUsuarioIdTarefa");
-
-                    b.ToTable("TarefaTarefaUsuario");
-                });
-
-            modelBuilder.Entity("TarefaUsuarioUsuario", b =>
-                {
-                    b.Property<int>("UsuarioIdUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LTarefaUsuarioIdUsuario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LTarefaUsuarioIdTarefa")
-                        .HasColumnType("int");
-
-                    b.HasKey("UsuarioIdUsuario", "LTarefaUsuarioIdUsuario", "LTarefaUsuarioIdTarefa");
-
-                    b.HasIndex("LTarefaUsuarioIdUsuario", "LTarefaUsuarioIdTarefa");
-
-                    b.ToTable("TarefaUsuarioUsuario");
-                });
-
-            modelBuilder.Entity("AtividadeAtividadeTarefa", b =>
-                {
-                    b.HasOne("Infraestrutura.Entity.Atividade", null)
-                        .WithMany()
-                        .HasForeignKey("AtividadeIdAtividade")
+                    b.HasOne("Infraestrutura.Entity.Projeto", "ProjetoFk")
+                        .WithMany("Atividades")
+                        .HasForeignKey("IdProjeto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infraestrutura.Entity.AtividadeTarefa", null)
-                        .WithMany()
-                        .HasForeignKey("LAtividadeTarefaIdAtividade", "LAtividadeTarefaIdTarefa")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AtividadeProjetoAtividade", b =>
-                {
-                    b.HasOne("Infraestrutura.Entity.Atividade", null)
-                        .WithMany()
-                        .HasForeignKey("AtividadeIdAtividade")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestrutura.Entity.ProjetoAtividade", null)
-                        .WithMany()
-                        .HasForeignKey("LProjetoAtividadeIdAtividade", "LProjetoAtividadeIdProjeto")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AtividadeTarefaTarefa", b =>
-                {
-                    b.HasOne("Infraestrutura.Entity.Tarefa", null)
-                        .WithMany()
-                        .HasForeignKey("TarefaIdTarefa")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestrutura.Entity.AtividadeTarefa", null)
-                        .WithMany()
-                        .HasForeignKey("LAtividadeTarefaIdAtividade", "LAtividadeTarefaIdTarefa")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("ProjetoFk");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Menu", b =>
@@ -565,6 +415,7 @@ namespace Infraestrutura.Migrations
                     b.HasOne("Infraestrutura.Entity.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("IdUsuarioCadastro")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Usuario");
@@ -581,6 +432,35 @@ namespace Infraestrutura.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("Infraestrutura.Entity.Tarefa", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.Atividade", "AtividadeFk")
+                        .WithMany("Tarefas")
+                        .HasForeignKey("IdAtividade")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AtividadeFk");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.TarefaUsuario", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.Tarefa", "Tarefa")
+                        .WithMany("TarefaUsuario")
+                        .HasForeignKey("IdTarefa")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestrutura.Entity.Usuario", "Usuario")
+                        .WithMany("TarefaUsuario")
+                        .HasForeignKey("IdUsuario")
+                        .IsRequired();
+
+                    b.Navigation("Tarefa");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Infraestrutura.Entity.Usuario", b =>
                 {
                     b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioFk")
@@ -590,49 +470,9 @@ namespace Infraestrutura.Migrations
                     b.Navigation("UsuarioFk");
                 });
 
-            modelBuilder.Entity("ProjetoProjetoAtividade", b =>
+            modelBuilder.Entity("Infraestrutura.Entity.Atividade", b =>
                 {
-                    b.HasOne("Infraestrutura.Entity.Projeto", null)
-                        .WithMany()
-                        .HasForeignKey("ProjetoIdProjeto")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestrutura.Entity.ProjetoAtividade", null)
-                        .WithMany()
-                        .HasForeignKey("LProjetoAtividadeIdAtividade", "LProjetoAtividadeIdProjeto")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TarefaTarefaUsuario", b =>
-                {
-                    b.HasOne("Infraestrutura.Entity.Tarefa", null)
-                        .WithMany()
-                        .HasForeignKey("TarefaIdTarefa")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestrutura.Entity.TarefaUsuario", null)
-                        .WithMany()
-                        .HasForeignKey("LTarefaUsuarioIdUsuario", "LTarefaUsuarioIdTarefa")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TarefaUsuarioUsuario", b =>
-                {
-                    b.HasOne("Infraestrutura.Entity.Usuario", null)
-                        .WithMany()
-                        .HasForeignKey("UsuarioIdUsuario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestrutura.Entity.TarefaUsuario", null)
-                        .WithMany()
-                        .HasForeignKey("LTarefaUsuarioIdUsuario", "LTarefaUsuarioIdTarefa")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Tarefas");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Modulo", b =>
@@ -640,11 +480,23 @@ namespace Infraestrutura.Migrations
                     b.Navigation("lMenus");
                 });
 
+            modelBuilder.Entity("Infraestrutura.Entity.Projeto", b =>
+                {
+                    b.Navigation("Atividades");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.Tarefa", b =>
+                {
+                    b.Navigation("TarefaUsuario");
+                });
+
             modelBuilder.Entity("Infraestrutura.Entity.Usuario", b =>
                 {
                     b.Navigation("LNotificacaoUsuarios");
 
                     b.Navigation("LSkillUsuarios");
+
+                    b.Navigation("TarefaUsuario");
                 });
 #pragma warning restore 612, 618
         }

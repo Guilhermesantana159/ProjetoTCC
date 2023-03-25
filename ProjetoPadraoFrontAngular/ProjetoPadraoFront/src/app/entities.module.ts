@@ -18,7 +18,7 @@ import {MAT_PROGRESS_BAR_DEFAULT_OPTIONS, MatProgressBarModule} from '@angular/m
 import {MatInputModule} from '@angular/material/input';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatSelectModule} from '@angular/material/select';
-import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS, MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatButtonModule} from '@angular/material/button';
@@ -31,7 +31,10 @@ import { ProjetoComponent } from './entities/projeto/projeto-grid/projeto-grid.c
 import { ProjetoCrudComponent } from './entities/projeto/projeto-crud/projeto-crud.component';
 import { MatTableModule } from '@angular/material/table'  
 import {MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginatorModule} from '@angular/material/paginator';
-import { MAT_FORM_FIELD, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { AtvidadeComponent } from './entities/atividade/atividade-grid/atividade-grid.component';
+import { AtividadeKanbanComponent } from './entities/atividade/atividade-kanban/atividade-kanban.component';
+import { DragDropModule } from "@angular/cdk/drag-drop";
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -48,7 +51,9 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         ProjetoComponent,
         UsuarioCrudComponent,
         ProjetoCrudComponent,
-        RecoverPasswordComponent
+        AtvidadeComponent,
+        RecoverPasswordComponent,
+        AtividadeKanbanComponent
     ],
     exports: [  
         AppComponent,
@@ -58,6 +63,8 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         ProjetoComponent,
         ProjetoCrudComponent,
         UsuarioCrudComponent,
+        AtvidadeComponent,
+        AtividadeKanbanComponent
     ],
     imports: [  
         CommonModule,
@@ -89,7 +96,8 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         MatRadioModule,
         MatChipsModule,
         MatAutocompleteModule,
-        MatTooltipModule
+        MatTooltipModule,
+        DragDropModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
@@ -120,4 +128,4 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
     ],
 })
 
-export class EntitiesModule { }
+export class EntitiesModule {}

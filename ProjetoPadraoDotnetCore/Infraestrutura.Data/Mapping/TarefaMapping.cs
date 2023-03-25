@@ -12,10 +12,10 @@ public class TarefaMapping : IEntityTypeConfiguration<Tarefa>
 
         builder.HasKey(o => o.IdTarefa);
         builder.Property(o => o.Descricao).IsRequired();
-        
-        builder
-            .HasMany(t => t.LAtividadeTarefa)
-            .WithMany(x => x.Tarefa);
 
+        builder
+            .HasOne(x => x.AtividadeFk)
+            .WithMany(x => x.Tarefas)
+            .HasForeignKey(x => x.IdAtividade);
     }
 }

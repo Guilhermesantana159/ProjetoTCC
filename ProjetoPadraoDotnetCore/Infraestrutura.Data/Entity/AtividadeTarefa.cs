@@ -1,12 +1,12 @@
 ﻿namespace Infraestrutura.Entity;
-public class AtividadeTarefa
+public class ividadeTarefa
 {
     public int IdAtividade { get; set; } 
     public int IdTarefa { get; set; }
 
     #region Relacionamento
-    public virtual  IEnumerable<Atividade>? Atividade { get; set; }
-    public virtual IEnumerable<Tarefa>? Tarefa { get; set; }
+    public virtual Atividade? Atividade { get; set; }
+    public virtual Tarefa? Tarefa { get; set; }
     #endregion
 
 }

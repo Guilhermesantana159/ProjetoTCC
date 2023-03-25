@@ -60,12 +60,13 @@
                             </mat-date-range-picker>
                         </mat-form-field>
                         <text-error-message  
-                            *ngIf="ProjetoRegisterFormGroup.get('dataFim')?.errors?.['required'] && submitRegister"
+                            *ngIf="(ProjetoRegisterFormGroup.get('dataFim')?.errors?.['required'] || ProjetoRegisterFormGroup.get('dataInicio')?.errors?.['required']) && submitRegister"
                             text="Data inicial e Data final obrigatório!">
                         </text-error-message>
                         <text-error-message  
-                            *ngIf="!ProjetoRegisterFormGroup.get('dataFim')?.errors?.['required'] && submitRegister
-                            && (ProjetoRegisterFormGroup.get('dataFim')?.errors?.['invalidData'] || ProjetoRegisterFormGroup.get('invalidData')?.errors?.['required'])"
+                            *ngIf="!(ProjetoRegisterFormGroup.get('dataFim')?.errors?.['required'] || ProjetoRegisterFormGroup.get('dataInicio')?.errors?.['required']) 
+                            && submitRegister
+                            && (ProjetoRegisterFormGroup.get('dataFim')?.errors?.['invalidData'] || ProjetoRegisterFormGroup.get('dataInicio')?.errors?.['invalidData'])"
                             text="Informe algum periodo com a data inicial maior que a data atual!">
                         </text-error-message>
                     </div>
@@ -257,7 +258,8 @@
                     <form [formGroup]="FuncoesRegisterFormGroup" autocomplete="off">
                         <div class="row">
                             <div class="col-sm-12 col-xs-8 col-md-8 col-lg-8 py-1">
-                                <consulta-padrao *ngIf="true" 
+                                <consulta-padrao 
+                                    [disabled]="editTarefaEquipe"
                                     selectedText="responsavel"   
                                     selectedValue="idResponsavel"                                                                     
                                     [ParamsConsulta]="paramsConsultaUsuario">

@@ -12,6 +12,7 @@ import { FormGroup, FormGroupDirective } from '@angular/forms';
 export class ConsultaModalComponent implements OnInit{
   @Input() ParamsConsulta!: ConsultaModalParams;
   @Input() selectedText!: string;
+  @Input() disabled!: boolean;
   @Input() selectedValue!: string;
   @Output() valueChange = new EventEmitter();
   form!: FormGroup;

@@ -23,16 +23,21 @@
           [class]="!gridOptions.Parametros.MultiModal ? 'input-group-text' : 'btn'" 
           id="addon-wrapping" 
           (click)="ResetConsultaPadrao()" 
-          [disabled]="ParamsConsulta.Disabled" 
+          [disabled]="ParamsConsulta.Disabled || disabled" 
           matTooltip="Limpar" matTooltipPosition="above">
           <i class="bi bi-x-circle-fill"></i>
         </button>
         <button 
+          *ngIf="(ParamsConsulta.Disabled || disabled)"
+          disabled
           [class]="!gridOptions.Parametros.MultiModal ? 'input-group-text' : 'btn'" 
-          id="addon-wrapping" 
+          matTooltip="Buscar" matTooltipPosition="above">
+          <i class="bi bi-search"></i>
+        </button>
+        <button 
+          *ngIf="!(ParamsConsulta.Disabled || disabled)"   
           data-bs-toggle="modal" 
           data-bs-target="#consulta-padrao" 
-          [disabled]="ParamsConsulta.Disabled"
           matTooltip="Buscar" matTooltipPosition="above">
           <i class="bi bi-search"></i>
         </button>
@@ -46,17 +51,23 @@
         [class]="!gridOptions.Parametros.MultiModal ? 'input-group-text' : 'btn'" 
         id="addon-wrapping" 
         (click)="ResetConsultaPadrao()" 
-        [disabled]="ParamsConsulta.Disabled" 
+        [disabled]="ParamsConsulta.Disabled || disabled" 
         matTooltip="Limpar" matTooltipPosition="above">
         <i class="bi bi-x-circle-fill"></i>
       </button>
       <button 
-        *ngIf="!gridOptions.Parametros.MultiModal"
+        *ngIf="(ParamsConsulta.Disabled || disabled)"
+        [class]="!gridOptions.Parametros.MultiModal ? 'input-group-text' : 'btn'" 
+        disabled
+        matTooltip="Buscar" matTooltipPosition="above">
+        <i class="bi bi-search"></i>
+      </button>
+      <button 
+        *ngIf="!(ParamsConsulta.Disabled || disabled)"
         [class]="!gridOptions.Parametros.MultiModal ? 'input-group-text' : 'btn'" 
         id="addon-wrapping" 
         data-bs-toggle="modal" 
         data-bs-target="#consulta-padrao" 
-        [disabled]="ParamsConsulta.Disabled"
         matTooltip="Buscar" matTooltipPosition="above">
         <i class="bi bi-search"></i>
       </button>

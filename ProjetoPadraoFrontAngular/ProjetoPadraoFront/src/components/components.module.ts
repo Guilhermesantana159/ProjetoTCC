@@ -22,6 +22,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CodeInputComponent } from './code-input/code-input.component';
 import { MatTableModule } from '@angular/material/table'  
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TaskComponent } from './task/task.component';
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { KanbanColumnComponent } from './column/column.component';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -30,9 +33,9 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
 };
 
 @NgModule({
-    declarations: [ TextErrorMessageComponent,DataGridComponent,NoSanitizePipe,ConsultaModalComponent,CodeInputComponent],
+    declarations: [ TextErrorMessageComponent,DataGridComponent,NoSanitizePipe,ConsultaModalComponent,CodeInputComponent,TaskComponent,KanbanColumnComponent],
     providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
-    exports: [ TextErrorMessageComponent,DataGridComponent,ConsultaModalComponent,CodeInputComponent],
+    exports: [ TextErrorMessageComponent,DataGridComponent,ConsultaModalComponent,CodeInputComponent,TaskComponent,KanbanColumnComponent],
     imports: [  
                 BrowserModule,
                 MatPaginatorModule,
@@ -49,6 +52,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
                 MatIconModule,
                 MatSelectModule,
                 MatProgressBarModule,
+                DragDropModule,
                 MatChipsModule,
                 MatAutocompleteModule,
                 MatChipsModule,

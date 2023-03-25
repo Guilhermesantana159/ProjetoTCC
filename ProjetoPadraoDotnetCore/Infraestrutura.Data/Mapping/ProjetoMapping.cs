@@ -16,18 +16,15 @@ public class ProjetoMapping : IEntityTypeConfiguration<Projeto>
         builder.Property(o => o.DataFim).IsRequired();
         builder.Property(o => o.DataInicio).IsRequired();
         builder.Property(o => o.ListarParaParticipantes).IsRequired();
-        builder.Property(o => o.IdUsuarioCadastro).IsRequired();
         builder.Property(o => o.DataCadastro).IsRequired();
-        
+        builder.Property(o => o.Status).IsRequired();
+        builder.Property(o => o.Foto);
+
         builder
             .HasOne(t => t.Usuario)
             .WithMany()
             .HasForeignKey(t => t.IdUsuarioCadastro)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.ClientSetNull);
-        
-        builder
-            .HasMany(t => t.LProjetoAtividade)
-            .WithMany(x => x.Projeto);
+            .IsRequired();
+
     }
 }

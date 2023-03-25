@@ -14,7 +14,7 @@
   <div class="card-body">
     <div class="row">
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-outline-success btn-sm m-1">
+          <button type="button" class="btn btn-outline-success btn-sm m-1" (click)="RecarregarGrid()">
             <small>
               <strong>
               <i class="bi bi-arrow-right-circle"></i> Atualizar
@@ -31,7 +31,8 @@
         </div>
     </div>
     <div class="row px-2">
-      <data-grid [gridOptions]="gridOptions" [modal]="false" (Editar)="Editar($event)"></data-grid>  
+      <data-grid [gridOptions]="gridOptions" [modal]="false" (Editar)="Editar($event)" (Concluir)="Concluir($event)" (Encerrar)="Encerrar($event)" (Deletar)="Deletar($event)">
+      </data-grid>  
     </div>
   </div> 
   <div class="card-footer">

@@ -16,7 +16,9 @@ public class AtividadeMapping : IEntityTypeConfiguration<Atividade>
         builder.Property(t => t.DataFim).IsRequired();
 
         builder
-            .HasMany(t => t.LAtividadeTarefa)
-            .WithMany(x => x.Atividade);
+            .HasOne(x => x.ProjetoFk)
+            .WithMany(x => x.Atividades)
+            .HasForeignKey(x => x.IdProjeto);
+
     }
 }

@@ -39,7 +39,9 @@ export class UsuarioComponent{
           MultiModal: true,
           UrlRelatorio: 'Usuario/GerarRelatorioGridUsuario',
           Modal: undefined,
-          Params: undefined
+          Params: {
+            IdUsuario: Number.parseInt(window.localStorage.getItem('IdUsuario') ?? '1')
+          }
         },
         Colunas: [{
             Field: 'Action',

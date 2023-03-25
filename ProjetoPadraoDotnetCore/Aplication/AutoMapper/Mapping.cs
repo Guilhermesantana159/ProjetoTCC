@@ -1,4 +1,5 @@
 ﻿using Aplication.Models.Request.ModuloMenu;
+using Aplication.Models.Request.Projeto;
 using Aplication.Models.Request.Usuario;
 using Aplication.Models.Response.Menu;
 using Aplication.Models.Response.Usuario;
@@ -6,6 +7,7 @@ using Aplication.Utils.HashCripytograph;
 using AutoMapper;
 using Domain.DTO.Correios;
 using Infraestrutura.Entity;
+using Infraestrutura.Enum;
 using Infraestrutura.Reports.Usuario.Obj;
 
 namespace Aplication.AutoMapper;
@@ -37,6 +39,7 @@ public class Mapping : Profile
                 map => map.MapFrom(src => new HashCripytograph().Hash(src.Senha)));
 
         CreateMap<Usuario, UsuarioGridReportObj>();
+            
         #endregion
 
         #region ModuloMenu
@@ -66,6 +69,22 @@ public class Mapping : Profile
                 map => map.MapFrom(src => src.uf))
             .ForMember(dst => dst.Rua,
                 map => map.MapFrom(src => src.logradouro));
+
+        #endregion
+
+        #region Projeto
+
+        CreateMap<ProjetoRequest, Projeto>()
+            .ForMember(dst => dst.DataCadastro,
+                map => map.MapFrom(src => DateTime.Now))
+            .ForMember(dst => dst.Status,
+                map => map.MapFrom(src => EStatusProjeto.Aberto));
+
+        CreateMap<AtividadeRequest, Atividade>()
+            .ForMember(dst => dst.Titulo,
+                map => map.MapFrom(src => src.Atividade));
+
+        CreateMap<TarefaRequest, Tarefa>();
 
         #endregion
     }

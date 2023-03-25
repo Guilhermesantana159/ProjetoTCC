@@ -1,0 +1,12 @@
+<div class="board">
+	<div class="board-header">
+		<p class="board-name">{{Board.name}}</p>
+	</div>
+	<div class="board-wrapper">
+		<div class="board-columns" cdkDropListGroup>
+			<div class="board-column" *ngFor="let column of Board.columns">
+				<kanban-column [column]="column"></kanban-column>
+			</div>
+		</div>
+	</div>
+</div>

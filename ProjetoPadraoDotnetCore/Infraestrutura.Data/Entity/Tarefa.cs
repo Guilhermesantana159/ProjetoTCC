@@ -1,11 +1,15 @@
-﻿namespace Infraestrutura.Entity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Infraestrutura.Entity;
 public class Tarefa
 {
-    public int IdTarefa { get; set; }
+    public int? IdTarefa { get; set; }
+    public int IdAtividade { get; set; }
     public string? Descricao { get; set; }
 
     #region Relacionamento
-    public virtual IEnumerable<AtividadeTarefa> LAtividadeTarefa { get; set; } = null!;
-    public virtual IEnumerable<TarefaUsuario> LTarefaUsuario { get; set; } = null!;
+    public virtual Atividade AtividadeFk {get; set; } = null!;
+    public IEnumerable<TarefaUsuario> TarefaUsuario { get; set; } = null!;
+
     #endregion
 }

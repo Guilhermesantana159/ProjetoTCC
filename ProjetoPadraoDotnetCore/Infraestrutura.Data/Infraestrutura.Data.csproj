@@ -51,6 +51,8 @@
       <Compile Remove="Migrations\20221111002506_Initial.Designer.cs" />
       <Compile Remove="Mapping\ProfissaoMapping.cs" />
       <Compile Remove="Entity\Profissao.cs" />
+      <Compile Remove="Entity\AtividadeTarefa.cs" />
+      <Compile Remove="Entity\ProjetoAtividade.cs" />
     </ItemGroup>
 
     <ItemGroup>

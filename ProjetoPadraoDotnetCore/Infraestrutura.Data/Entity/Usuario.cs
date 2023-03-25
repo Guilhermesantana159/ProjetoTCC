@@ -30,9 +30,9 @@ public class Usuario
     public DateTime? DataRecuperacaoSenha { get; set; }
 
     #region Relacionamento
-    public virtual IEnumerable<SkillUsuario> LSkillUsuarios { get; set; } = null!;
-    public virtual IEnumerable<Notificacao> LNotificacaoUsuarios { get; set; } = null!;
+    public virtual List<SkillUsuario> LSkillUsuarios { get; set; } = null!;
+    public virtual List<Notificacao> LNotificacaoUsuarios { get; set; } = null!;
     public virtual Usuario UsuarioFk {get; set; } = null!;
-    public virtual IEnumerable<TarefaUsuario> LTarefaUsuario { get; set; } = null!;
+    public List<TarefaUsuario> TarefaUsuario { get; set; } = null!;
     #endregion
 }

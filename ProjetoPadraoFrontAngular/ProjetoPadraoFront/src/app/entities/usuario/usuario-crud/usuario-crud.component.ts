@@ -73,24 +73,24 @@ export class UsuarioCrudComponent{
       //Load Edit
       if(params['id'] != undefined){
          this.response.Get("Usuario","ConsultarViaId/" + params['id']).subscribe(
-      (response: UsuarioResponse) =>{        
-        if(response.sucesso){
-          this.IsNew = false;
-          this.UserRegisterFormGroup.setValue(response.data);
-          this.UserRegisterFormGroup.get('pais')?.setValue('Brasil');
-          this.UserRegisterFormGroup.get('dataNascimento')?.setValue(new Date(response.data.dataNascimento));
+        (response: UsuarioResponse) =>{        
+          if(response.sucesso){
+            this.IsNew = false;
+            this.UserRegisterFormGroup.setValue(response.data);
+            this.UserRegisterFormGroup.get('pais')?.setValue('Brasil');
+            this.UserRegisterFormGroup.get('dataNascimento')?.setValue(new Date(response.data.dataNascimento));
 
-          //Atribuições
-          response.data.lSkills.forEach(element => {
-            this.lSkill.push(element);
-          });
-          
-          //Senha Imutavel quando edição
-          this.UserRegisterFormGroup.controls['senha'].clearValidators();
-          this.UserRegisterFormGroup.controls['senha'].updateValueAndValidity();
+            //Atribuições
+            response.data.lSkills.forEach(element => {
+              this.lSkill.push(element);
+            });
+            
+            //Senha Imutavel quando edição
+            this.UserRegisterFormGroup.controls['senha'].clearValidators();
+            this.UserRegisterFormGroup.controls['senha'].updateValueAndValidity();
 
-        }else{
-          this.toastr.error(response.mensagem, 'Mensagem:');
+          }else{
+            this.toastr.error(response.mensagem, 'Mensagem:');
         }
       });
     }});

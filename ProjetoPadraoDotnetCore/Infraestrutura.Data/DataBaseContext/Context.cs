@@ -20,4 +20,9 @@ public class Context : DbContext
     public DbSet<SkillUsuario> SkillUsuario { get; set; } = null!;
     public DbSet<Modulo> Modulo { get; set; } = null!;
     public DbSet<Menu> Menu { get; set; } = null!;
+    public DbSet<Tarefa> Tarefa { get; set; } = null!;
+    public DbSet<TarefaUsuario> TarefaUsuario { get; set; } = null!;
+    public DbSet<Projeto> Projeto { get; set; } = null!;
+    public DbSet<Atividade> Atividade { get; set; } = null!;
+
 }

@@ -17,8 +17,8 @@ import { ValidateDataAtual } from 'src/factorys/validators/validators-form';
 import { GridAtvTarefas } from 'src/objects/Projeto/GridAtvTarefas';
 import { TableBase } from 'src/objects/Table-base/Table-Base';
 import { GridTarefaEquipe } from 'src/objects/Projeto/GridTarefaEquipe';
-import { ProjetoRequest } from 'src/objects/Projeto/ProjetoRequest';
 import { TarefaReponsavel } from 'src/objects/Projeto/TarefaResponsavel';
+import { ProjetoRequest, AtividadeRequest } from 'src/objects/Projeto/ProjetoRequest';
 
 @Component({
   selector: 'projeto-crud-root',
@@ -41,6 +41,7 @@ export class ProjetoCrudComponent{
   indexTab: number = 0;
   IsNew = true;
   IsAdmin: string = window.localStorage.getItem('Perfil') ?? "false";
+  IdUsuarioLogado: number = Number.parseInt(window.localStorage.getItem('IdUsuario') ?? '1');
 
   //Variaveis Aba Equipe e Funções
   FuncoesRegisterFormGroup: FormGroup;
@@ -118,7 +119,8 @@ export class ProjetoCrudComponent{
       dataInicio: [undefined, [Validators.required,ValidateDataAtual]],      
       descricao: [undefined],     
       fotoProjeto: [undefined],
-      listarAtvProjeto: [false]
+      listarAtvProjeto: [false],
+      foto: [undefined]
     });
 
     this.AtividadeRegisterFormGroup = this.formBuilder.group({
@@ -171,25 +173,52 @@ export class ProjetoCrudComponent{
       return;
     }
 
-
-    let projetoRequest:ProjetoRequest = {
-      idProjeto: form.get('idProjeto')?.value,
-      titulo: form.get('titulo')?.value,
-      dataInicio: form.get('dataInicio')?.value.toLocaleDateString(),
-      dataFim: form.get('dataFim')?.value,
-      descricao: form.get('descricao')?.value,
-      listarParaParticipantes: form.get('listarAtvProjeto')?.value,
-      atividade: this.dataSource.data, 
-      tarefa: [],
+    if(this.dataSource.data.length == 0){
+      this.loading = false;
+      this.toastr.error('<small>Cadastre no mínimo uma atividade para seu projeto!</small>', 'Mensagem:');
+      return;
     }
 
+    //Formatação para Save
+    debugger
+    let projetoRequest:ProjetoRequest = {
+      IdProjeto: form.get('idProjeto')?.value,
+      Titulo: form.get('titulo')?.value,
+      DataInicio: form.get('dataInicio')?.value,
+      DataFim: form.get('dataFim')?.value,
+      Descricao: form.get('descricao')?.value,
+      ListarParaParticipantes: form.get('listarAtvProjeto')?.value,
+      Atividade: [],
+      IdUsuarioCadastro: this.IdUsuarioLogado,
+      Tarefa: [],
+      Foto: form.get('foto')?.value
+    }
+
+    //Tarefa Usuario
     this.dataSourcelTarefaFuncoes.data.forEach(function(element){
+      debugger
       let tarefa:TarefaReponsavel = {
-        tarefa: element.listTarefas,
-        responsavelId: element.idResponsavel
+        Tarefa: element.listTarefas,
+        ResponsavelId: element.idResponsavel
       };
 
-      projetoRequest.tarefa.push(tarefa);
+      projetoRequest.Tarefa.push(tarefa);
+    });
+
+    //Atividade
+    this.dataSource.data.forEach(function(element){
+      //Formatacao data
+      let dataInicial:any = element.dataInicial.split("/"); 
+      let dataFim:any = element.dataFim.split("/");
+
+      let Atv:AtividadeRequest = {
+        Atividade: element.atividade,
+        DataInicial: new Date(dataInicial[2], dataInicial[1]-1, dataInicial[0]),
+        DataFim:  new Date(dataFim[2], dataFim[1]-1, dataFim[0]),
+        ListTarefas: element.listTarefas
+      };
+      
+      projetoRequest.Atividade.push(Atv);
     });
 
 
@@ -460,7 +489,7 @@ export class ProjetoCrudComponent{
       return;
     }
 
-    if(this.dataSourcelTarefaFuncoes.data.map(x => x.idResponsavel).indexOf(form.get('idResponsavel')?.value) != -1){
+    if(this.dataSourcelTarefaFuncoes.data.map(x => x.idResponsavel).indexOf(form.get('idResponsavel')?.value) != -1 && !this.editTarefaEquipe){
       this.toastr.error('<small>Não é permitido inserir um usuário repetido! Para adicionar ou retirar tarefas desse usuário, edite o que está presente na grid!</small>', 'Mensagem:');
       return;
     }
@@ -527,7 +556,7 @@ export class ProjetoCrudComponent{
 
     reader.onloadend = () => {
       let base64data: any = reader.result;
-      this.ProjetoRegisterFormGroup.get('fotoProjeto')?.setValue(base64data);
+      this.ProjetoRegisterFormGroup.get('foto')?.setValue(base64data);
     }
   };
 

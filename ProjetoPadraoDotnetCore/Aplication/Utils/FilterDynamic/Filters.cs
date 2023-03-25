@@ -45,7 +45,7 @@ public static class Filters
                 if (filter.Value != null && filter.Value != null)
                 {
                     var numberEnum = Int32.Parse(filter.Value);
-                    source = source.Where("Perfil" + " == @0",numberEnum);
+                    source = source.Where(filter.Field + " == @0",numberEnum);
                 }
             }
             else

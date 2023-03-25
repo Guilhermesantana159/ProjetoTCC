@@ -92,6 +92,12 @@ export class MainComponent implements OnInit{
         IdNotificaoLida: notificacao.idNotificacao
       }; 
 
+      this.quantidadeSemLer = this.quantidadeSemLer - 1;
+
+      if(this.quantidadeSemLer == 0){
+        this.notificaoSemLer = false;
+      }
+
       this.response.Post("Notificacao","NotificacaoLida", request).subscribe(); 
     }
   };

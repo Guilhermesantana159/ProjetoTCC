@@ -1,11 +1,11 @@
 ﻿namespace Infraestrutura.Entity;
-public class ProjetoAtividade
+public class rojetoAtividade
 {
     public int IdProjeto { get; set; }
     public int IdAtividade { get; set; } 
 
     #region Relacionamento
-    public virtual IEnumerable<Projeto>? Projeto { get; set; }
-    public virtual IEnumerable<Atividade>? Atividade { get; set; }
+    public virtual Projeto? Projeto { get; set; }
+    public virtual Atividade? Atividade { get; set; }
     #endregion
 }

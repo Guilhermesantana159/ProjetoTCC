@@ -6,6 +6,9 @@ import { EnumBase } from 'src/enums/EnumBase';
 import { TypeFilter } from 'src/enums/TypeFilter';
 import { GridOptions } from 'src/objects/Grid/GridOptions';
 import { ETipoArquivo } from '../../../../enums/ETipoArquivo';
+import { RetornoPadrao } from 'src/objects/RetornoPadrao';
+import { ToastrService } from 'ngx-toastr';
+import { BaseService } from 'src/factorys/base.service';
 
 @Component({
   selector: 'projeto-root',
@@ -18,7 +21,7 @@ export class ProjetoComponent{
   statusEnumProjeto: Array<EnumBase>;
 
   constructor(private gridService: GridService,public gridComponent: DataGridComponent,
-    private router: Router){  
+    private router: Router,private response: BaseService,private toastr: ToastrService){  
 
     this.statusEnumProjeto = [
       {
@@ -31,7 +34,11 @@ export class ProjetoComponent{
       },
       {
         Description: 'Concluido',
-        Value: '1'
+        Value: '2'
+      },
+      {
+        Description: 'Atrasado',
+        Value: '3'
       }
     ];
 
@@ -56,8 +63,8 @@ export class ProjetoComponent{
             EnumName: undefined,
             ServerField: '',
             EnumOptions: undefined,  
-            StyleColuna: undefined,  
-            StyleCell: undefined,
+            StyleColuna: 'min-width: 40vh; max-width: 45vh;',
+            StyleCell: "display: inline-block;padding: 2pt;",
             ClassCell: undefined,
             CellGraphics: undefined,
             CellImage: undefined,
@@ -82,7 +89,7 @@ export class ProjetoComponent{
                 }
               },
               {
-                TypeActionButton: 0,
+                TypeActionButton: 2,
                 TypeButton: 1,
                 ParametrosAction: {
                   Conteudo: '<i class="bi bi-check2"></i>',
@@ -101,7 +108,7 @@ export class ProjetoComponent{
                 }
               },
               {
-                TypeActionButton: 0,
+                TypeActionButton: 4,
                 TypeButton: 1,
                 ParametrosAction: {
                   Conteudo: '<i class="bi bi-trash"></i>',
@@ -120,7 +127,7 @@ export class ProjetoComponent{
                 }
               },
               {
-                TypeActionButton: 0,
+                TypeActionButton: 3,
                 TypeButton: 1,
                 ParametrosAction: {
                   Conteudo: '<i class="bi bi-x-octagon"></i>',
@@ -135,7 +142,7 @@ export class ProjetoComponent{
                   },
                   Target: undefined,
                   Href: undefined,
-                  Tooltip: 'Encerrar'
+                  Tooltip: 'Cancelar'
                 }
               }
             ]  
@@ -173,7 +180,7 @@ export class ProjetoComponent{
           ClassCell: 'd-inline',
           CellGraphics: undefined,
           CellImage: {
-            PropertyLink: 'imagemProjeto',
+            PropertyLink: 'fotoProjeto',
             ClassImage: 'rounded float-start d-inline',
             StyleImage: 'max-width: 30pt;',
             Tooltip:  'Representação do projeto',
@@ -181,13 +188,13 @@ export class ProjetoComponent{
           },    
         },
         {
-          Field: 'dataFimProjeto',
-          DisplayName: 'Data de conclusão',
+          Field: 'dataInicio',
+          DisplayName: 'Data de início',
           CellTemplate: undefined,
           ActionButton: undefined, 
           Type: TypeFilter.Data,
           EnumName: undefined,
-          ServerField: 'dataFimProjeto',
+          ServerField: 'DataInicio',
           Filter: true,
           OrderBy: true,
           StyleColuna: undefined,
@@ -198,13 +205,30 @@ export class ProjetoComponent{
           CellImage: undefined,    
         },
         {
-          Field: 'statusProjeto',
-          DisplayName: 'Perfil',
+          Field: 'dataFim',
+          DisplayName: 'Data de conclusão',
+          CellTemplate: undefined,
+          ActionButton: undefined, 
+          Type: TypeFilter.Data,
+          EnumName: undefined,
+          ServerField: 'DataFim',
+          Filter: true,
+          OrderBy: true,
+          StyleColuna: undefined,
+          EnumOptions: undefined,
+          StyleCell: undefined,
+          ClassCell: undefined,
+          CellGraphics: undefined,
+          CellImage: undefined,    
+        },
+        {
+          Field: 'status',
+          DisplayName: 'Status Projeto',
           CellTemplate: undefined,
           ActionButton: undefined, 
           Type: TypeFilter.Enum,
           EnumName: undefined,
-          ServerField: 'perfil',
+          ServerField: 'Status',
           Filter: true,
           OrderBy: true,
           StyleColuna: undefined,
@@ -215,13 +239,13 @@ export class ProjetoComponent{
           CellImage: undefined,  
         },
         {
-          Field: 'andamentoProjeto',
-          DisplayName: 'Andamento projeto',
+          Field: 'porcentagem',
+          DisplayName: 'Andamento do projeto',
           CellTemplate: undefined,
           ActionButton: undefined, 
           Type: TypeFilter.String,
           EnumName: undefined,
-          ServerField: 'andamentoProjeto',
+          ServerField: 'porcentagem',
           Filter: false,
           OrderBy: false,
           StyleColuna: 'min-width: 40vh',
@@ -229,47 +253,13 @@ export class ProjetoComponent{
           StyleCell: undefined,
           ClassCell: undefined,
           CellGraphics: {  
-            PropertyLink: 'andamentoProjeto',
+            PropertyLink: 'porcentagem',
             Tooltip: '%',
             OnlyGraphics: true,
             ClassGraphics: '',
             StyleGraphics: undefined
           },
           CellImage: undefined,  
-        },
-        {
-          Field: 'funcaoProjeto',
-          DisplayName: 'Função',
-          CellTemplate: undefined,
-          ActionButton: undefined, 
-          Type: TypeFilter.String,
-          EnumName: undefined,
-          ServerField: 'funcaoProjeto',
-          Filter: true,
-          OrderBy: true,
-          StyleColuna: 'min-width: 45vh; max-width: 50vh;',
-          EnumOptions: undefined,
-          StyleCell: undefined,
-          ClassCell: undefined,
-          CellGraphics: undefined,
-          CellImage: undefined,           
-        },
-        {
-          Field: 'admProjeto',
-          DisplayName: 'Admnistrador',
-          CellTemplate: undefined,
-          ActionButton: undefined, 
-          Type: TypeFilter.String,
-          EnumName: undefined,
-          ServerField: 'admProjeto',
-          Filter: true,
-          OrderBy: true,
-          StyleColuna: 'min-width: 45vh; max-width: 50vh;',
-          EnumOptions: undefined,
-          StyleCell: undefined,
-          ClassCell: undefined,
-          CellGraphics: undefined,
-          CellImage: undefined,           
         }
       ]
     }
@@ -281,6 +271,49 @@ export class ProjetoComponent{
 
   Editar(data: any){
     this.router.navigate(['main/projeto/' + data.idProjeto.toString() + '/editar']);
+  }
+
+  Concluir(data: any){
+    this.response.Post("Projeto","MudarStatusProjeto",{Status: 2,IdProjeto: data.idProjeto}).subscribe(
+      (response: RetornoPadrao) =>{        
+        if(response.sucesso){
+          this.toastr.success(response.mensagem, 'Mensagem:');
+        }else{
+          this.toastr.error(response.mensagem, 'Mensagem:');
+        }
+
+        this.gridService.RecarregarGrid();
+
+      });
+  }
+
+  Encerrar(data: any){
+    this.response.Post("Projeto","MudarStatusProjeto",{Status: 1,IdProjeto: data.idProjeto}).subscribe(
+      (response: RetornoPadrao) =>{        
+        if(response.sucesso){
+          this.toastr.success(response.mensagem, 'Mensagem:');
+
+        }else{
+          this.toastr.error(response.mensagem, 'Mensagem:');
+        }
+
+        this.gridService.RecarregarGrid();
+
+      });
+  }
+
+  Deletar(data: any){
+    this.response.Post("Projeto","Deletar",{IdProjeto: data.idProjeto}).subscribe(
+      (response: RetornoPadrao) =>{        
+        if(response.sucesso){
+          this.toastr.success(response.mensagem, 'Mensagem:');
+        }else{
+          this.toastr.error(response.mensagem, 'Mensagem:');
+        }
+
+        this.gridService.RecarregarGrid();
+
+      });
   }
 
   GerarRelatorio(tipo: ETipoArquivo){

@@ -10,15 +10,17 @@ public class TarefaUsuarioMapping : IEntityTypeConfiguration<TarefaUsuario>
     {
         builder.ToTable("TarefaUsuario");
 
-        builder.HasKey(o => new {o.IdUsuario,o.IdTarefa});
-
+        builder.HasKey(bc => new { bc.IdTarefa, bc.IdUsuario });
+        
         builder
-            .HasMany(t => t.Tarefa)
-            .WithMany(x => x.LTarefaUsuario);
-
+            .HasOne(bc => bc.Tarefa)
+            .WithMany(c => c.TarefaUsuario)
+            .HasForeignKey(bc => bc.IdTarefa);
+        
         builder
-            .HasMany(t => t.Usuario)
-            .WithMany(x => x.LTarefaUsuario);
-
+            .HasOne(bc => bc.Usuario)
+            .WithMany(c => c.TarefaUsuario)
+            .HasForeignKey(bc => bc.IdUsuario)
+            .OnDelete(DeleteBehavior.ClientSetNull);
     }
 }

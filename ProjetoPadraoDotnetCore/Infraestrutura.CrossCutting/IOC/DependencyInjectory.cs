@@ -11,20 +11,18 @@ using Aplication.Validators.Utils;
 using Domain.Interfaces;
 using Domain.Services;
 using Infraestrutura.DataBaseContext;
+using Infraestrutura.Reports.Projeto;
 using Infraestrutura.Reports.Service;
 using Infraestrutura.Reports.Usuario;
 using Infraestrutura.Repository.External;
 using Infraestrutura.Repository.Interface.Atividade;
-using Infraestrutura.Repository.Interface.Atividade_Tarefa;
 using Infraestrutura.Repository.Interface.Base;
 using Infraestrutura.Repository.Interface.Menu;
 using Infraestrutura.Repository.Interface.Modulo;
 using Infraestrutura.Repository.Interface.Notificacao;
 using Infraestrutura.Repository.Interface.Projeto;
-using Infraestrutura.Repository.Interface.Projeto_Atividade;
 using Infraestrutura.Repository.Interface.SkillUsuario;
 using Infraestrutura.Repository.Interface.Tarefa;
-using Infraestrutura.Repository.Interface.Tarefa_Usuario;
 using Infraestrutura.Repository.Interface.Usuario;
 using Infraestrutura.Repository.ReadRepository;
 using Infraestrutura.Repository.WriteRepository;
@@ -66,6 +64,8 @@ namespace CrossCutting.IOC
             services.AddScoped<IEstruturaMenuService, EstruturaMenuService>();
             services.AddScoped<IUtilsService, UtilService>();
             services.AddScoped<IProjetoService, ProjetoService>();
+            services.AddScoped<ITarefaService, TarefaService>();
+            services.AddScoped<IAtividadeService, AtividadeService>();
             #endregion
 
             #region Repositorio
@@ -89,23 +89,18 @@ namespace CrossCutting.IOC
             services.AddScoped<IAtividadeReadRepository,AtividadeReadRepository>();
             services.AddScoped<ITarefaWriteRepository,TarefaWriteRepository>();
             services.AddScoped<ITarefaReadRepository,TarefaReadRepository>();
-            services.AddScoped<IProjetoAtividadeWriteRepository,ProjetoAtividadeWriteRepository>();
-            services.AddScoped<IProjetoAtividadeReadRepository,ProjetoAtividadeReadRepository>();
-            services.AddScoped<IAtividadeTarefaWriteRepository,AtividadeTarefaWriteRepository>();
-            services.AddScoped<IAtividadeTarefaReadRepository,AtividadeTarefaReadRepository>();
-            services.AddScoped<ITarefaUsuarioWriteRepository,TarefaUsuarioWriteRepository>();
-            services.AddScoped<ITarefaUsuarioReadRepository,TarefaUsuarioReadRepository>();
             #endregion
 
             #region Reports
+            services.AddScoped<IProjetoGridBuildReport, ProjetoGridBuildReport>();
             services.AddScoped<IUsuarioGridBuildReport, UsuarioGridBuildReport>();
             services.AddScoped<IReportsService, ReportsService>();
             #endregion
             
-            
             //Context
             services.AddDbContext<Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+            
         }
     }
 }

@@ -1,5 +1,5 @@
 export interface TarefaReponsavel
 {
-    tarefa: Array<any>,
-    responsavelId: number 
+    Tarefa: Array<any>,
+    ResponsavelId: number 
 }

@@ -1,5 +1,5 @@
 ﻿using Infraestrutura.Enum;
-using Infraestrutura.Reports.Projeto.Obj;
+using Infraestrutura.Reports.Projeto.Objeto;
 
 namespace Infraestrutura.Reports.Projeto;
 

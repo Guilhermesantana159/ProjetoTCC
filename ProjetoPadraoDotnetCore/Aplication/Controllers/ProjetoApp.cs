@@ -5,13 +5,13 @@ using Aplication.Models.Request.Projeto;
 using Aplication.Models.Response.Projeto;
 using Aplication.Utils.FilterDynamic;
 using Aplication.Utils.Helpers;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 using Aplication.Validators.Projeto;
 using AutoMapper;
 using Domain.Interfaces;
 using Infraestrutura.Entity;
 using Infraestrutura.Enum;
-using Infraestrutura.Reports.Projeto.Obj;
+using Infraestrutura.Reports.Projeto.Objeto;
 
 namespace Aplication.Controllers;
 

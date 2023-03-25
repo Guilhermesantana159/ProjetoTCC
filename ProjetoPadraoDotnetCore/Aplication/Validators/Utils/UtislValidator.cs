@@ -1,4 +1,4 @@
-﻿using Aplication.Utils.Obj;
+﻿using Aplication.Utils.Objeto;
 
 namespace Aplication.Validators.Utils;
 

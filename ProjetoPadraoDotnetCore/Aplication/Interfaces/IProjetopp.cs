@@ -1,7 +1,7 @@
 ﻿using Aplication.Models.Grid;
 using Aplication.Models.Request.Projeto;
-using Aplication.Utils.Obj;
-using Infraestrutura.Reports.Projeto.Obj;
+using Aplication.Utils.Objeto;
+using Infraestrutura.Reports.Projeto.Objeto;
 
 namespace Aplication.Interfaces;
 

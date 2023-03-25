@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Infraestrutura.Enum;
 using Infraestrutura.Reports.Service;
-using Infraestrutura.Reports.Usuario.Obj;
+using Infraestrutura.Reports.Usuario.Objeto;
 
 namespace Infraestrutura.Reports.Usuario;
 

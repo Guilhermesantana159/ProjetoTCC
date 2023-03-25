@@ -1,5 +1,5 @@
 ﻿using Aplication.Models.Request.ModuloMenu;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 
 namespace Aplication.Validators.EstruturaMenu;
 

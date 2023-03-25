@@ -9,14 +9,14 @@ using Aplication.Models.Response.Usuario;
 using Aplication.Utils.FilterDynamic;
 using Aplication.Utils.HashCripytograph;
 using Aplication.Utils.Helpers;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 using Aplication.Validators.Usuario;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Interfaces;
 using Infraestrutura.Entity;
 using Infraestrutura.Enum;
-using Infraestrutura.Reports.Usuario.Obj;
+using Infraestrutura.Reports.Usuario.Objeto;
 
 namespace Aplication.Controllers;
 public class UsuarioApp : IUsuarioApp

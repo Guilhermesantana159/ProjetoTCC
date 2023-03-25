@@ -1,5 +1,5 @@
 ﻿using Aplication.Models.Request.Usuario;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 using Aplication.Utils.ValidatorDocument;
 
 namespace Aplication.Validators.Usuario;

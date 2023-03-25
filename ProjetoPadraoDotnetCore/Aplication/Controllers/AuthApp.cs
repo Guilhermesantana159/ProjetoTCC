@@ -4,7 +4,7 @@ using Aplication.Models.Request.Login;
 using Aplication.Models.Response.Auth;
 using Aplication.Utils.Email;
 using Aplication.Utils.HashCripytograph;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 using Domain.Interfaces;
 using Infraestrutura.Entity;
 using Infraestrutura.Enum;

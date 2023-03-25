@@ -1,7 +1,7 @@
 ﻿using Aplication.Interfaces;
 using Aplication.Models.Request.ModuloMenu;
 using Aplication.Models.Response.Menu;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 using Aplication.Validators.EstruturaMenu;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;

@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using Infraestrutura.Enum;
-using Infraestrutura.Reports.Projeto.Obj;
+using Infraestrutura.Reports.Projeto.Objeto;
 using Infraestrutura.Reports.Service;
 
 namespace Infraestrutura.Reports.Projeto;

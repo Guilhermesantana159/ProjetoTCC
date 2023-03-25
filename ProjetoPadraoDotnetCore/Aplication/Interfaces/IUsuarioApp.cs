@@ -3,8 +3,8 @@ using Aplication.Models.Request.Senha;
 using Aplication.Models.Request.Usuario;
 using Aplication.Models.Response.Usuario;
 using Infraestrutura.Entity;
-using Infraestrutura.Reports.Usuario.Obj;
-using ValidationResult = Aplication.Utils.Obj.ValidationResult;
+using Infraestrutura.Reports.Usuario.Objeto;
+using ValidationResult = Aplication.Utils.Objeto.ValidationResult;
 
 namespace Aplication.Interfaces;
 

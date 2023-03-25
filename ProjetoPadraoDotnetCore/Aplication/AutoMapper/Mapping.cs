@@ -8,7 +8,7 @@ using AutoMapper;
 using Domain.DTO.Correios;
 using Infraestrutura.Entity;
 using Infraestrutura.Enum;
-using Infraestrutura.Reports.Usuario.Obj;
+using Infraestrutura.Reports.Usuario.Objeto;
 
 namespace Aplication.AutoMapper;
 

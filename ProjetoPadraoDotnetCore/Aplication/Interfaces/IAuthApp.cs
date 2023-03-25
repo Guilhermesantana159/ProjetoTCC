@@ -1,6 +1,6 @@
 ﻿using Aplication.Models.Request.Login;
 using Aplication.Models.Response.Auth;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 using Infraestrutura.Entity;
 
 namespace Aplication.Interfaces;

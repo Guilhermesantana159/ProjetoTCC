@@ -9,4 +9,5 @@ public class ProjetoGridResponse
     public string? DataFim { get; set; }
     public string? Status { get; set; }
     public string? Porcentagem { get; set; }
+    public bool? ActionDisabled { get; set; }
 }

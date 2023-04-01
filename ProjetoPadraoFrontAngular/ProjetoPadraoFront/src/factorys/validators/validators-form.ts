@@ -31,10 +31,11 @@ export function ValidateSenha(control: AbstractControl) {
 }
 
 export function ValidateDataAtual(control: AbstractControl) {
-  let dataAtual = new Date();
+  let dataAtualHoraSubtrair = new Date();
+  let dataAtual = new Date(dataAtualHoraSubtrair.getFullYear(),dataAtualHoraSubtrair.getMonth(),dataAtualHoraSubtrair.getDate());
   let data = new Date(control.value);
   
-  if (data < dataAtual ) {
+  if (dataAtual > data) {
     return { invalidData: true };
   }
 

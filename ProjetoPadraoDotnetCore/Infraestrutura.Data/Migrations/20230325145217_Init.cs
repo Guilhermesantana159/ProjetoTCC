@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infraestrutura.Migrations
 {
-    public partial class InitBanco : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -123,9 +123,11 @@ namespace Infraestrutura.Migrations
                     DataInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataFim = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Foto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ListarParaParticipantes = table.Column<bool>(type: "bit", nullable: false),
                     IdUsuarioCadastro = table.Column<int>(type: "int", nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

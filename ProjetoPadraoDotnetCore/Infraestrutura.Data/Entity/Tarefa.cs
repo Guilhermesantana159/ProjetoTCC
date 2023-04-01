@@ -1,9 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Infraestrutura.Entity;
+﻿namespace Infraestrutura.Entity;
 public class Tarefa
 {
-    public int? IdTarefa { get; set; }
+    public int IdTarefa { get; set; }
     public int IdAtividade { get; set; }
     public string? Descricao { get; set; }
 

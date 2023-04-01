@@ -18,6 +18,7 @@ public class ProjetoReadRepository : BaseReadRepository<Projeto>,IProjetoReadRep
         return _context.Projeto
                    .Include(x => x.Atividades)
                    .ThenInclude(x => x.Tarefas)
+                   .ThenInclude(x => x.TarefaUsuario)
                    .Include(x => x.Usuario)
                    .FirstOrDefault(x => x.IdProjeto == id) ?? throw new InvalidOperationException($"Usuário com Id {id} não encontrado!");
     }

@@ -77,15 +77,6 @@ public class ProjetoApp : IProjetoApp
                         {
                             var listaUsuarioTarefa = new List<TarefaUsuario>();
 
-                            //Adicionar admin projeto
-                            if (usuarioCadastro != null)
-                            {
-                                listaUsuarioTarefa.Add(new TarefaUsuario()
-                                {
-                                    IdUsuario = usuarioCadastro.IdUsuario
-                                });
-                            }
-
                             if (request.Tarefa != null)
                             {
                                 foreach (var userTarefa in request.Tarefa)
@@ -180,7 +171,10 @@ public class ProjetoApp : IProjetoApp
                     FotoProjeto = x.Foto == null 
                             ? _configuration.GetSection("ImageDefaultProjeto:Imagem").Value 
                             : x.Foto,
-                    Porcentagem = x.DataInicio > DateTime.Now ? "0" : ((DateTime.Now - x.DataInicio) * 100/(x.DataFim - x.DataInicio).Days).ToString() 
+                    Porcentagem = (x.Status == EStatusProjeto.Concluido || x.Status == EStatusProjeto.Cancelado) 
+                        ? "100" 
+                        : (x.DataInicio - DateTime.Now).Days < 0 ? "0" : ((x.DataInicio - DateTime.Now).Days * 100/(x.DataFim - x.DataInicio).Days).ToString(),
+                    ActionDisabled = (x.Status == EStatusProjeto.Concluido || x.Status == EStatusProjeto.Cancelado) 
                 }).ToList(),
             
             TotalItens = itens.Count()
@@ -250,6 +244,36 @@ public class ProjetoApp : IProjetoApp
                 Amdamento = "0%"
             }).ToList();
 
+    }
+    
+    public ProjetoResponse GetById(int id)
+    { 
+        var projeto = _service.GetByIdWithIncludes(id);
+        var retorno = Mapper.Map<ProjetoResponse>(projeto);
+
+        if (projeto == null)
+            throw new Exception($"Não foi possível encontrar o projeto com id {id}");
+
+        //AdicionarAtividade
+        foreach (var item in projeto.Atividades)
+        {
+            var atividade = new AtvidadeResponse()
+            {
+                IdAtividade = item.IdAtividade,
+                DataFim = item.DataFim.FormatDateBr(),
+                DataInicial = item.DataInicial.FormatDateBr(),
+                ListTarefas = item.Tarefas.AsQueryable().Select(x => new TarefaAtividadeResponse
+                {
+                    Descricao = x.Descricao
+                }).ToList()
+            };
+
+            if (retorno.ListAtividade != null) retorno.ListAtividade.Add(atividade);
+        }
+        
+        //Adicionar
+
+        return retorno;
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using Aplication.Models.Grid;
 using Aplication.Models.Request.Projeto;
+using Aplication.Models.Response.Projeto;
 using Aplication.Utils.Objeto;
 using Infraestrutura.Reports.Projeto.Objeto;
 
@@ -12,4 +13,5 @@ public interface IProjetoApp
     public ValidationResult MudarStatusProjeto(ProjetoStatusRequest request);
     public ValidationResult Deletar(ProjetoDeleteRequest request);
     public List<ProjetoGridReportObj> ConsultarRelatorioGridProjeto(ProjetoRelatorioGridRequest request);
+    public ProjetoResponse GetById(int id);
 }

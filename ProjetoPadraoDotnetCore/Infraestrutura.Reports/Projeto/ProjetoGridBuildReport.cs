@@ -24,13 +24,13 @@ public class ProjetoGridBuildReport : IProjetoGridBuildReport
         dt.Clear();
         dt.Columns.Add("IdProjeto", typeof(int));
         dt.Columns.Add("Titulo", typeof(string));
-        dt.Columns.Add("DataInicio", typeof(string));
+        dt.Columns.Add("DataInicial", typeof(string));
         dt.Columns.Add("DataFim", typeof(string));
         dt.Columns.Add("Status", typeof(string));
-        dt.Columns.Add("Porcentagem", typeof(string));
+        dt.Columns.Add("Andamento", typeof(string));
 
         //Body
-        foreach (var item in listUsuario)
+         foreach (var item in listUsuario)
         {
             dt.Rows.Add(item.IdProjeto,item.Titulo,item.DataInicial,
                 item.DataFim,item.Status,item.Amdamento);

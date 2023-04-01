@@ -77,11 +77,11 @@ export class ProjetoComponent{
                   ClassProperty: 'btn btn-info btn-sm',
                   Disabled: {
                     Disabled: undefined,
-                    PropertyDisabled: ''
+                    PropertyDisabled: 'actionDisabled'
                   },
                   Hidden: {
                     Hidden: false,
-                    PropertyHidden: 'disabledButtonAction'
+                    PropertyHidden: ''
                   },
                   Target: undefined,
                   Href: undefined,
@@ -96,11 +96,11 @@ export class ProjetoComponent{
                   ClassProperty: 'btn btn-success btn-sm',
                   Disabled: {
                     Disabled: undefined,
-                    PropertyDisabled: ''
+                    PropertyDisabled: 'actionDisabled'
                   },
                   Hidden: {
                     Hidden: false,
-                    PropertyHidden: 'disabledButtonAction'
+                    PropertyHidden: ''
                   },
                   Target: undefined,
                   Href: undefined,
@@ -134,11 +134,11 @@ export class ProjetoComponent{
                   ClassProperty: 'btn btn-danger btn-sm',
                   Disabled: {
                     Disabled: undefined,
-                    PropertyDisabled: ''
+                    PropertyDisabled: 'actionDisabled'
                   },
                   Hidden: {
                     Hidden: false,
-                    PropertyHidden: 'disabledButtonAction'
+                    PropertyHidden: ''
                   },
                   Target: undefined,
                   Href: undefined,

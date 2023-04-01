@@ -1,6 +1,7 @@
 ﻿using Infraestrutura.DataBaseContext;
 using Infraestrutura.Entity;
 using Infraestrutura.Repository.Interface.Atividade;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infraestrutura.Repository.ReadRepository;
 

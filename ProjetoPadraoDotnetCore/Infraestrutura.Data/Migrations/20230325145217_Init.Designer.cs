@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestrutura.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230319150335_AddStatusProjeto")]
-    partial class AddStatusProjeto
+    [Migration("20230325145217_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,11 @@ namespace Infraestrutura.Migrations
 
             modelBuilder.Entity("Infraestrutura.Entity.Atividade", b =>
                 {
-                    b.Property<int?>("IdAtividade")
+                    b.Property<int>("IdAtividade")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdAtividade"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAtividade"), 1L, 1);
 
                     b.Property<DateTime>("DataFim")
                         .HasColumnType("datetime2");

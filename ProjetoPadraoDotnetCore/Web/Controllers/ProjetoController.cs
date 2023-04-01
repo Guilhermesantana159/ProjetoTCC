@@ -114,4 +114,19 @@ public class ProjetoController : DefaultController
         return File(result,"application/pdf" , "RelatorioProjeto.pdf");
 
     }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("ConsultarViaId/{id}")]
+    public JsonResult ConsultarViaId(int id)
+    {
+        try
+        {
+            return ResponderSucesso(_app.GetById(id));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
 }

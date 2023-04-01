@@ -120,7 +120,9 @@ export class ProjetoCrudComponent{
       descricao: [undefined],     
       fotoProjeto: [undefined],
       listarAtvProjeto: [false],
-      foto: [undefined]
+      foto: [undefined],
+      idUsuarioCadastro: [undefined],
+      dataCadastro: [undefined]
     });
 
     this.AtividadeRegisterFormGroup = this.formBuilder.group({
@@ -141,18 +143,13 @@ export class ProjetoCrudComponent{
     this.route.params.subscribe(params => {
       //Load Edit
       if(params['id'] != undefined){
-         this.response.Get("Usuario","ConsultarViaId/" + params['id']).subscribe(
+         this.response.Get("Projeto","ConsultarViaId/" + params['id']).subscribe(
       (response: UsuarioResponse) =>{        
         if(response.sucesso){
           this.IsNew = false;
-          this.ProjetoRegisterFormGroup.setValue(response.data);
-          this.ProjetoRegisterFormGroup.get('pais')?.setValue('Brasil');
-          this.ProjetoRegisterFormGroup.get('dataNascimento')?.setValue(new Date(response.data.dataNascimento));
+          
 
-          //Senha Imutavel quando edição
-          this.ProjetoRegisterFormGroup.controls['senha'].clearValidators();
-          this.ProjetoRegisterFormGroup.controls['senha'].updateValueAndValidity();
-
+          
         }else{
           this.toastr.error(response.mensagem, 'Mensagem:');
         }
@@ -180,7 +177,6 @@ export class ProjetoCrudComponent{
     }
 
     //Formatação para Save
-    debugger
     let projetoRequest:ProjetoRequest = {
       IdProjeto: form.get('idProjeto')?.value,
       Titulo: form.get('titulo')?.value,
@@ -196,7 +192,6 @@ export class ProjetoCrudComponent{
 
     //Tarefa Usuario
     this.dataSourcelTarefaFuncoes.data.forEach(function(element){
-      debugger
       let tarefa:TarefaReponsavel = {
         Tarefa: element.listTarefas,
         ResponsavelId: element.idResponsavel

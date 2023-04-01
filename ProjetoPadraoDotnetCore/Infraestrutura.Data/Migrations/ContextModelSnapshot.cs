@@ -24,11 +24,11 @@ namespace Infraestrutura.Migrations
 
             modelBuilder.Entity("Infraestrutura.Entity.Atividade", b =>
                 {
-                    b.Property<int?>("IdAtividade")
+                    b.Property<int>("IdAtividade")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdAtividade"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAtividade"), 1L, 1);
 
                     b.Property<DateTime>("DataFim")
                         .HasColumnType("datetime2");

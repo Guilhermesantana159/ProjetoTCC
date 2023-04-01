@@ -20,4 +20,10 @@ public class UsuarioReadRepository : BaseReadRepository<Usuario>,IUsuarioReadRep
                    .FirstOrDefault(x => x.IdUsuario == id) ?? 
                throw new InvalidOperationException($"Usuário com Id {id} não encontrado!");
     }
+    
+    public IQueryable<Usuario>? GetTarefaUsuarioWithInclude()
+    {
+        return _context.Usuario
+            .Include(x => x.TarefaUsuario);
+    }
 }

@@ -24,4 +24,18 @@ public class TarefaService : ITarefaService
     { 
         WriteRepository.DeleteRangeTarefas(tarefa);
     }
+    
+    public IQueryable<Tarefa> GetTarefaByUsuario(List<int> atividadesId)
+    {
+        return ReadRepository
+            .GetAllWithInclude()
+            .Where(x => atividadesId.Contains(x.IdAtividade));
+    }
+    
+    public IQueryable<TarefaUsuario> GetTarefaUsuario(List<int> atividadesId)
+    {
+        return ReadRepository
+            .GetAllTarefaUsuarioWithInclude()
+            .Where(x => x.Tarefa != null && atividadesId.Contains(x.Tarefa.IdAtividade));
+    }
 }

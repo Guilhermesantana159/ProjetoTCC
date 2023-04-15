@@ -10,13 +10,14 @@ import { ELido } from '../../../enums/ELido';
 import { NotificacaoRequest } from '../../../objects/Notificacao/NotificacaoRequestLida';
 
 @Component({
-  selector: 'main-root',
+  selector: 'main-this.root',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.css']
 
 })
 
 export class MainComponent implements OnInit{
+
   usuarioNome: string | null;
   estruturaMenu: Array<Modulo> = [];
   loading: boolean;
@@ -27,6 +28,7 @@ export class MainComponent implements OnInit{
   idUsuarioLogado: number = 0;
   notificaoSemLer: boolean = false;
   quantidadeSemLer: number = 0;
+  root:any = document.getElementsByTagName('html')[0];
 
   constructor(private toastr: ToastrService,private response: BaseService,private router: Router){
     this.idUsuarioLogado = Number.parseInt(window.localStorage.getItem('IdUsuario') ?? '0');
@@ -116,6 +118,7 @@ export class MainComponent implements OnInit{
       startWith(''),
       map(value => this._filter(value || '')),
     );
+
   }
 
   private _filter(value: string): string[] {

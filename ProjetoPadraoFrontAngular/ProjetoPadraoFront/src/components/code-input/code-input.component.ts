@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ConsultaModalParams } from 'src/objects/Consulta-Padrao/ConsultaModalParams';
+import { AfterViewInit, Component } from '@angular/core';
 
 @Component({
   selector: 'code-input',

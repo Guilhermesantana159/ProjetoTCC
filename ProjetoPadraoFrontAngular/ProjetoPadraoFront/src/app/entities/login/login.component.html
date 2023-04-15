@@ -1,127 +1,110 @@
-<div class="text-center">
-  <div class="form-login mb-2">
-    <nav>
-      <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <a class="nav-link active" id="nav-login-tab" data-bs-toggle="tab" data-bs-target="#nav-login" type="button" role="tab" aria-controls="nav-login" aria-selected="true">Entrar</a>
-          <a class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Cadastre-se</a>
+<div class="loginwrapper">
+  <div class="lg-inner-column">
+    <div class="left-column relative z-[1]">
+      <div class="max-w-[520px] pt-20 ltr:pl-20 rtl:pr-20 mx-5">
+        <a>
+          <img src="../../../assets/svg/logo/logo.svg" alt="" class="mb-10 dark_logo">
+        </a>
+        <h4>
+          Administre e crie seus 
+          <span class="text-slate-800 dark:text-slate-400 font-bold">
+                          projetos
+                      </span>
+        </h4>
       </div>
-    </nav>
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="nav-login" role="tabpanel" aria-labelledby="nav-login-tab">
-        <form class="form-signin" [formGroup]="loginFormGroup" (ngSubmit)="Login(loginFormGroup)" autocomplete="off">
-          <div class="row">
-            <img id="LogoLogin" class="mx-auto d-block" src="../assets/Images/LogoLogin.png">
-          </div>
-          <div class="mb-3 mt-3">
-            <label for="email" class="form-label">Email:</label>
-            <input type="email" formControlName="emailLogin" maxlength="100" class="form-control form-control-sm" id="emailLogin" placeholder="Insira seu email" name="emailLogin" >
-            <text-error-message  *ngIf="loginFormGroup.get('emailLogin')?.errors?.['required'] && submitLogin"
-              text="Este campo é obrigatório">
-            </text-error-message>
-          </div>
-          <div class="mb-1">
-            <label for="pswdLogin" class="form-label">Senha:</label>
-            <div class="input-group">
-              <input [type]="ActiveEyePasswordLogin ? 'text' : 'password'" 
-              class="form-control form-control-sm" 
-              formControlName="senhaLogin"
-              placeholder="Insira sua senha" 
-              maxlength="10" id="pswdLogin"  name="pswdLogin"             
-              aria-label="Senha" 
-              aria-describedby="div-eye">
-              <div class="input-group-append">
-                <div class="eye-password" id="div-eye" (click)="EyePasswordLogin()">
-                  <i [class]="ActiveEyePasswordLogin ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
-                </div>
-              </div>
-            </div>            
-            <text-error-message  *ngIf="loginFormGroup.get('senhaLogin')?.errors?.['required'] && submitLogin"
-              text="Este campo é obrigatório">
-            </text-error-message>
-          </div>
-          <div class="mb-3 d-flex justify-content-end">
-            <small><a class="recoverPassword"  routerLink="recuperar-senha">Esqueci minha senha</a></small>
-          </div>
-          <button type="submit" class="submit-login" [disabled]="loading">
-              <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              <span [hidden]="loading">Entrar</span>
-          </button>       
-        </form> 
-      </div>
-      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-        <form class="form-signin"  [formGroup]="UserRegisterFormGroup" (ngSubmit)="RegisterUsuario(UserRegisterFormGroup)" autocomplete="off">
-          <div class="mb-3 mt-3">
-            <label for="email" class="form-label">Nome:<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
-            <input type="text" formControlName="nome" maxlength="150" class="form-control form-control-sm" id="nome" placeholder="Insira seu nome" name="nome">
-            <text-error-message  
-              *ngIf="UserRegisterFormGroup.get('nome')?.errors?.['required'] && submitRegister"
-              text="Este campo é obrigatório">
-            </text-error-message>
-          </div>
-          <div class="mb-3 mt-3">
-            <label for="email" class="form-label">Email:<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
-            <input type="email" formControlName="email" maxlength="150" class="form-control form-control-sm" id="email" placeholder="Insira seu email" name="email">
-            <text-error-message  
-              *ngIf="UserRegisterFormGroup.get('email')?.errors?.['email'] && submitRegister"
-              text="Campo inválido!">
-            </text-error-message>
-            <text-error-message  
-              *ngIf="UserRegisterFormGroup.get('email')?.errors?.['required'] && submitRegister"
-              text="Este campo é obrigatório">
-            </text-error-message>
-          </div>
-          <div class="mb-3 mt-3">
-            <div class="input-label mb-3">
-                <label class="form-label">Gênero<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
-            </div>
-            <mat-radio-group aria-label="Select an option" formControlName="genero">
-                <mat-radio-button class="px-1" checked value=0>Masculino</mat-radio-button>
-                <mat-radio-button class="px-1" value=1>Feminino</mat-radio-button>
-            </mat-radio-group>
-          </div>
-          <div class="mb-3 mt-3">
-            <label for="email" class="form-label">CPF:<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
-            <input type="text" [mask]= "'000.000.000-00'" formControlName="CPF" maxlength="14" class="form-control form-control-sm" id="CPF" placeholder="Insira seu CPF" name="CPF">
-            <text-error-message  
-              *ngIf="UserRegisterFormGroup.get('CPF')?.errors?.['required'] && submitRegister"
-              text="Este campo é obrigatório">
-            </text-error-message>
-            <text-error-message  
-              *ngIf="UserRegisterFormGroup.get('CPF')?.errors?.['minlength'] && submitRegister"
-              text="Campo inválido!">
-            </text-error-message>
-          </div>
-          <div class="mb-3">
-            <label for="pwd" class="form-label">Senha:<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
-            <div class="input-group">
-              <input [type]="ActiveEyePasswordRegister ? 'text' : 'password'" 
-              class="form-control form-control-sm" 
-              formControlName="senha"
-              placeholder="Insira sua senha" 
-              maxlength="10" id="pwd"  name="pswd"             
-              aria-label="Senha" 
-              aria-describedby="div-eye">
-              <div class="input-group-append">
-                <div class="eye-password" id="div-eye" (click)="EyePasswordRegister()">
-                  <i [class]="ActiveEyePasswordRegister ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
-                </div>
-              </div>
-            </div>
-            <text-error-message  
-              *ngIf="UserRegisterFormGroup.get('senha')?.errors?.['required'] && submitRegister"
-              text="Este campo é obrigatório">
-            </text-error-message>
-            <text-error-message  
-            *ngIf="UserRegisterFormGroup.get('senha')?.errors?.['invalidSenha'] && submitRegister && 
-            !UserRegisterFormGroup.get('senha')?.errors?.['required']"
-            [text]="UserRegisterFormGroup.get('senha')?.errors?.['Motivo']">
-            </text-error-message>
-          </div>
-          <button type="submit" class="submit-login" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <span [hidden]="loading">Cadastrar</span>
-          </button>       
-        </form>  
+      <div class="absolute left-0 2xl:bottom-[-160px] bottom-[-130px] h-full w-full z-[-1]">
+        <img src="../../../assets/svg/auth/ils1.svg" alt="" class="h-full w-full object-contain">
       </div>
     </div>
+    <div class="right-column relative">
+      <div class="inner-content h-full flex flex-col bg-white dark:bg-slate-800">
+        <div class="auth-box h-full flex flex-col justify-center">
+          <div class="mobile-logo text-center mb-6 lg:hidden block">
+            <a>
+              <img src="../../../assets/svg/logo/logo.svg" alt="" class="mb-10 dark_logo">
+            </a>
+          </div>
+          <div class="text-center 2xl:mb-10 mb-4">
+            <h4 class="font-medium">Login</h4>
+            <div class="text-slate-500 text-base">
+              Entre na sua conta para começar a usar!             
+            </div>
+          </div>
+          <form class="space-y-4" [formGroup]="loginFormGroup" (ngSubmit)="Login(loginFormGroup)" autocomplete="off">
+            <div class="fromGroup">
+              <label class="block capitalize form-label">Email</label>
+              <div class="relative">
+                <input type="email" name="email" class="  form-control py-2" placeholder="Insira seu email" formControlName="emailLogin" maxlength="100">
+              </div>
+              <text-error-message  *ngIf="loginFormGroup.get('emailLogin')?.errors?.['required'] && submitLogin"
+                text="Este campo é obrigatório">
+              </text-error-message>
+            </div>
+            <div class="fromGroup">
+              <label class="block capitalize form-label">Senha</label>
+              <div class="relative">
+                <div class="input-group">
+                  <input [type]="ActiveEyePasswordLogin ? 'text' : 'password'" name="password" formControlName="senhaLogin" class="form-control py-2" placeholder="Insira sua senha" aria-label="Senha" aria-describedby="div-eye">
+                  <div class="eye-password" id="div-eye" (click)="EyePasswordLogin()">
+                    <i [class]="ActiveEyePasswordLogin ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+                  </div>
+                </div>
+              </div>
+              <text-error-message  *ngIf="loginFormGroup.get('senhaLogin')?.errors?.['required'] && submitLogin"
+                text="Este campo é obrigatório">
+              </text-error-message>
+            </div>
+            <div class="flex justify-between">
+              <a class="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium" routerLink="recuperar-senha">
+                Esqueceu sua senha?
+              </a>
+            </div>
+            <button type="submit" class="btn btn-dark block w-full text-center" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span [hidden]="loading">Entrar</span>
+            </button>
+          </form>
+          <div class="relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6">
+            <div class="absolute inline-block bg-white dark:bg-slate-800 dark:text-slate-400 left-1/2 top-1/2 transform -translate-x-1/2
+                                  px-4 min-w-max text-sm text-slate-500 font-normal">
+              Ou continue com
+            </div>
+          </div>
+          <div class="max-w-[242px] mx-auto mt-8 w-full">
+            <ul class="flex">
+              <li class="flex-1">
+                <a href="#" class="inline-flex h-10 w-10 bg-[#1C9CEB] text-white text-2xl flex-col items-center justify-center rounded-full">
+                  <img src="../../../assets/svg/icon/tw.svg" alt="">
+                </a>
+              </li>
+              <li class="flex-1">
+                <a href="#" class="inline-flex h-10 w-10 bg-[#395599] text-white text-2xl flex-col items-center justify-center rounded-full">
+                  <img src="../../../assets/svg/icon/fb.svg" alt="">
+                </a>
+              </li>
+              <li class="flex-1">
+                <a href="#" class="inline-flex h-10 w-10 bg-[#0A63BC] text-white text-2xl flex-col items-center justify-center rounded-full">
+                  <img src="../../../assets/svg/icon/in.svg" alt="">
+                </a>
+              </li>
+              <li class="flex-1">
+                <a href="#" class="inline-flex h-10 w-10 bg-[#EA4335] text-white text-2xl flex-col items-center justify-center rounded-full">
+                  <img src="../../../assets/svg/icon/gp.svg" alt="">
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="md:max-w-[345px] mx-auto font-normal text-slate-500 dark:text-slate-400 mt-12 text-sm">
+            Não possui conta?
+            <a routerLink="nova-conta" class="text-slate-900 dark:text-white font-medium hover:underline">
+              Criar
+            </a>
+          </div>
+        </div>
+        <div class="auth-footer text-center">
+          Copyright 2023, todos os direitos reservador.
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

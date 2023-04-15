@@ -35,6 +35,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { AtvidadeComponent } from './entities/atividade/atividade-grid/atividade-grid.component';
 import { AtividadeKanbanComponent } from './entities/atividade/atividade-kanban/atividade-kanban.component';
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { RegisterComponent } from './entities/register/register.component';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -53,7 +54,8 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         ProjetoCrudComponent,
         AtvidadeComponent,
         RecoverPasswordComponent,
-        AtividadeKanbanComponent
+        AtividadeKanbanComponent,
+        RegisterComponent
     ],
     exports: [  
         AppComponent,
@@ -64,7 +66,8 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         ProjetoCrudComponent,
         UsuarioCrudComponent,
         AtvidadeComponent,
-        AtividadeKanbanComponent
+        AtividadeKanbanComponent,
+        RegisterComponent
     ],
     imports: [  
         CommonModule,

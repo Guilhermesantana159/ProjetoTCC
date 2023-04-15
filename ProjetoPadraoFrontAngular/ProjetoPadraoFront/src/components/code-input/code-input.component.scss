@@ -5,15 +5,17 @@
   max-width: 400px;
 }
 
-.form-control {
+.component-control {
   display: block;
-  height: 35px;
+  height: 50px;
   margin-right: 0.5rem;
   text-align: center;
   font-size: 0.80rem;
   min-width: 0;
+  width: 50%;
   font-weight: bold;
-  border: 1pt black dotted;
+  border-radius: 5pt;
+  border: 1pt black solid;
   &:last-child {
     margin-right: 0;
   }

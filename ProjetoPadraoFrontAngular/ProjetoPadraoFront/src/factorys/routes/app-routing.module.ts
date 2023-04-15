@@ -9,6 +9,7 @@ import { ProjetoComponent } from 'src/app/entities/projeto/projeto-grid/projeto-
 import { ProjetoCrudComponent } from 'src/app/entities/projeto/projeto-crud/projeto-crud.component';
 import { AtvidadeComponent } from 'src/app/entities/atividade/atividade-grid/atividade-grid.component';
 import { AtividadeKanbanComponent } from 'src/app/entities/atividade/atividade-kanban/atividade-kanban.component';
+import { RegisterComponent } from 'src/app/entities/register/register.component';
 
 const routes: Routes = [
   {path: 'main',component: MainComponent, 
@@ -47,9 +48,10 @@ const routes: Routes = [
       }
     ]
   },
+  { path: 'nova-conta', component: RegisterComponent},
   {path: 'login',component: LoginComponent},
   {path: 'recuperar-senha',component: RecoverPasswordComponent},
-  {path: '**',component: LoginComponent}
+  {path: '**',component: LoginComponent},
 ];
 
 @NgModule({

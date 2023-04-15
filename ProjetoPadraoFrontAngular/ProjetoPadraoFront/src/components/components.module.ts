@@ -25,6 +25,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TaskComponent } from './task/task.component';
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { KanbanColumnComponent } from './column/column.component';
+import { FooterMainComponent } from './footer-main/footer-main.component';
+import { NavbarMainComponent } from './navbar-main/navbar-main.component';
+import { SidebarMainComponent } from './sidebar-main/sidebar-main.component';
+import { AppRoutingModule } from 'src/factorys/routes/app-routing.module';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -33,14 +37,15 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
 };
 
 @NgModule({
-    declarations: [ TextErrorMessageComponent,DataGridComponent,NoSanitizePipe,ConsultaModalComponent,CodeInputComponent,TaskComponent,KanbanColumnComponent],
+    declarations: [SidebarMainComponent,NavbarMainComponent,FooterMainComponent,TextErrorMessageComponent,DataGridComponent,NoSanitizePipe,ConsultaModalComponent,CodeInputComponent,TaskComponent,KanbanColumnComponent],
     providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
-    exports: [ TextErrorMessageComponent,DataGridComponent,ConsultaModalComponent,CodeInputComponent,TaskComponent,KanbanColumnComponent],
+    exports: [SidebarMainComponent,NavbarMainComponent,FooterMainComponent,TextErrorMessageComponent,DataGridComponent,ConsultaModalComponent,CodeInputComponent,TaskComponent,KanbanColumnComponent],
     imports: [  
                 BrowserModule,
                 MatPaginatorModule,
                 MatSortModule,
                 MatTooltipModule,
+                MatIconModule,
                 MatDatepickerModule,
                 MatNativeDateModule,
                 MatInputModule,
@@ -51,6 +56,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
                 MatFormFieldModule,
                 MatIconModule,
                 MatSelectModule,
+                AppRoutingModule,
                 MatProgressBarModule,
                 DragDropModule,
                 MatChipsModule,

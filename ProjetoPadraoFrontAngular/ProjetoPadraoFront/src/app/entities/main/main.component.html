@@ -1,37 +1,5 @@
-<div class="wrapper">
-    <nav id="sidebar" tabindex="-1">
-        <div class="sidebar-header">
-            <div class="d-flex justify-content-center">
-                <h3>Projeto Padrão</h3>
-                <strong>PJ</strong>
-            </div>
-        </div>       
-        <div class="d-flex flex-column align-items-center justify-content-center mt-2" *ngIf="loading">
-            <div class="spinner-grow" role="status"></div>
-        </div>
-        <ul class="list-unstyled components" *ngIf="!loading">
-            <li class="active">  
-                <a class="text-nowrap" href="main">
-                <i class="bi bi-house-fill"></i>              
-                Principal
-                </a> 
-            </li>
-            <div *ngFor="let menu of estruturaMenu">
-                <li class="menu">   
-                    <a class="text-nowrap" [href]="'#'+ menu.nome" role="button" data-bs-toggle="collapse" aria-expanded="false" 
-                    class="dropdown-toggle" [attr.aria-controls]="menu.nome" [matTooltip]="menu.descricaoModulo" matTooltipPosition="above">
-                    <i [class]="menu.icone"></i>
-                        {{ menu.descricaoLabel}}
-                    </a>
-                    <ul class="collapse list-unstyled" [id]="menu.nome" *ngFor="let subMenu of menu.lMenus"> 
-                        <li class="link" routerLinkActive="active-link" [matTooltip]="subMenu.descricaoMenu" matTooltipPosition="above">
-                            <a [routerLink]="subMenu.link"><span class="px-2">&#x268A;</span>{{subMenu.nome}}</a>
-                        </li>
-                    </ul> 
-                </li>
-            </div>
-        </ul>
-    </nav>
+<main class="app-wrapper extend">
+    <sidebar-main></sidebar-main>
     <div id="content">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -134,34 +102,18 @@
               </div>
             </div>
         </div>
-        <div class="container-fluid" style="min-height: 100vh;z-index: 1;">
-            <router-outlet></router-outlet>            
-        </div>
-        <footer class="text-center p-2 border-top footer-content bottom-0 end-0">
-            <section class="d-inline">
-                <span class="mb-1 mb-md-0 text-muted">
-                    <small>            
-                        <strong>&copy; 
-                            2022 Copyright:
-                        </strong>
-                        Todos os direitos reservados
-                    </small>
-                </span>
-                <a class="btn btn-outline-none btn-floating" href="#!" role="button">
-                    <i class="bi bi-whatsapp"></i>
-                </a>
-        
-                <a class="btn btn-outline-none btn-floating" href="#!" role="button">
-                    <i class="bi bi-github"></i>
-                </a>
-        
-                <a class="btn btn-outline-none btn-floating" href="#!" role="button" >
-                    <i class="bi bi-facebook"></i>
-                </a>
-            </section>
-        </footer>    
+        <div class="content-wrapper transition-all duration-150 ltr:ml-[248px] rtl:mr-[248px]" id="content_wrapper">
+            <div class="page-content">
+              <div class="transition-all duration-150 container-fluid" id="page_layout">
+                <div id="content_layout">
+                    <router-outlet></router-outlet>            
+                </div>
+              </div>
+            </div>
+          </div>
+        <footer-main></footer-main>
     </div>
-</div>
+</main>
 
 
 

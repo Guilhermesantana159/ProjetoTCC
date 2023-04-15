@@ -38,11 +38,7 @@
   padding: 0;
   background-color: #222d32;
 }
-.sidebar-menu > li {
-  position: relative;
-  margin: 0;
-  padding: 0;
-}
+
 .sidebar-menu > li > a {
   padding: 12px 10px 12px 10px;
   display: block;

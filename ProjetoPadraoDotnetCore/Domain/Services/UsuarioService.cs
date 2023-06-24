@@ -79,4 +79,10 @@ public class UsuarioService : IUsuarioService
         return ReadRepository
             .GetTarefaUsuarioWithInclude();
     }
+
+    public IQueryable<Usuario>? GetUsuarioTarefa()
+    {
+        return ReadRepository
+            .GetTarefaUsuarioWithInclude();    
+    }
 }

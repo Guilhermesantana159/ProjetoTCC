@@ -14,6 +14,7 @@ public class AtividadeMapping : IEntityTypeConfiguration<Atividade>
         builder.Property(t => t.Titulo).IsRequired();
         builder.Property(t => t.DataInicial).IsRequired();
         builder.Property(t => t.DataFim).IsRequired();
+        builder.Property(t => t.StatusAtividade).IsRequired();
 
         builder
             .HasOne(x => x.ProjetoFk)

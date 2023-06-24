@@ -22,6 +22,10 @@
       <Compile Remove="DTO\Grid\Order.cs" />
       <Compile Remove="Enum\ETypeField.cs" />
       <Compile Remove="Models\Grid\Order.cs" />
+      <Compile Remove="Models\Response\Tarefa\TarefaResponse.cs" />
+      <Compile Remove="Models\Response\Tarefa\TarefaGridResponse.cs" />
+      <Compile Remove="Models\Response\Tarefa\TarefaCadastroInicialResponse.cs" />
+      <Compile Remove="Models\Response\Tarefa\TarefaCrudResponse.cs" />
     </ItemGroup>
 
 </Project>

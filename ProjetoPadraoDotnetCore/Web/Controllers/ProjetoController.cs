@@ -43,6 +43,27 @@ public class ProjetoController : DefaultController
     
     [HttpPost]
     [Authorize]
+    [Route("Editar")]
+    public JsonResult Editar(ProjetoRequest request)
+    {
+        try
+        {
+            var cadastro = _app.Editar(request);
+            
+            if(cadastro.IsValid())
+                return ResponderSucesso("Projeto editado com sucesso!");
+            
+            return ResponderErro(cadastro.LErrors.FirstOrDefault());
+
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpPost]
+    [Authorize]
     [Route("ConsultarGridProjeto")]
     public JsonResult ConsultarGridProjeto(ProjetoGridRequest request)
     {
@@ -123,6 +144,37 @@ public class ProjetoController : DefaultController
         try
         {
             return ResponderSucesso(_app.GetById(id));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpPost]
+    [Authorize]
+    [Route("DeletarAtividade/{id}")]
+    public JsonResult DeletarAtividade(int id)
+    {
+        try
+        {
+            _app.DeletarAtividade(id);
+            return ResponderSucesso("Atividade deletada com sucesso!");
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("ConsultarPorProjeto/{idProjeto}/{idUsuario}")]
+    public JsonResult ConsultarPorProjeto(int idProjeto,int idUsuario)
+    {
+        try
+        {
+            return ResponderSucesso(_app.ConsultarPorProjeto(idProjeto,idUsuario));
         }
         catch (Exception e)
         {

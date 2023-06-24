@@ -25,5 +25,6 @@ public interface IUsuarioApp
     public ValidationResult AlterarSenha(UsuarioAlterarSenhaRequest request);
     public ValidationResult ValidarCodigo(Usuario? usuario, ValidarCodigoRequest request);
     public Usuario? GetById(int? id);
+    public IQueryable<Usuario>? GetUsuarioTarefa();
 
 }

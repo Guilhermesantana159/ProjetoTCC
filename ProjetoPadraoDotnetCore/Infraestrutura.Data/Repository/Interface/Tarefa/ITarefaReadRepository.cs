@@ -7,5 +7,5 @@ public interface ITarefaReadRepository : IBaseReadRepository<Entity.Tarefa>
 {
     public IQueryable<Entity.Tarefa> GetAllWithInclude();
     public IQueryable<TarefaUsuario> GetAllTarefaUsuarioWithInclude();
-
+    public Entity.Tarefa? GetByIdWithInclude(int idAtividade);
 }

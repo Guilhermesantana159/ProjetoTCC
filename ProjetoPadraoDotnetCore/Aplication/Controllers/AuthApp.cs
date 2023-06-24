@@ -37,7 +37,7 @@ public class AuthApp : IAuthApp
         {
             usuario = UsuarioService.GetAllList()
                 .FirstOrDefault(x => x.Email == request.EmailLogin && x.Senha ==
-                    Crypto.Hash(request.SenhaLogin));
+                   request.SenhaLogin);
         }
         else
         {

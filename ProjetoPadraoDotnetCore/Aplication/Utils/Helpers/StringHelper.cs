@@ -37,4 +37,9 @@ public static class StringHelper
     {
         return DateTime.Parse(source.ToString("d")).ToString("dd/MM/yyyy");
     }
+    
+    public static string FormatLongDateBr(this DateTime source)
+    {
+        return source.ToString("dd/MM/yyyy HH:mm:ss");
+    }
 }

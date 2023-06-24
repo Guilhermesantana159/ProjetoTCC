@@ -11,4 +11,6 @@ public interface IProjetoService
     public Projeto? GetByIdWithIncludes(int id);
     public void Editar(Projeto projeto);
     public void DeleteById(int idProjeto);
+    public IQueryable<Projeto> GetAllWithIncludeQuery();
+    public Projeto EditarComRetorno(Projeto projeto);
 }

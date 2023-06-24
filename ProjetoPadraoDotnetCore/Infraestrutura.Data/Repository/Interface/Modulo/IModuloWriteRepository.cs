@@ -4,5 +4,4 @@ namespace Infraestrutura.Repository.Interface.Modulo;
 
 public interface IModuloWriteRepository : IBaseWriteRepository<Entity.Modulo>
 {
-    
 }

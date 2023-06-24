@@ -26,3 +26,11 @@ public class UsuarioRequest
     public EGenero Genero { get; set; }
     public List<SkillRequest> lSkills { get; set; }
 }
+
+
+public class Carro
+{
+    public string? roda { get; set; } = null!;
+    public string? gasolina { get; set; } = null!;
+
+}

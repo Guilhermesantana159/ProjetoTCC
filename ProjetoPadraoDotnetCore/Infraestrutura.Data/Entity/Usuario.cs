@@ -34,6 +34,8 @@ public class Usuario
     public virtual IEnumerable<SkillUsuario> LSkillUsuarios { get; set; } = null!;
     public virtual IEnumerable<Notificacao> LNotificacaoUsuarios { get; set; } = null!;
     public virtual Usuario UsuarioFk {get; set; } = null!;
-    public virtual IEnumerable<TarefaUsuario>? TarefaUsuario { get; set; } = null!;
+    public virtual IEnumerable<TarefaUsuario>? TarefaUsuario { get; set; }
+    public IEnumerable<ComentarioTarefa> ComentarioTarefa { get; set; } = null!;
+    public IEnumerable<MovimentacaoTarefa> MovimentacaoTarefa { get; set; } = null!;
     #endregion
 }

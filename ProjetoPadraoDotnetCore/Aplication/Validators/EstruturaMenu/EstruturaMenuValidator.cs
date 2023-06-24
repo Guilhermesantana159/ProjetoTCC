@@ -5,7 +5,7 @@ namespace Aplication.Validators.EstruturaMenu;
 
 public class EstruturaMenuValidator : IEstruturaMenuValidator
 {
-    public ValidationResult ValidaçãoIntegraçãoModulo(ModuloRequest request)
+    public ValidationResult ValidaçãoIntegraçãoSubModulo(SubModuloRequest request)
     {
         var validation = new ValidationResult();
         
@@ -13,8 +13,8 @@ public class EstruturaMenuValidator : IEstruturaMenuValidator
             validation.LErrors.Add("Campo Icone é obrigatório!");
         if(string.IsNullOrEmpty(request.Nome))
             validation.LErrors.Add("Campo nome é obrigatório!");
-        if(string.IsNullOrEmpty(request.DescricaoLabel))
-            validation.LErrors.Add("Campo DescricaoLabel é obrigatório!");
+        if(request.IdModulo == null)
+            validation.LErrors.Add("Campo IdModulo é obrigatório!");
 
         return validation;    
     }
@@ -27,9 +27,19 @@ public class EstruturaMenuValidator : IEstruturaMenuValidator
             validation.LErrors.Add("Campo Link é obrigatório!");
         if(string.IsNullOrEmpty(request.Nome))
             validation.LErrors.Add("Campo nome é obrigatório!");
-        if(request.IdModulo == 0)
-            validation.LErrors.Add("Campo IdModulo é obrigatório!");
+        if(request.IdSubModulo == 0)
+            validation.LErrors.Add("Campo IdSubModulo é obrigatório!");
 
         return validation;    
+    }
+
+    public ValidationResult ValidaçãoIntegraçãoModulo(ModuloRequest request)
+    {
+        var validation = new ValidationResult();
+        
+        if(string.IsNullOrEmpty(request.Nome))
+            validation.LErrors.Add("Campo Nome é obrigatório!");
+
+        return validation;        
     }
 }

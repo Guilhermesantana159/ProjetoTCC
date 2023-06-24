@@ -10,4 +10,7 @@ public class ProjetoGridResponse
     public string? Status { get; set; }
     public string? Porcentagem { get; set; }
     public bool? ActionDisabled { get; set; }
+    public bool DisabledView { get; set; }
+    public bool DisabledAdminister { get; set; }
+    public string? Administrador { get; set; }
 }

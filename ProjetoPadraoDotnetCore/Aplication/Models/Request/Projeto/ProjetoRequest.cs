@@ -1,4 +1,7 @@
-﻿namespace Aplication.Models.Request.Projeto;
+﻿using Aplication.Models.Request.Tarefa;
+using Infraestrutura.Enum;
+
+namespace Aplication.Models.Request.Projeto;
 
 public class ProjetoRequest
 {
@@ -17,9 +20,11 @@ public class ProjetoRequest
 
 public class AtividadeRequest
 {
+    public int? IdAtividade { get; set; }
     public string? Atividade { get; set; }
     public DateTime? DataInicial { get; set; }
     public DateTime? DataFim { get; set; }
+    public EStatusAtividade StatusAtividade { get; set; }
     public List<TarefaRequest>? ListTarefas{ get; set; }
 }
 
@@ -31,11 +36,13 @@ public class TarefaUsuarioRequest
 
 public class TarefaRequest
 {
+    public int? IdTarefa { get; set; }
     public string? Descricao { get; set; }
 }
 
 public class TarefaAtividadeRequest
 {
+    public int? IdTarefa { get; set; }
     public string? Tarefa { get; set; }
     public string? Atividade { get; set; }
 }

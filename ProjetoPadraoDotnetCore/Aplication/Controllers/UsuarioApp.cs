@@ -117,7 +117,7 @@ public class UsuarioApp : IUsuarioApp
                 DataCadastro = DateTime.Now,
                 Lido = ESimNao.Nao,
                 ClassficacaoMensagem = EMensagemNotificacao.MensagemBemVindo,
-                Corpo = $"Seja bem vindo {usuario.Nome} este é um futuro software de gestão de projeto aproveite as funcionalidades!",
+                Corpo = $"Seja bem vindo, este é um futuro software de gestão de projeto aproveite as funcionalidades!",
                 Titulo = "Seja bem vindo",
                 DataVisualização = null,
             };
@@ -126,6 +126,7 @@ public class UsuarioApp : IUsuarioApp
 
             response.DataUsuario = new LoginResponse()
             {
+                IdUsuario = responseCadastro.IdUsuario,
                 SessionKey = Jwt.GerarToken(responseCadastro.Cpf),
                 Nome = usuario.Nome,
                 Autenticado = true,
@@ -149,7 +150,8 @@ public class UsuarioApp : IUsuarioApp
     public ValidationResult Editar(UsuarioRequest request)
     {
         var validation = Validation.ValidacaoCadastro(request);
-        var lUsuario = Service.GetAllList();
+        var lUsuario = Service.GetAllQuery();
+        var usuarioOld = Service.GetById(request.IdUsuario ?? 0);
 
         if (lUsuario.Any(x => x.Email == request.Email && x.IdUsuario != request.IdUsuario))
             validation.LErrors.Add("Email já vinculado a outro usuário");
@@ -157,7 +159,10 @@ public class UsuarioApp : IUsuarioApp
         if(validation.IsValid())
         {
             var usuario = Mapper.Map<UsuarioRequest,Usuario>(request);
-            
+
+            if (string.IsNullOrEmpty(request.Senha) && usuarioOld != null)
+                usuario.Senha = usuarioOld.Senha;
+
             Service.Editar(usuario);
         }
 
@@ -213,7 +218,7 @@ public class UsuarioApp : IUsuarioApp
                     ImagemUsuario = x.Foto == null ? x.Genero == EGenero.Masculino 
                             ? _configuration.GetSection("ImageDefaultUser:Masculino").Value 
                             : _configuration.GetSection("ImageDefaultUser:Feminino").Value     
-                        : x.Foto,
+                        : x.Foto
                 }).ToList(),
             
             TotalItens = itens.Count()
@@ -266,6 +271,11 @@ public class UsuarioApp : IUsuarioApp
     public Usuario? GetById(int? id)
     {
         return Service.GetById(id ?? 0);
+    }
+    
+    public IQueryable<Usuario>? GetUsuarioTarefa()
+    {
+        return Service.GetUsuarioTarefa();
     }
 }
 

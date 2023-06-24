@@ -20,6 +20,7 @@ public class BaseReadRepository <T> : IBaseReadRepository<T> where T : class
 
     public IQueryable<T> GetAll()
     {
+        
         return Context.Set<T>()
             .AsNoTracking()
             .AsQueryable();

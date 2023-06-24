@@ -5,4 +5,5 @@ namespace Infraestrutura.Repository.Interface.Projeto;
 public interface IProjetoReadRepository : IBaseReadRepository<Entity.Projeto>
 {
     public Entity.Projeto GetByIdWithInclude(int id);
+    public IQueryable<Entity.Projeto> GetAllWithIncludeQuery();
 }

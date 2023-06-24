@@ -16,4 +16,5 @@ public interface IUsuarioService
     public void DeleteById(int id);
     public Usuario GetByIdWithInclude(int id);
     public IQueryable<Usuario>? GetTarefaByUsuario(List<int> list);
+    public IQueryable<Usuario>? GetUsuarioTarefa();
 }

@@ -2,22 +2,27 @@
 
 public class EstrututuraMenuResponse
 {
-    public List<ModuloResponse> lModulos { get; set; }
+    public List<ItemMenu> Menu { get; set; }
 }
 
-public class ModuloResponse
+public class ItemMenu
 {
-    public string Nome { get; set; }
-    public string Icone { get; set; }
-    public string DescricaoLabel { get; set; }
-    public string DescricaoModulo { get; set; }
-    public List<LMenu> lMenus { get; set; }
+    public int Id { get; set; }
+    public string? Label { get; set; }
+    public string? Icon { get; set; }
+    public string? Link { get; set; }
+    public int ParentId { get; set; }
+    public bool IsTitle { get; set; }
+    public bool IsLayout { get; set; }
+    public List<ItemMenu>? SubItems { get; set; }
+    public Badgde? Badgde { get; set; }
+    public string? Collapseid { get; set; }
 }
-public class LMenu
+
+public class Badgde
 {
-    public string DescricaoMenu { get; set; }
-    public string Nome { get; set; }
-    public string Link { get; set; }
-    public bool OnlyAdmin { get; set; }
+    public string? Variant { get; set; }
+    public string? Text { get; set; }
 }
+
 

@@ -6,6 +6,7 @@ using Aplication.Utils.HashCripytograph;
 using Aplication.Utils.ValidatorDocument;
 using Aplication.Validators.EstruturaMenu;
 using Aplication.Validators.Projeto;
+using Aplication.Validators.Tarefa;
 using Aplication.Validators.Usuario;
 using Aplication.Validators.Utils;
 using Domain.Interfaces;
@@ -17,11 +18,15 @@ using Infraestrutura.Reports.Usuario;
 using Infraestrutura.Repository.External;
 using Infraestrutura.Repository.Interface.Atividade;
 using Infraestrutura.Repository.Interface.Base;
+using Infraestrutura.Repository.Interface.ComentarioTarefa;
 using Infraestrutura.Repository.Interface.Menu;
 using Infraestrutura.Repository.Interface.Modulo;
+using Infraestrutura.Repository.Interface.MovimentacaoTarefa;
+using Infraestrutura.Repository.Interface.SubModulo;
 using Infraestrutura.Repository.Interface.Notificacao;
 using Infraestrutura.Repository.Interface.Projeto;
 using Infraestrutura.Repository.Interface.SkillUsuario;
+using Infraestrutura.Repository.Interface.TagTarefa;
 using Infraestrutura.Repository.Interface.Tarefa;
 using Infraestrutura.Repository.Interface.Usuario;
 using Infraestrutura.Repository.ReadRepository;
@@ -45,6 +50,7 @@ namespace CrossCutting.IOC
             #region Validators
             services.AddTransient<IProjetoValidator, ProjetoValidator>();
             services.AddTransient<IUsuarioValidator, UsuarioValidator>();
+            services.AddTransient<ITarefaValidator, TarefaValidator>();
             services.AddTransient<IEstruturaMenuValidator,EstruturaMenuValidator>();
             services.AddTransient<IUtilsValidator,UtilsValidatior>();
             #endregion
@@ -55,6 +61,7 @@ namespace CrossCutting.IOC
             services.AddScoped<INotificacaoApp,NotificacaoApp>();
             services.AddScoped<IAuthApp, AuthApp>();
             services.AddScoped<IProjetoApp, ProjetoApp>();
+            services.AddScoped<ITarefaApp, TarefaApp>();
             services.AddScoped<IUtilsApp, UtilsApp>();
             #endregion
 
@@ -73,6 +80,8 @@ namespace CrossCutting.IOC
             services.AddScoped(typeof(IBaseWriteRepository<>), typeof(BaseWriteRepository<>));
             services.AddScoped<IUsuarioReadRepository, UsuarioReadRepository>();
             services.AddScoped<IUsuarioWriteRepository, UsuarioWriteRepository>();
+            services.AddScoped<ISubModuloReadRepository, SubModuloReadRepository>();
+            services.AddScoped<ISubModuloWriteRepository, SubModuloWriteRepository>();
             services.AddScoped<IModuloReadRepository, ModuloReadRepository>();
             services.AddScoped<IModuloWriteRepository, ModuloWriteRepository>();
             services.AddScoped<IMenuReadRepository, MenuReadRepository>();
@@ -89,6 +98,12 @@ namespace CrossCutting.IOC
             services.AddScoped<IAtividadeReadRepository,AtividadeReadRepository>();
             services.AddScoped<ITarefaWriteRepository,TarefaWriteRepository>();
             services.AddScoped<ITarefaReadRepository,TarefaReadRepository>();
+            services.AddScoped<ITagTarefaReadRepository, TagTarefaReadRepository>();
+            services.AddScoped<ITagTarefaWriteRepository, TagTarefaWriteRepository>();
+            services.AddScoped<IComentarioTarefaReadRepository, ComentarioTarefaReadRepository>();
+            services.AddScoped<IComentarioTarefaWriteRepository, ComentarioTarefaWriteRepository>();
+            services.AddScoped<IMovimentacaoTarefaReadRepository, MovimentacaoTarefaReadRepository>();
+            services.AddScoped<IMovimentacaoTarefaWriteRepository, MovimentacaoTarefaWriteRepository>();
             #endregion
 
             #region Reports

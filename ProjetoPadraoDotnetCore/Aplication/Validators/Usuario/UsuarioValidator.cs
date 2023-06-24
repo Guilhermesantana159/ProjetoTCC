@@ -39,7 +39,7 @@ public class UsuarioValidator : IUsuarioValidator
         if(string.IsNullOrEmpty(request.Nome))
             validation.LErrors.Add("Campo nome é obrigatório!");
         if(string.IsNullOrEmpty(request.NomeMae))
-            validation.LErrors.Add("Campo noma da mãe é obrigatório!");
+            validation.LErrors.Add("Campo nome da mãe é obrigatório!");
         if(string.IsNullOrEmpty(request.Cpf))
             validation.LErrors.Add("Campo CPF é obrigatório!");
         if(!request.DataNascimento.HasValue)

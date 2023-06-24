@@ -4,7 +4,6 @@ using Aplication.Models.Response.Menu;
 using Aplication.Utils.Objeto;
 using Aplication.Validators.EstruturaMenu;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Interfaces;
 using Infraestrutura.Entity;
 
@@ -25,24 +24,24 @@ public class EstruturaMenuApp : IEstruturaMenuApp
         UsuarioService = usuarioService;
     }
     
-    public ValidationResult IntegrarModulo(ModuloRequest request)
+    public ValidationResult IntegrarSubModulo(SubModuloRequest request)
     {
-        var validation = Validation.ValidaçãoIntegraçãoModulo(request);
-        var lModulo = Service.GetAllModulo();
+        var validation = Validation.ValidaçãoIntegraçãoSubModulo(request);
+        var lSubModulo = Service.GetAllSubModulo();
 
         if(validation.IsValid())
         {
-            var modulo = Mapper.Map<ModuloRequest,Modulo>(request);
+            var subModulo = Mapper.Map<SubModuloRequest,SubModulo>(request);
 
-            if (request.Id.HasValue || request.Id > 0)
+            if (request.IdSubModulo.HasValue || request.IdSubModulo > 0)
             {
-                if (!lModulo.Any(x => x.IdModulo == request.Id))
-                    validation.LErrors.Add("Id não identificado para edição do modulo!");
+                if (!lSubModulo.Any(x => x.IdSubModulo == request.IdSubModulo))
+                    validation.LErrors.Add("Id não identificado para edição do SubModulo!");
                 else
-                    Service.EditarModulo(modulo);
+                    Service.EditarSubModulo(subModulo);
             }
             else
-                Service.CadastrarModulo(modulo);
+                Service.CadastrarSubModulo(subModulo);
         }
 
         return validation;
@@ -52,10 +51,10 @@ public class EstruturaMenuApp : IEstruturaMenuApp
     {
         var validation = Validation.ValidaçãoIntegraçãoMenu(request);
         var lMenu = Service.GetAllMenu();
-        var lModulo = Service.GetAllModulo();
+        var lSubModulo = Service.GetAllSubModulo();
         
-        if (!lModulo.Any(x => x.IdModulo == request.IdModulo))
-            validation.LErrors.Add("IdModulo não identificado para integração do modulo ao menu!");
+        if (!lSubModulo.Any(x => x.IdSubModulo == request.IdSubModulo))
+            validation.LErrors.Add("IdSubModulo não identificado para integração do SubModulo ao menu!");
         
         if(validation.IsValid())
         {
@@ -77,28 +76,155 @@ public class EstruturaMenuApp : IEstruturaMenuApp
 
     public EstrututuraMenuResponse ConsultarEstruturaMenus(int idUsuario)
     {
-        var lMenus = Service.GetWithInclude()
-            .ProjectTo<ModuloResponse>(Mapper.ConfigurationProvider).ToList();
+        var estruturaInicial = Service.GetModuloWithInclude().ToList();
         var usuario = UsuarioService.GetById(idUsuario);
-        
-        var retorno = new EstrututuraMenuResponse()
-        {
-            lModulos = new List<ModuloResponse>()
-        };
 
         if (usuario == null)
-            return retorno;
+            throw new Exception("Usuário não encontrado!");
         
-        foreach (var item in lMenus)
+        var menuResponse = new EstrututuraMenuResponse
         {
-            if (!usuario.PerfilAdministrador)
-                item.lMenus = item.lMenus.AsQueryable().Where(x => x.OnlyAdmin == false).ToList();
+            Menu = new List<ItemMenu>()
+        };
 
-            if(item.lMenus.Any())
-                retorno.lModulos.Add(item);
-        }            
-        
-        
+        var count = 0;
+        foreach (var menu in estruturaInicial)
+        {
+            var title = new ItemMenu()
+            {
+                Id = count++,
+                Label = menu.Nome,
+                IsTitle = true
+            };
+            
+            menuResponse.Menu.Add(title);
+
+            foreach (var modulo in menu.LSubModulo)
+            {
+                if (modulo.LMenus != null)
+                {
+                    var moduloResponse = new ItemMenu()
+                    {
+                        Id = count++,
+                        Label = modulo.Nome,
+                        Icon = modulo.Icone,
+                        Collapseid = modulo.Nome + "collapse",
+                        SubItems = new List<ItemMenu>()
+                    };
+
+                    if (usuario.PerfilAdministrador == false)
+                    {
+                        moduloResponse.SubItems = modulo.LMenus
+                            .Where(x => x.OnlyAdmin == false)
+                            .Select(x => new ItemMenu()
+                            {
+                                Id = count++,
+                                Label = x.Nome,
+                                Link = x.Link,
+                                ParentId = count--
+                            }).ToList();
+                    }
+                    else
+                    {
+                        moduloResponse.SubItems = modulo.LMenus
+                            .Select(x => new ItemMenu()
+                            {
+                                Id = count++,
+                                Label = x.Nome,
+                                Link = x.Link,
+                                ParentId = count--
+                            }).ToList();
+                    }
+
+                    if (moduloResponse.SubItems == null || !moduloResponse.SubItems.Any())
+                    {
+                        count--;
+                        continue;
+                    }
+                    
+                    count++;
+                    menuResponse.Menu.Add(moduloResponse);
+                }
+            }
+
+            if (menuResponse.Menu.Count > 0)
+            {
+                var last = menuResponse.Menu.LastOrDefault();
+                
+                if (last != null && last.IsTitle)
+                {
+                    menuResponse.Menu.Remove(last);
+                }
+            }
+        }
+
+        if (menuResponse.Menu.Count == 0)
+            throw new Exception("você não possui nenhum menu liberado!");
+
+        return menuResponse;
+    }
+
+    public AutoCompleteMenuResponse ConsultarAutoCompleteMenu(int idUsuario)
+    {
+        var menus = ConsultarEstruturaMenus(idUsuario).Menu;
+        var retorno = new AutoCompleteMenuResponse()
+        {
+            Pages = new List<PageMenu>()
+        };
+
+        foreach (var item in menus)
+        {
+            if (item.SubItems != null)
+            {
+                foreach (var menuItem in item.SubItems)
+                {
+                    retorno.Pages.Add(new PageMenu()
+                    {
+                        Nome = menuItem.Label,
+                        Url = menuItem.Link
+                    });    
+                }
+            }
+        }
+
         return retorno;
+    }
+
+    public ValidationResult IntegrarModulo(ModuloRequest request)
+    {
+        var validation = Validation.ValidaçãoIntegraçãoModulo(request);
+        var lSubModulo = Service.GetAllModulo();
+
+        if(validation.IsValid())
+        {
+            var modulo = Mapper.Map<ModuloRequest,Modulo>(request);
+
+            if (request.IdModulo.HasValue || request.IdModulo > 0)
+            {
+                if (!lSubModulo.Any(x => x.IdModulo == request.IdModulo))
+                    validation.LErrors.Add("Id não identificado para edição do Modulo!");
+                else
+                    Service.EditarModulo(modulo);
+            }
+            else
+                Service.CadastrarModulo(modulo);
+        }
+
+        return validation;
+    }
+
+    public List<Menu> ConsultarMenus()
+    {
+        return Service.GetAllMenu().ToList();
+    }
+
+    public List<Modulo> ConsultarModulo()
+    {
+        return Service.GetModuloWithInclude().ToList();
+    }
+    
+    public List<SubModulo> ConsultarSubModulo()
+    {
+        return Service.GetWithInclude().ToList();
     }
 }

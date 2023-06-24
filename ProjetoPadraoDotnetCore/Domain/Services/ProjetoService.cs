@@ -20,9 +20,19 @@ public class ProjetoService : IProjetoService
         return WriteRepository.AddWithReturn(projeto);
     }
     
+    public Projeto EditarComRetorno(Projeto projeto)
+    {
+        return WriteRepository.UpdateWithReturn(projeto);
+    }
+    
     public IQueryable<Projeto> GetAllQuery()
     {
         return ReadRepository.GetAll();
+    }
+    
+    public IQueryable<Projeto> GetAllWithIncludeQuery()
+    {
+        return ReadRepository.GetAllWithIncludeQuery();
     }
     
     public Projeto? GetById(int id)

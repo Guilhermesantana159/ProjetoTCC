@@ -22,6 +22,31 @@ public class AtividadeService : IAtividadeService
         return WriteRepository.AddWithReturn(atividade);
     }
     
+    public Atividade EditarComRetorno(Atividade atividade)
+    {
+        return WriteRepository.UpdateWithReturn(atividade);
+    }
+
+    public Atividade? GetByIdWithInclude(int idAtividade)
+    {
+        return ReadRepository.GetByIdWithInclude(idAtividade);
+    }
+    
+    public Atividade? GetById(int idAtividade)
+    {
+        return ReadRepository.GetById(idAtividade);
+    }
+
+    public List<Atividade> GetByIdProjeto(int idProjeto)
+    {
+        return ReadRepository.GetByIdProjeto(idProjeto);
+    }
+
+    public void DeleteById(Atividade atividade)
+    {
+        WriteRepository.DeleteById(atividade.IdAtividade);
+    }
+
     public void DeleteRangeAtividades(List<Atividade> list)
     {
         foreach (var item in list)

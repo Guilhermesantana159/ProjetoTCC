@@ -1,0 +1,124 @@
+<!-- <main class="app-wrapper extend">
+  <div id="content" >
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger" (click)="toggleClass()">
+            <span><i class="bi bi-justify-left"></i></span>
+          </button>
+        </div>
+        <div class="d-flex justify-content-end">
+          <div class="btn-group dropstart mx-2">
+            <button type="button" class="btn btn-light btn-lg btn-navbar" data-bs-toggle="dropdown" aria-expanded="false">
+              <img class="rounded" [src]="fotoUser" width="60"/>
+            </button>
+            <span class="span-badge translate-middle badge rounded-pill bg-danger" *ngIf="notificaoSemLer">
+                            {{quantidadeSemLer}}+<span class="visually-hidden"></span>
+                        </span>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header d-flex justify-content-center">
+                <strong>
+                  {{usuarioNome}}
+                </strong>
+              </li>
+              <div class="dropdown-divider"></div>
+              <li>
+                <a class="dropdown-item" (click)="EditarPerfil()">
+                  <small>
+                    <i class="bi bi-person-circle"></i>
+                    <span class="px-2">Perfil</span>
+                  </small>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item">
+                  <small>
+                    <i class="bi bi-envelope-fill"></i>
+                    <span class="px-2">Mensagens</span>
+                  </small>
+                  <span class="translate-middle badge rounded-pill bg-danger" hidden>
+                                        1+<span class="visually-hidden"></span>
+                                    </span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                  <small>
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="px-2">Notificações</span>
+                  </small>
+                  <span class="translate-middle badge rounded-pill bg-danger" *ngIf="notificaoSemLer">
+                                        {{quantidadeSemLer}}+<span class="visually-hidden"></span>
+                                    </span>
+                </a>
+              </li>
+              <div class="dropdown-divider"></div>
+              <li>
+                <a class="dropdown-item" (click)="Deslogar()">
+                  <small>
+                    <i class="bi bi-box-arrow-in-left"></i>
+                    <span class="px-2">Sair</span>
+                  </small>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Notificações</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div *ngIf="listNotificacao.length > 0">
+              <div class="accordion" id="accordionExample" *ngFor="let item of listNotificacao">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button [class]="item.lido == 1 ? 'accordion-button collapsed': 'accordion-button collapsed NaoLido'" type="button" data-bs-toggle="collapse" attr.data-bs-target="#{{'accordion' + item.idNotificacao}}" aria-expanded="false" attr.aria-controls="{{'accordion' + item.idNotificacao}}" (click)="NotificacaoLida(item)">
+                      <i [class]="item.lido == 1 ? 'bi-envelope-fill m-2' : 'bi bi-envelope-open-fill m-2'"></i>
+                      <strong>{{item.titulo}}</strong>
+                    </button>
+                  </h2>
+                  <div [id]="'accordion' + item.idNotificacao" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      {{item.corpo}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center text-muted" *ngIf="listNotificacao.length == 0">
+              Você não possui notificações!
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-wrapper transition-all duration-150 ltr:ml-[248px] rtl:mr-[248px]" id="content_wrapper">
+      <div class="page-content">
+        <div class="transition-all duration-150 container-fluid" id="page_layout">
+          <div id="content_layout">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main> -->
+
+
+<!-- Vertical layout -->
+<app-vertical *ngIf="isVerticalLayoutRequested()"></app-vertical>
+
+<!-- Horizontal layout -->
+<app-horizontal *ngIf="isHorizontalLayoutRequested()"></app-horizontal>
+
+<!-- Two Columns layout -->
+<app-two-column *ngIf="isTwoColumnLayoutRequested()"></app-two-column>

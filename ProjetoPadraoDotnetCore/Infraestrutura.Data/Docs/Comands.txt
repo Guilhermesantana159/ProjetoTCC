@@ -1,8 +1,8 @@
 ﻿//Criar Migration
-dotnet ef migrations add Init
+dotnet ef migrations add ChangeCascadeTagTarefa
 
 //Remover ultimo migration
-dotnet ef migrations remove AddTableNotificacao
+dotnet ef migrations remove 
 
 //Update no banco
 dotnet ef database update

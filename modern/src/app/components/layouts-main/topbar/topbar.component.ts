@@ -204,7 +204,7 @@ export class TopbarComponent implements OnInit {
   }
 
   selectEvent(item: PageItem) { 
-    this.router.navigateByUrl('/main-dashboard/' + item.url);
+    this.router.navigateByUrl(item.url);
     this.auto.clear();
   }
 

@@ -181,4 +181,19 @@ public class ProjetoController : DefaultController
             return ResponderErro(e.Message);
         }
     }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("ConsultarAtividadeCronogramaPorProjeto/{idProjeto}")]
+    public JsonResult ConsultarAtividadeCronogramaPorProjeto(int idProjeto)
+    {
+        try
+        {
+            return ResponderSucesso(_app.ConsultarAtividadeCronogramaPorProjeto(idProjeto));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
 }

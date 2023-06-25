@@ -15,9 +15,6 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { defineElement } from 'lord-icon-element';
 import lottie from 'lottie-web';
 
-// Calendar package
-import { FullCalendarModule } from '@fullcalendar/angular';
-
 // Flat Picker
 import { FlatpickrModule } from 'angularx-flatpickr';
 // Simplebar
@@ -102,7 +99,6 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
     NgbPaginationModule,
     NgbCollapseModule,
     FeatherModule.pick(allIcons),
-    FullCalendarModule,
     FlatpickrModule.forRoot(),
     SimplebarAngularModule,
     CKEditorModule,

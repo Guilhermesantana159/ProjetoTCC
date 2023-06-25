@@ -55,6 +55,7 @@ import { NgbdListViewSortableHeaderAdministracaoTarefa } from './administracao-t
 import { TimeLineComponent } from './time-line/time-line.component';
 import { CronogramaGridComponent } from './cronograma/cronograma-grid/cronograma-grid.component';
 import { CronogramaComponent } from './cronograma/cronograma-crud/cronograma.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -110,6 +111,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         ComponentModule,   
         ReactiveFormsModule,
         FormsModule,
+        FullCalendarModule,
         MatChipsModule,
         MatTableModule,
         DragDropModule,

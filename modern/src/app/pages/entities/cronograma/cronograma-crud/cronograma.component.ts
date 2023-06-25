@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { CalendarOptions, EventClickArg, EventApi } from '@fullcalendar/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UntypedFormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
-import Swal from 'sweetalert2';
-import { category, createEventId } from './data';
-import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BaseService } from 'src/factorys/services/base.service';
+import { CronogramaResponse } from 'src/app/objects/Cronograma/CronogramaResponse';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'cronograma-root',
@@ -17,251 +17,141 @@ import { DatePipe } from '@angular/common';
 })
 
 export class CronogramaComponent implements OnInit {
+  
+  //Operação
   breadCrumbItems!: Array<{}>;
-  calendarEvents!: any[];
-  editEvent: any;
-  formEditData!: UntypedFormGroup;
+  calendarOptions: CalendarOptions = {}
+  calendarCor: string[] = [];
+  lAtividades: Array<any> = [];
   newEventDate: any;
-  category!: any[];
-  submitted = false;
+  editEvent: any;
+  loading = false;
+  @ViewChild('calendar')
+  calendarComponent!: FullCalendarComponent;
 
-  formData!: UntypedFormGroup;
-  @ViewChild('editmodalShow') editmodalShow!: TemplateRef<any>;
-  @ViewChild('modalShow') modalShow !: TemplateRef<any>;
-
-  constructor(private modalService: NgbModal, private formBuilder: UntypedFormBuilder,
-    private datePipe: DatePipe) { }
-
-  ngOnInit(): void {
-    /**
-     * BreadCrumb
-     */
-    this.breadCrumbItems = [
-      { label: 'Apps' },
-      { label: 'Calendar', active: true }
-    ];
-
-    // Validation
-    this.formData = this.formBuilder.group({
-      title: ['', [Validators.required]],
-      category: ['', [Validators.required]],
-      location: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      date: ['', Validators.required],
-      start: ['', Validators.required],
-      end: ['', Validators.required]
+  constructor(private toastr: ToastrService,private router: Router,private route: ActivatedRoute,private response: BaseService) { 
+    //Carregar as informações do banco
+    this.route.params.subscribe(params => {
+      //Load Edit
+      if(params['id'] != undefined){
+        this.consultarCronograma(params['id']);
+      }
     });
 
-    this._fetchData();
+    this.calendarOptions = {
+      plugins: [
+        interactionPlugin,
+        dayGridPlugin,
+        timeGridPlugin,
+        listPlugin,
+      ],
+      headerToolbar: {
+        left: 'dayGridMonth,dayGridWeek,dayGridDay',
+        center: 'title',
+        right: 'prevYear,prev,next,nextYear'
+      },
+      initialView: "dayGridMonth",
+      themeSystem: "bootstrap",
+      initialEvents: [],
+      weekends: true,
+      editable: false,
+      selectable: true,
+      selectMirror: true,
+      allDayText: '24 horas',
+      slotLabelFormat: 'HH:mm',
+      buttonText: {
+        today: 'Hoje',
+        month: 'Mês',
+        week: 'Semana',
+        day: 'Hoje',
+        listWeek: 'Lista'
+      },
+      dayMaxEvents: true,
+      locale: 'pt-br',
+      eventClick: this.handleEventClick.bind(this)
+    };
   }
 
-  /**
-   * Fetches the data
-   */
-  private _fetchData() {
-    // Event category
-    this.category = category;
-
-    //Calender: Event = Data;
-
-    // this.calendarEvents = calendarEvents;
-    // this.restApiService.getCalendarData().subscribe(
-    //   data => {
-    //     const users = JSON.parse(data);        
-    //     this.calendarEvents = users.data;   
-    //     this.calendarOptions.events = this.calendarEvents.map(
-    //       (evt:any) => {
-    //         return { date: evt.start, title: evt.title,className:evt.className,location:evt.location,description:evt.description }
-    //       })     
-    // });
-  }
-
-  calendarOptions: CalendarOptions = {
-    plugins: [
-      interactionPlugin,
-      dayGridPlugin,
-      timeGridPlugin,
-      listPlugin,
-    ],
-    headerToolbar: {
-      left: 'dayGridMonth,dayGridWeek,dayGridDay',
-      center: 'title',
-      right: 'prevYear,prev,next,nextYear'
-    },
-    initialView: "dayGridMonth",
-    themeSystem: "bootstrap",
-    initialEvents: this.calendarEvents,
-    weekends: true,
-    editable: true,
-    selectable: true,
-    selectMirror: true,
-    dayMaxEvents: true,
-    select: this.openModal.bind(this),
-    eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this)
-  };
-  currentEvents: EventApi[] = [];
-
-  openModal(event?: any) {
-    this.submitted = false;
-    this.newEventDate = event;
-    this.modalService.open(this.modalShow, { centered: true });
+  ngOnInit(): void {
+    this.breadCrumbItems = [
+      { label: 'Projeto' },
+      { label: 'Cronograma', active: true }
+    ];
   }
 
   handleEventClick(clickInfo: EventClickArg) {
     this.editEvent = clickInfo.event;
 
-    this.formEditData = this.formBuilder.group({
-      editTitle: clickInfo.event.title,
-      editCategory: clickInfo.event.classNames[0],
-      editlocation: clickInfo.event.extendedProps['location'],
-      editDescription: clickInfo.event.extendedProps['description'],
-      editDate: clickInfo.event.start,
-      editStart: clickInfo.event.start,
-      editEnd: clickInfo.event.end
-    });
-    this.modalService.open(this.editmodalShow, { centered: true });
-  }
-
-  handleEvents(events: EventApi[]) {
-    this.currentEvents = events;
-  }
-
-  closeEventModal() {
-    this.formData = this.formBuilder.group({
-      title: '',
-      category: '',
-      location: '',
-      description: '',
-      date: '',
-      start: '',
-      end: ''
-    });
-    this.modalService.dismissAll();
-  }
-
-
-  position() {
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: 'Event has been saved',
-      showConfirmButton: false,
-      timer: 1000,
-    });
-  }
-
-
-  Editposition() {
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: 'Event has been Updated',
-      showConfirmButton: false,
-      timer: 1000,
-    });
-  }
-
-  get form() {
-    return this.formData.controls;
-  }
-
-
-  saveEvent() {
-    if (this.formData.valid) {
-      const className = this.formData.get('category')!.value;
-      const title = this.formData.get('title')!.value;
-      const location = this.formData.get('location')!.value;
-      const description = this.formData.get('description')!.value
-      const date = this.formData.get('date')!.value
-      const starttime = this.formData.get('start')!.value;
-      const endtime = this.formData.get('end')!.value;
-      const yy = new Date(date).getFullYear();
-      const mm = new Date(date).getMonth() + 1;
-      const dd = new Date(date).getDate();
-
-      const start = new Date(mm + '-' + dd + '-' + yy);
-      start.setHours((starttime.split(' ')[0]).split(':')[0]);
-      start.setMinutes((starttime.split(' ')[0]).split(':')[1]);
-
-      const end = new Date(mm + '-' + dd + '-' + yy);
-      end.setHours((endtime.split(' ')[0]).split(':')[0]);
-      end.setMinutes((endtime.split(' ')[0]).split(':')[1]);
-      const calendarApi = this.newEventDate.view.calendar;
-
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        date,
-        start,
-        end,
-        location,
-        description,
-        className: className + ' ' + 'text-white'
-      });
-      this.position();
-      this.formData = this.formBuilder.group({
-        title: '',
-        category: '',
-        location: '',
-        description: '',
-        date: '',
-        start: '',
-        end: ''
-      });
-      this.modalService.dismissAll();
-    } else {
+    if(clickInfo.event.title == 'Início do projeto'
+    || clickInfo.event.title == 'Previsão término do projeto'){
+      return
     }
-    this.submitted = true;
+
+    this.router.navigate(['/main-dashboard/entities/time-line/' + clickInfo.event.id]);
   }
 
+  generateRandomColor(calendarCor: Array<string>): string {
+    let corInvalid = true;
+    let cor = '';
 
-  editEventSave() {
-    const editTitle = this.formEditData.get('editTitle')!.value;
-    const editCategory = this.formEditData.get('editCategory')!.value;
+    while(corInvalid){
+      cor = this.generateColor();
+      let includes = false;
 
-    const editId = this.calendarEvents.findIndex(
-      (x) => x.id + '' === this.editEvent.id + ''
-    );
+      calendarCor.forEach((element) => {
+        if(element = cor){
+          includes = true;
+          return
+        };
+      });
 
-    this.editEvent.setProp('title', editTitle);
-    this.editEvent.setProp('classNames', editCategory);
-
-    this.calendarEvents[editId] = {
-      ...this.editEvent,
-      title: editTitle,
-      id: this.editEvent.id,
-      classNames: editCategory,
-    };
-    this.Editposition();
-    this.formEditData = this.formBuilder.group({
-      editTitle: '',
-      editCategory: '',
-    });
-    this.modalService.dismissAll();
-  }
-
-
-  confirm() {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You won\'t be able to revert this!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#34c38f',
-      cancelButtonColor: '#f46a6a',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.value) {
-        this.deleteEventData();
-        Swal.fire('Deleted!', 'Event has been deleted.', 'success');
+      if(includes){
+        corInvalid = true;
+      }else{
+        corInvalid = false;
       }
+    }
+  
+    return cor;
+  }
+
+  generateColor(): string{
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+  
+    return `rgba(${r.toString()},${g.toString()},${b.toString()},1)`;
+  }
+
+  consultarCronograma(id: string){
+    this.loading = true;
+    this.response.Get("Projeto","ConsultarAtividadeCronogramaPorProjeto/" + id).subscribe(
+    (response: CronogramaResponse) =>{        
+      if(response.sucesso){
+        const calendarApi = this.calendarComponent.getApi();
+
+        //Inicio projeto
+        calendarApi.addEvent({start: new Date(response.data.dataInicio), title: 'Início do projeto'});
+
+        //Atividades
+        response.data.lAtividadeCronograma.forEach(element => {
+          let color = this.generateRandomColor(this.calendarCor);
+          let item = {id: element.idAtividade.toString(),start: new Date(element.dataInicio),
+            end:new Date(element.dataFim),title: element.nomeAtividade,textColor: color
+            ,color: color.replace(',1)',',0.3)'),allDay:true}
+          this.lAtividades.push(item);
+          calendarApi.addEvent(item);
+        });
+
+        //Fim Projeto
+        calendarApi.addEvent({start: new Date(response.data.dataFim), title: 'Previsão término do projeto'});
+      }
+      else
+      {
+        this.toastr.error(response.mensagem, 'Mensagem:');
+      }
+      this.loading = false;
     });
   }
 
-
-  deleteEventData() {
-    this.editEvent.remove();
-    this.modalService.dismissAll();
-  }
 }

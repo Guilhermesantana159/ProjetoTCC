@@ -109,7 +109,6 @@ export class TimeLineComponent{
             return acc;
           }, []);
 
-          console.log(this.timeLine)
         }
       );
     }});

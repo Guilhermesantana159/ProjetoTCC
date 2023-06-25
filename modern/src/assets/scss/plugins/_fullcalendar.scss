@@ -214,10 +214,12 @@
 }
 
 #external-events {
+    cursor: pointer !important;
     .external-event {
         text-align: left;
         padding: 8px 16px;
         margin: 6px 0;
+        cursor: pointer !important;
     }
 }
 
@@ -397,4 +399,8 @@ $value in $theme-colors {
     .fc-toolbar>*>:not(:first-child){
         margin-left: 0.75em;
     }
+}
+
+.fc-direction-ltr .fc-daygrid-event.fc-event-start, .fc-direction-rtl .fc-daygrid-event.fc-event-end {
+    cursor: pointer;
 }

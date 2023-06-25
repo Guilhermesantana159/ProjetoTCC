@@ -513,7 +513,7 @@ public class ProjetoApp : IProjetoApp
         if (atividade == null)
             throw new Exception("Atividade não encontrada!");
             
-        if (atividade?.Tarefas != null)
+        if (atividade.Tarefas != null)
         {
             foreach (var item in atividade.Tarefas)
             {
@@ -570,5 +570,28 @@ public class ProjetoApp : IProjetoApp
         }
 
         return retorno;
+    }
+
+    public CronogramaAtividadeResponse ConsultarAtividadeCronogramaPorProjeto(int idProjeto)
+    {
+        var projeto = _service.GetById(idProjeto);
+        
+        if (projeto == null)
+            throw new Exception("Não foi encontrado nenhum registro de projeto!");
+
+        return new CronogramaAtividadeResponse()
+        {
+            DataFim = projeto.DataFim.ToString("yyyy-M-d"),
+            DataInicio = projeto.DataInicio.ToString("yyyy-M-d"),
+            DescricaoProjeto = projeto.Titulo,
+            LAtividadeCronograma = AtividadeService.GetByIdProjeto(idProjeto)
+                .Select(x => new AtividadeCronogramaResponse()
+                {
+                  IdAtividade = x.IdAtividade,
+                  NomeAtividade = x.Titulo,
+                  DataInicio = x.DataInicial.ToString("yyyy-M-d"),
+                  DataFim = x.DataFim.ToString("yyyy-M-d "),
+                }).ToList()
+        };
     }
 }

@@ -75,7 +75,8 @@ export class CronogramaComponent implements OnInit {
   ngOnInit(): void {
     this.breadCrumbItems = [
       { label: 'Projeto' },
-      { label: 'Cronograma', active: true }
+      { label: 'Cronograma'},
+      { label: 'Cronograma do Projeto', active: true }
     ];
   }
 

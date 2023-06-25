@@ -24,8 +24,7 @@ export class CronogramaGridComponent{
 
     this.breadCrumbItems = [
       { label: 'Projeto'},
-      { label: 'Cronograma'},
-      { label: 'Cronograma do projeto', active: true }
+      { label: 'Cronograma', active: true }
     ];
 
     this.statusEnumProjeto = [

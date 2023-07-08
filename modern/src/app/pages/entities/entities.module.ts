@@ -56,6 +56,8 @@ import { TimeLineComponent } from './time-line/time-line.component';
 import { CronogramaGridComponent } from './cronograma/cronograma-grid/cronograma-grid.component';
 import { CronogramaComponent } from './cronograma/cronograma-crud/cronograma.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { TemplateCrudComponent } from './template/template-crud/template-crud.component';
+import { TemplateComponent } from './template/template-grid/template-grid.component';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -80,6 +82,8 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         KambamGridTarefasComponent,
         DetalhesTarefasComponent,
         CronogramaGridComponent,
+        TemplateComponent,
+        TemplateCrudComponent,
         CronogramaComponent,
         AdministracaoTarefasComponent,
         AdministracaoTarefasCrudComponent,
@@ -95,6 +99,8 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         RecoverPasswordComponent,
         RegisterComponent,
         MaintenanceComponent,
+        TemplateComponent,
+        TemplateCrudComponent,
         TimeLineComponent,
         ComingSoonComponent,
         CronogramaGridComponent,

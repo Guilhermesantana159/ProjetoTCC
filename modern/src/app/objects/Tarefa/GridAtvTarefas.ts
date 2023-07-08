@@ -1,13 +1,13 @@
 import { EStatusAtividade } from "src/app/enums/EStatusAtividade";
-import { Tarefa } from "./Tarefas";
 
 export interface GridAtvTarefas
 {
     idAtividade: number | undefined
     position: number,
     atividade: string,
+    escalaTempoAtividade: string | undefined,
     dataInicial: string,
     dataFim: string,
-    listTarefas: Array<Tarefa>,
-    statusAtividade: EStatusAtividade
+    listTarefas: Array<any>,
+    statusAtividade: EStatusAtividade | undefined
 }

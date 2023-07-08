@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UsuarioComponent } from './usuario/usuario-grid/usuario-grid.component';
 import { UsuarioCrudComponent } from './usuario/usuario-crud/usuario-crud.component';
-import { ComingSoonComponent } from './extrapages/coming-soon/coming-soon.component';
 import { MaintenanceComponent } from './extrapages/maintenance/maintenance.component';
 import { ProjetoComponent } from './projeto/projeto-grid/projeto-grid.component';
 import { ProjetoCrudComponent } from './projeto/projeto-crud/projeto-crud.component';
@@ -14,6 +13,8 @@ import { AdministracaoTarefasCrudComponent } from './administracao-tarefas/admin
 import { TimeLineComponent } from './time-line/time-line.component';
 import { CronogramaGridComponent } from './cronograma/cronograma-grid/cronograma-grid.component';
 import { CronogramaComponent } from './cronograma/cronograma-crud/cronograma.component';
+import { TemplateComponent } from './template/template-grid/template-grid.component';
+import { TemplateCrudComponent } from './template/template-crud/template-crud.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,22 @@ const routes: Routes = [
   { 
     path: 'projeto/:id/editar', 
     component: ProjetoCrudComponent 
+  },
+  { 
+    path: 'template', 
+    component: TemplateComponent,
+  },
+  { 
+    path: 'template/:id/editar', 
+    component: TemplateCrudComponent 
+  },
+  { 
+    path: 'template/:id/ver', 
+    component: TemplateCrudComponent 
+  },
+  { 
+    path: 'template/registro/novo', 
+    component: TemplateCrudComponent,
   },
   { 
     path: 'projeto/registro/novo', 

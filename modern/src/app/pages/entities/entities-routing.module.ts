@@ -15,6 +15,7 @@ import { CronogramaGridComponent } from './cronograma/cronograma-grid/cronograma
 import { CronogramaComponent } from './cronograma/cronograma-crud/cronograma.component';
 import { TemplateComponent } from './template/template-grid/template-grid.component';
 import { TemplateCrudComponent } from './template/template-crud/template-crud.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 const routes: Routes = [
@@ -94,6 +95,10 @@ const routes: Routes = [
   {
     path: "cronograma/:id",
     component: CronogramaComponent
+  },
+  {
+    path: "chat",
+    component: ChatComponent
   }
 ];
 

@@ -9,6 +9,7 @@ import { GridService } from 'src/app/components/data-grid/data-grid.service';
 import { RetornoPadrao } from 'src/app/objects/RetornoPadrao';
 import { GridOptions } from 'src/app/objects/Grid/GridOptions';
 import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'template-root',
@@ -21,7 +22,7 @@ export class TemplateComponent{
   breadCrumbItems!: Array<{}>;
 
   constructor(private gridService: GridService,public gridComponent: DataGridComponent,private toastr: ToastrService,
-    private router: Router,private response: BaseService){  
+    private router: Router,private response: BaseService,private formBuilder: FormBuilder){  
 
     this.breadCrumbItems = [
       { label: 'Projeto'},
@@ -31,17 +32,15 @@ export class TemplateComponent{
 
     this.gridOptions = {
         Parametros: {
-          Controller: 'Projeto',
-          Metodo: 'ConsultarGridProjeto',
+          Controller: 'Template',
+          Metodo: 'ConsultarGridTemplate',
           PaginatorSizeOptions: [10,15,20],
           PageSize: 10,
           MultiModal: false,
           UrlRelatorio: '',
           Modal: undefined,
           Params: {
-            IdUsuario: window.localStorage.getItem('IdUsuario'),
-            OnlyAbertos: false,
-            OnlyAdmin: true
+            IdUsuario: window.localStorage.getItem('IdUsuario')
           }
         },
         Colunas: [{
@@ -68,7 +67,7 @@ export class TemplateComponent{
                   ClassProperty: 'btn btn-sm btn-outline-info waves-effect waves-light',
                   Disabled: {
                     Disabled: undefined,
-                    PropertyDisabled: 'actionDisabled'
+                    PropertyDisabled: 'isView'
                   },
                   Hidden: {
                     Hidden: false,
@@ -87,7 +86,7 @@ export class TemplateComponent{
                   ClassProperty: 'btn btn-sm btn-outline-success waves-effect waves-light',
                   Disabled: {
                     Disabled: undefined,
-                    PropertyDisabled: 'disabledView'
+                    PropertyDisabled: 'isEdit'
                   },
                   Hidden: {
                     Hidden: false,
@@ -106,7 +105,7 @@ export class TemplateComponent{
                   ClassProperty: 'btn btn-sm btn-outline-danger waves-effect waves-light',
                   Disabled: {
                     Disabled: undefined,
-                    PropertyDisabled: ''
+                    PropertyDisabled: 'isView'
                   },
                   Hidden: {
                     Hidden: false,
@@ -137,7 +136,7 @@ export class TemplateComponent{
           CellImage: undefined,
         },
         {
-          Field: 'template',
+          Field: 'titulo',
           DisplayName: 'Template',
           CellTemplate: undefined,
           ActionButton: undefined,
@@ -227,7 +226,7 @@ export class TemplateComponent{
   }
 
   Deletar(data: any){
-    this.response.Post("Template","Deletar",{IdTemplate: data.idTemplate}).subscribe(
+    this.response.Post("Template","DeletarTemplate/" + data.idTemplate,{}).subscribe(
       (response: RetornoPadrao) =>{        
         if(response.sucesso){
           this.toastr.success(response.mensagem, 'Mensagem:');

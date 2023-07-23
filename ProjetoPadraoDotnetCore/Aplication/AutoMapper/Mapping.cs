@@ -1,6 +1,8 @@
-﻿using Aplication.Models.Request.ModuloMenu;
+﻿using Aplication.Models.Request.Chat;
+using Aplication.Models.Request.ModuloMenu;
 using Aplication.Models.Request.Projeto;
 using Aplication.Models.Request.Tarefa;
+using Aplication.Models.Request.Template;
 using Aplication.Models.Request.Usuario;
 using Aplication.Models.Response.Projeto;
 using Aplication.Models.Response.Usuario;
@@ -43,7 +45,7 @@ public class Mapping : Profile
                 map => map.MapFrom(src => new HashCripytograph().Hash(src.Senha)));
 
         CreateMap<Usuario, UsuarioGridReportObj>();
-            
+
         #endregion
 
         #region SubModuloMenu
@@ -101,6 +103,38 @@ public class Mapping : Profile
             .ForMember(dst => dst.DataCadastro,
                 map => map.MapFrom(src => DateTime.Now));
         
+        #endregion
+
+        #region Chat
+
+        CreateMap<ContatoRequest, ContatoChat>()
+            .ForMember(dst => dst.StatusContato,
+                map => map.MapFrom(src => StatusContato.Disponivel))
+            .ForMember(dst => dst.DataCadastro,
+                map => map.MapFrom(src => DateTime.Now));
+        
+        #endregion
+
+        #region Template
+
+        CreateMap<TemplateRequest, Template>()
+            .ForMember(dst => dst.LAtividadesTemplate,map => map.MapFrom(src => src.LAtividade))
+            .ForMember(dst => dst.DataCadastro,map => map.MapFrom(src => DateTime.Now));
+
+        CreateMap<AtividadeTemplateRequest, AtividadeTemplate>();
+        
+        CreateMap<TarefaTemplateRequest, TarefaTemplate>()
+            .ForMember(dst => dst.TagTarefaTemplate,
+                map => map.MapFrom(src => src.LTagsTarefa));
+        
+        CreateMap<string, TagTarefaTemplate>()
+            .ForMember(dst => dst.Descricao,
+                map => map.MapFrom(src => src));
+        
+        CreateMap<CategoriaRequest, CategoriaTemplate>()            
+            .ForMember(dst => dst.DataCadastro,
+            map => map.MapFrom(src => DateTime.Now));
+
         #endregion
     }
 }

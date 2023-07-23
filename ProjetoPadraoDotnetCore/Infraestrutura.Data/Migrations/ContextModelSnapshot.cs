@@ -53,6 +53,61 @@ namespace Infraestrutura.Migrations
                     b.ToTable("Atividade", (string)null);
                 });
 
+            modelBuilder.Entity("Infraestrutura.Entity.AtividadeTemplate", b =>
+                {
+                    b.Property<int?>("IdAtvidadeTemplate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdAtvidadeTemplate"), 1L, 1);
+
+                    b.Property<int?>("IdTemplate")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Posicao")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TempoPrevisto")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdAtvidadeTemplate");
+
+                    b.HasIndex("IdTemplate");
+
+                    b.ToTable("AtividadeTemplate", (string)null);
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.CategoriaTemplate", b =>
+                {
+                    b.Property<int?>("IdCategoriaTemplate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdCategoriaTemplate"), 1L, 1);
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IdUsuarioCadastro")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdCategoriaTemplate");
+
+                    b.HasIndex("IdUsuarioCadastro");
+
+                    b.ToTable("CategoriaTemplate", (string)null);
+                });
+
             modelBuilder.Entity("Infraestrutura.Entity.ComentarioTarefa", b =>
                 {
                     b.Property<int?>("IdComentarioTarefa")
@@ -81,6 +136,35 @@ namespace Infraestrutura.Migrations
                     b.HasIndex("IdUsuario");
 
                     b.ToTable("ComentarioTarefa", (string)null);
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.ContatoChat", b =>
+                {
+                    b.Property<int?>("IdContatoChat")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdContatoChat"), 1L, 1);
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdUsuarioCadastro")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuarioContato")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StatusContato")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdContatoChat");
+
+                    b.HasIndex("IdUsuarioCadastro");
+
+                    b.HasIndex("IdUsuarioContato");
+
+                    b.ToTable("ContatoChat", (string)null);
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Menu", b =>
@@ -320,7 +404,7 @@ namespace Infraestrutura.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdTarefa")
+                    b.Property<int?>("IdTarefa")
                         .HasColumnType("int");
 
                     b.HasKey("IdTagTarefa");
@@ -328,6 +412,28 @@ namespace Infraestrutura.Migrations
                     b.HasIndex("IdTarefa");
 
                     b.ToTable("TagTarefa", (string)null);
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.TagTarefaTemplate", b =>
+                {
+                    b.Property<int>("IdTagTarefaTemplate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTagTarefaTemplate"), 1L, 1);
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IdTarefaTemplate")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdTagTarefaTemplate");
+
+                    b.HasIndex("IdTarefaTemplate");
+
+                    b.ToTable("TagTarefaTemplate", (string)null);
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Tarefa", b =>
@@ -361,6 +467,34 @@ namespace Infraestrutura.Migrations
                     b.ToTable("Tarefa", (string)null);
                 });
 
+            modelBuilder.Entity("Infraestrutura.Entity.TarefaTemplate", b =>
+                {
+                    b.Property<int>("IdTarefaTemplate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTarefaTemplate"), 1L, 1);
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescricaoTarefa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdAtividadeTemplate")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Prioridade")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdTarefaTemplate");
+
+                    b.HasIndex("IdAtividadeTemplate");
+
+                    b.ToTable("TarefaTemplate", (string)null);
+                });
+
             modelBuilder.Entity("Infraestrutura.Entity.TarefaUsuario", b =>
                 {
                     b.Property<int?>("IdTarefa")
@@ -374,6 +508,48 @@ namespace Infraestrutura.Migrations
                     b.HasIndex("IdUsuario");
 
                     b.ToTable("TarefaUsuario", (string)null);
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.Template", b =>
+                {
+                    b.Property<int>("IdTemplate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTemplate"), 1L, 1);
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Escala")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Foto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IdTemplateCategoria")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuarioCadastro")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantidadeTotal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdTemplate");
+
+                    b.HasIndex("IdTemplateCategoria");
+
+                    b.HasIndex("IdUsuarioCadastro");
+
+                    b.ToTable("Template", (string)null);
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Usuario", b =>
@@ -497,6 +673,27 @@ namespace Infraestrutura.Migrations
                     b.Navigation("ProjetoFk");
                 });
 
+            modelBuilder.Entity("Infraestrutura.Entity.AtividadeTemplate", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.Template", "Template")
+                        .WithMany("LAtividadesTemplate")
+                        .HasForeignKey("IdTemplate")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.CategoriaTemplate", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioCadastro")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioCadastro")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("UsuarioCadastro");
+                });
+
             modelBuilder.Entity("Infraestrutura.Entity.ComentarioTarefa", b =>
                 {
                     b.HasOne("Infraestrutura.Entity.Tarefa", "Tarefa")
@@ -514,6 +711,25 @@ namespace Infraestrutura.Migrations
                     b.Navigation("Tarefa");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.ContatoChat", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioCadastro")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioCadastro")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioContato")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioContato")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("UsuarioCadastro");
+
+                    b.Navigation("UsuarioContato");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Menu", b =>
@@ -595,10 +811,19 @@ namespace Infraestrutura.Migrations
                     b.HasOne("Infraestrutura.Entity.Tarefa", "Tarefa")
                         .WithMany("TagTarefa")
                         .HasForeignKey("IdTarefa")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Tarefa");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.TagTarefaTemplate", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.TarefaTemplate", "TarefaTemplate")
+                        .WithMany("TagTarefaTemplate")
+                        .HasForeignKey("IdTarefaTemplate")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
+                    b.Navigation("TarefaTemplate");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Tarefa", b =>
@@ -610,6 +835,17 @@ namespace Infraestrutura.Migrations
                         .IsRequired();
 
                     b.Navigation("AtividadeFk");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.TarefaTemplate", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.AtividadeTemplate", "AtividadeTemplate")
+                        .WithMany("LTarefaTemplate")
+                        .HasForeignKey("IdAtividadeTemplate")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AtividadeTemplate");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.TarefaUsuario", b =>
@@ -630,6 +866,24 @@ namespace Infraestrutura.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("Infraestrutura.Entity.Template", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.CategoriaTemplate", "CategoriaTemplate")
+                        .WithMany()
+                        .HasForeignKey("IdTemplateCategoria")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioCadastro")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioCadastro")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CategoriaTemplate");
+
+                    b.Navigation("UsuarioCadastro");
+                });
+
             modelBuilder.Entity("Infraestrutura.Entity.Usuario", b =>
                 {
                     b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioFk")
@@ -642,6 +896,11 @@ namespace Infraestrutura.Migrations
             modelBuilder.Entity("Infraestrutura.Entity.Atividade", b =>
                 {
                     b.Navigation("Tarefas");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.AtividadeTemplate", b =>
+                {
+                    b.Navigation("LTarefaTemplate");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Modulo", b =>
@@ -668,6 +927,16 @@ namespace Infraestrutura.Migrations
                     b.Navigation("TagTarefa");
 
                     b.Navigation("TarefaUsuario");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.TarefaTemplate", b =>
+                {
+                    b.Navigation("TagTarefaTemplate");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.Template", b =>
+                {
+                    b.Navigation("LAtividadesTemplate");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Usuario", b =>

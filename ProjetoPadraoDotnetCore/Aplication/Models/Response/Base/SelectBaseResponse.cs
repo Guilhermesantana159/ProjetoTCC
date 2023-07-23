@@ -2,6 +2,11 @@
 
 public class SelectBaseResponse 
 { 
-    public string Description { get; set; } = null!;
+    public List<SelectBase>? LSelectBase { get; set; }
+}
+
+public class SelectBase
+{
+    public string? Description { get; set; } = null!;
     public int Value { get; set; }
 }

@@ -67,7 +67,6 @@ export class KanbanColumnComponent {
             if(!response.sucesso){
               this.toastr.error('<small>' + response.mensagem + '</small>', 'Mensagem:');
             }
-            debugger  
           }
         );
       } 

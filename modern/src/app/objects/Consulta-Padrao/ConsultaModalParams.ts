@@ -8,6 +8,7 @@ export interface ConsultaModalParams
     Class: string,
     Required: boolean,
     GridOptions: GridOptions,
+    OnlyButton: boolean,
     SelectedText: string,
     SelectedValue: string 
 }

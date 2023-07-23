@@ -86,7 +86,8 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       Required: true,
       GridOptions: defaultService.Modal.ConsultaPadraoUsuario,
       SelectedText: '',
-      SelectedValue: ''
+      SelectedValue: '',
+      OnlyButton: false
     };
 
     this.ProjetoRegisterFormGroup = this.formBuilder.group({

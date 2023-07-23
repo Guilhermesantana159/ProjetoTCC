@@ -10,14 +10,15 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import { MatTableDataSource } from '@angular/material/table';
 import { GridAtvTarefas } from 'src/app/objects/Tarefa/GridAtvTarefas';
 import { TarefaEquipe } from 'src/app/objects/Projeto/GridTarefaEquipe';
-import { ProjetoRequest, AtividadeRequest } from 'src/app/objects/Projeto/ProjetoRequest';
 import { RetornoPadrao } from 'src/app/objects/RetornoPadrao';
 import { BaseOptions, SelectPadrao } from 'src/app/objects/Select/SelectPadrao';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { ProjetoResponse } from 'src/app/objects/Projeto/ProjetoResponse';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {CdkDragDrop,moveItemInArray,transferArrayItem,CdkDrag,} from '@angular/cdk/drag-drop';
+import {CdkDragDrop,moveItemInArray,transferArrayItem,} from '@angular/cdk/drag-drop';
+import { Cronograma } from 'src/app/objects/Template/Cronograma';
+import { AtividadeTemplateRequest, TemplateRequest } from 'src/app/objects/Template/TemplateRequest';
+import { TemplateResponse } from 'src/app/objects/Template/TemplateResponse';
 
 @Component({
   selector: 'template-crud-root',
@@ -68,18 +69,19 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
   index: any;
 
   //CronoGrama
-  lCrongrama = [];
+  itemMovido!: GridAtvTarefas | undefined;
+
 
   constructor(private formBuilder: FormBuilder,private modalService: NgbModal,private response: BaseService,private defaultService: DefaultService,private router: Router,
     private route: ActivatedRoute,private toastr: ToastrService,private changeDetectorRef: ChangeDetectorRef) {    
     
     this.TemplateRegisterFormGroup = this.formBuilder.group({
-      idProjeto: [undefined],
+      idTemplate: [undefined],
       titulo: [undefined, [Validators.required]],
       escalaTempo: ["0", [Validators.required]],
       quantidade: [undefined, [Validators.required]],
       categoria: ["0", [Validators.required]],      
-      newCategoria: [undefined, [Validators.required]],      
+      newCategoria: [undefined],      
       descricao: [undefined, [Validators.required]],     
       foto: [undefined],
       idUsuarioCadastro: [undefined],
@@ -114,48 +116,78 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
           response.data.forEach(element => {
            this.optionsCategoria.push(element);    
           });
+
+          this.route.params.subscribe(params => {
+            if(params['id'] != undefined){
+              this.loading = true;
+              this.response.Get("Template","ConsultarViaId/" + params['id']).subscribe(
+              (response: TemplateResponse) =>{        
+                if(response.sucesso){
+                  this.IsNew = false;
+                  this.loading = false;
+                  this.disabledAll = response.data.idUsuarioCadastro != this.IdUsuarioLogado;
+                  this.TemplateRegisterFormGroup.patchValue(response.data);
+
+                  //Parte do cronograma
+                  this.lCronograma = [];
+                  this.lAtividadesCronograma = [];
+
+                  for (let index = 1; index <= response.data.quantidade; index++) {
+                    this.lCronograma.push({
+                      id: index,
+                      title: (this.TemplateRegisterFormGroup.get('escalaTempo')?.value == "0" ? 'Dia ' : 'Semana ')  + index.toString(),
+                      listAtividades: []
+                    });
+                  }
+      
+                  response.data.lAtividade.forEach(element => {
+                    this.position = this.position + 1;
+      
+                    let GridAtvTarefas:GridAtvTarefas = {
+                      position: this.position,
+                      idAtividade: undefined,
+                      atividade: element.titulo,
+                      escalaTempoAtividade: element.tempoPrevisto.toString(),
+                      dataInicial: '',
+                      dataFim: '',
+                      listTarefas: element.lTarefaTemplate,
+                      statusAtividade: undefined
+                    }
+                    this.dataSource.data.push(GridAtvTarefas);
+                    this.dataSource.filter = "";  
+                    
+                    //Posicionar primeiro
+                    let posicao = element.posicao - 1;
+                    this.lCronograma[posicao].listAtividades.push(GridAtvTarefas);
+
+                    let tempo = element.tempoPrevisto;
+                    if(tempo <= (this.lCronograma.length - posicao)){
+                      let itensTamanho = (tempo - 1)
+                      for (let index = 1; index <= itensTamanho; index++) {
+                        this.lCronograma[posicao + index].listAtividades.push(GridAtvTarefas);
+                      }
+                    }
+                  });
+
+                  if(this.disabledAll){
+                    this.toastr.info('Você está no modo visualização!', 'Mensagem:');
+                    return;
+                  }
+                }
+                else{
+                  this.toastr.error(response.mensagem, 'Mensagem:');
+                }
+      
+              this.loading = false;
+            });
+          }else{
+            this.disabledAll = false;
+          }});
         }
         else{
           this.toastr.error(response.mensagem, 'Mensagem:');
         }
     });
-
-    this.route.params.subscribe(params => {
-      //Load Edit
-      if(params['id'] != undefined){
-        this.loading = true;
-
-        this.response.Get("Projeto","ConsultarViaId/" + params['id']).subscribe(
-        (response: ProjetoResponse) =>{        
-          if(response.sucesso){
-            this.IsNew = false;
-            this.TemplateRegisterFormGroup.patchValue(response.data);
-
-            response.data.listAtividade.forEach(element => {
-              this.position = this.position + 1;
-              element.position = this.position;
-              this.dataSource.data.push(element);
-              this.dataSource.filter = "";          
-            });
-
-            if(response.data.status == 1 || response.data.status == 2){
-              this.disabledAll = true;
-              this.toastr.info('<small>O cadastro de projeto está no modo visualização!</small>', 'Mensagem:');
-            }
-            else{
-              this.disabledAll = false;
-            }
-
-          }
-          else{
-            this.toastr.error(response.mensagem, 'Mensagem:');
-          }
-
-        this.loading = false;
-      });
-    }else{
-      this.disabledAll = false;
-    }});
   }
 
   ngOnDestroy() {
@@ -169,7 +201,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
     this.loading = true;
     this.submitRegister = true;
 
-    if(this.TemplateRegisterFormGroup.invalid){
+    if(form.invalid){
       this.loading = false;
       this.toastr.error('<small>Preencha os campos corretamente no formulário!</small>', 'Mensagem:');
       return;
@@ -177,95 +209,76 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
 
     if(this.dataSource.data.length == 0){
       this.loading = false;
-      this.toastr.error('<small>Cadastre no mínimo uma atividade para seu projeto!</small>', 'Mensagem:');
+      this.toastr.error('<small>Cadastre no mínimo uma atividade para seu template!</small>', 'Mensagem:');
+      return;
+    }
+
+    if(this.lAtividadesCronograma.length > 0){
+      this.loading = false;
+      this.toastr.error('<small>Relacione todas as atividades a um cronogroma!</small>', 'Mensagem:');
+      return;
+    }
+
+    if(this.TemplateRegisterFormGroup.get('categoria')?.value == "0" && 
+    (this.TemplateRegisterFormGroup.get('newCategoria')?.value == undefined || (this.TemplateRegisterFormGroup.get('newCategoria')?.value == ""))){
+      this.loading = false;
+      this.toastr.error('<small>Selecione ou cadastre uma nova categoria!</small>', 'Mensagem:');
       return;
     }
 
     //Formatação para Save
-    let projetoRequest:ProjetoRequest = {
-      IdProjeto: form.get('idProjeto')?.value,
-      Titulo: form.get('titulo')?.value,
-      DataInicio: form.get('dataInicio')?.value,
-      DataFim: form.get('dataFim')?.value,
-      Descricao: form.get('descricao')?.value,
-      ListarParaParticipantes: form.get('listarAtvProjeto')?.value,
-      Atividade: [],
-      IdUsuarioCadastro: this.IdUsuarioLogado,
-      Tarefa: [],
-      Foto: form.get('foto')?.value
+    let templateRequest:TemplateRequest = {
+      IdTemplate: this.TemplateRegisterFormGroup.get('idTemplate')?.value,
+      Titulo: this.TemplateRegisterFormGroup.get('titulo')?.value,
+      Descricao: this.TemplateRegisterFormGroup.get('descricao')?.value,
+      QuantidadeTotal: parseInt(this.TemplateRegisterFormGroup.get('quantidade')?.value),
+      IdTemplateCategoria: parseInt(this.TemplateRegisterFormGroup.get('categoria')?.value),
+      Escala: parseInt(this.TemplateRegisterFormGroup.get('escalaTempo')?.value),
+      DescricaoCategoriaNova: this.TemplateRegisterFormGroup.get('newCategoria')?.value,
+      IdUsuarioCadastro: parseInt(localStorage.getItem('IdUsuario') ?? '0'),
+      Foto: this.TemplateRegisterFormGroup.get('foto')?.value,
+      LAtividade: []
     }
 
     //Atividade
     this.dataSource.data.forEach(function(element){
-      //Formatacao data
-      let dataInicial:any = element.dataInicial.split("/"); 
-      let dataFim:any = element.dataFim.split("/");
-
-      let Atv:AtividadeRequest = {
-        IdAtividade: element.idAtividade,
-        StatusAtividade: element.statusAtividade == undefined ? 0 : element.statusAtividade,
-        Atividade: element.atividade,
-        DataInicial: new Date(dataInicial[2], dataInicial[1]-1, dataInicial[0]),
-        DataFim:  new Date(dataFim[2], dataFim[1]-1, dataFim[0]),
-        ListTarefas: element.listTarefas
+      let Atv:AtividadeTemplateRequest = {
+        TempoPrevisto: parseInt(element.escalaTempoAtividade ?? '0'),
+        IdTemplate: templateRequest.IdTemplate,
+        Titulo: element.atividade,
+        Posicao: 0,
+        LTarefaTemplate: []
       };
+
+      element.listTarefas.forEach(element => {
+        element.prioridade = parseInt(element.prioridade ?? '0');
+        Atv.LTarefaTemplate.push(element);
+      });
       
-      projetoRequest.Atividade.push(Atv);
+      templateRequest.LAtividade.push(Atv);
     });
 
-
-    if(this.IsNew){
-      this.response.Post("Projeto","Cadastrar",projetoRequest).subscribe(
-        (response: RetornoPadrao) =>{        
-          if(response.sucesso){
-            this.toastr.success(response.mensagem, 'Mensagem:');
-            this.router.navigateByUrl('/main-dashboard/entities/projeto')
-          }else{
-            this.toastr.error(response.mensagem, 'Mensagem:');
-          }
-          this.loading = false;
+    templateRequest.LAtividade.forEach(atividade => {
+      this.lCronograma.forEach(cronograma => {
+        if(cronograma.listAtividades.findIndex(x => x.atividade == atividade.Titulo) != -1 && atividade.Posicao == 0){
+          atividade.Posicao = cronograma.id;
         }
-      );
-    }else{
-      this.response.Post("Projeto","Editar",projetoRequest).subscribe(
-        (response: RetornoPadrao) =>{        
-          if(response.sucesso){
-            this.toastr.success(response.mensagem, 'Mensagem:');
-            this.router.navigateByUrl('/main-dashboard/entities/projeto')
-          }else{
-            this.toastr.error(response.mensagem, 'Mensagem:');
-          }
-          this.loading = false;
+      });
+  
+    });
+
+    this.response.Post("Template","IntegrarTemplate",templateRequest).subscribe(
+      (response: RetornoPadrao) =>{        
+        if(response.sucesso){
+          this.toastr.success(response.mensagem, 'Mensagem:');
+          this.router.navigateByUrl('/main-dashboard/entities/template')
+        }else{
+          this.toastr.error(response.mensagem, 'Mensagem:');
         }
-      );
-    }
-  };
-
-  VerificarValor(){
-    let value = parseInt(this.TemplateRegisterFormGroup.get('quantidade')?.value);
-    let escala = this.TemplateRegisterFormGroup.get('escalaTempo')?.value == "0" ? 'dias' : 'semanas' 
-
-    for (let index = 0; index < this.dataSource.data.length; index++) {
-      if(parseInt(this.dataSource.data[index].escalaTempoAtividade ?? '0') > value){
-        this.dataSource.data[index].escalaTempoAtividade = value.toString();
-        this.dataSource.filter = "";
+        this.loading = false;
       }
-    }    
-
-
-    if(value > 999){
-      this.TemplateRegisterFormGroup.get('quantidade')?.setValue(999);
-      this.toastr.warning('<small>Valor máximo de '+ escala +' é 999!</small>', 'Mensagem:');
-      return
-    }
-
-    let valueAtividade = parseInt(this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.value);
-    if(valueAtividade > value){
-      this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.setValue(value);
-      this.toastr.warning('<small>Valor inválido: Este valor ultrapassa a quantidade máxima de '+ escala +' cadastrada para o template!</small>', 'Mensagem:');
-      return
-    }
-  }
+    );
+  };
 
   //Aba Atvidades/Tarefas
   AdicionarGridAtividade(form:FormGroup){
@@ -281,6 +294,12 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
       this.toastr.error('<small>Preencha o período estimado do template para adicionar uma atividade!</small>', 'Mensagem:');
       return;
     }
+
+    if(parseInt(this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.value ?? '0') <= 0){
+      this.toastr.error('<small>Duração de tempo da atividade inválido!</small>', 'Mensagem:');
+      return;
+    }
+
 
     var objAtv:GridAtvTarefas = {
       idAtividade: form.get('idAtividade')?.value,
@@ -321,6 +340,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
       }
 
       this.dataSource.data.push(objAtv);
+      this.lAtividadesCronograma.push(objAtv)
     }
     else{
       this.dataSource.data.forEach(element => {
@@ -339,6 +359,33 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
         if(this.dataSource.data[index].position == objAtv.position){          
           this.dataSource.data[index] = objAtv;
           this.dataSource.filter = "";
+          break;
+        } 
+      }
+
+      //Estando na aba semanas ou dias
+      let repetidos = 0;
+      this.lCronograma.forEach(element => {
+        for (let index = 0; index < element.listAtividades.length; index++) {
+          if(element.listAtividades[index].position == objAtv.position){
+            element.listAtividades[index].escalaTempoAtividade = objAtv.escalaTempoAtividade;
+            element.listAtividades[index].atividade = objAtv.atividade;
+            element.listAtividades[index].listTarefas = objAtv.listTarefas;
+
+            repetidos = repetidos + 1;
+
+            if(repetidos > parseInt(objAtv.escalaTempoAtividade ?? '0')){
+              element.listAtividades.splice(index,1)
+            }
+          }
+          
+        }
+      });
+
+      //Estando na aba atividades
+      for (let index = 0; index < this.lAtividadesCronograma.length; index++) {
+        if(this.dataSource.data[index].position == objAtv.position){          
+          this.lAtividadesCronograma[index] = objAtv;
           break;
         } 
       }
@@ -362,6 +409,24 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
       }
     }    
 
+    //Estando na aba semanas ou dias
+    this.lCronograma.forEach(element => {
+      for (let index = 0; index < element.listAtividades.length; index++) {
+        if(element.listAtividades[index].position == Atv.position){
+          element.listAtividades.splice(index,1);
+          break
+        }
+      }
+    });
+
+    //Estando na aba atividades
+    for (let index = 0; index < this.lAtividadesCronograma.length; index++) {
+      if(this.lAtividadesCronograma[index].position == Atv.position){          
+        this.lAtividadesCronograma.splice(index,1);
+        break
+      } 
+    }
+
     //Reset Campos
     this.ResetarCamposAtividades();
   }
@@ -379,7 +444,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
     this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.setValue(Atv.escalaTempoAtividade);
     
     Atv.listTarefas.forEach(element => {
-      this.lTarefa.push({descricao:element.descricao,idTarefa: element.idTarefa});
+      this.lTarefa.push({descricao:element.descricao,idTarefa: element.idTarefa,prioridade: element.prioridade,lTagsTarefa: element.lTagsTarefa,descricaoTarefa: element.descricaoTarefa});
     });
   };
 
@@ -401,7 +466,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
     const value = (event.value || '').trim();
 
     if (value) {
-      this.lTarefa.push({descricao:value,idTarefa: undefined});
+      this.lTarefa.push({descricao:value,idTarefa: undefined,prioridade: '0',lTagsTarefa:[],descricaoTarefa: undefined});
     }
 
     event.chipInput!.clear();
@@ -545,28 +610,173 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
     this.ltags = [];
   }
 
-  //Cronograma
-  items = ['Carrots', 'Tomatoes', 'Onions', 'Apples', 'Avocados'];
+  VerificarValor(){
+    if(this.TemplateRegisterFormGroup.get('quantidade')?.value == "e" || this.TemplateRegisterFormGroup.get('quantidade')?.value == undefined){
+      this.TemplateRegisterFormGroup.get('quantidade')?.setValue(undefined);
+      return
+    }
 
-  drop(event: CdkDragDrop<string[]>) {
+    let value = parseInt(this.TemplateRegisterFormGroup.get('quantidade')?.value);
+    let escala = this.TemplateRegisterFormGroup.get('escalaTempo')?.value == "0" ? 'dias' : 'semanas' 
+
+    for (let index = 0; index < this.dataSource.data.length; index++) {
+      if(parseInt(this.dataSource.data[index].escalaTempoAtividade ?? '0') > value){
+        this.dataSource.data[index].escalaTempoAtividade = value.toString();
+        this.dataSource.filter = "";
+      }
+    }    
+
+    if(value > 999){
+      this.TemplateRegisterFormGroup.get('quantidade')?.setValue(999);
+      this.toastr.warning('<small>Valor máximo de '+ escala +' é 999!</small>', 'Mensagem:');
+      return
+    }
+
+    let valueAtividade = parseInt(this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.value);
+    if(valueAtividade > value){
+      this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.setValue(value);
+      this.toastr.warning('<small>Valor inválido: Este valor ultrapassa a quantidade máxima de '+ escala +' cadastrada para o template!</small>', 'Mensagem:');
+    }
+
+    //Parte do cronograma
+    if(this.lCronograma.length == 0){
+      for (let index = 1; index <= value; index++) {
+        this.lCronograma.push({
+          id: index,
+          title: (this.TemplateRegisterFormGroup.get('escalaTempo')?.value == "0" ? 'Dia ' : 'Semana ')  + index.toString(),
+          listAtividades: []
+        });
+      }
+    }else{
+      this.lCronograma = [];
+      this.lAtividadesCronograma = [];
+
+      for (let index = 1; index <= value; index++) {
+        this.lCronograma.push({
+          id: index,
+          title: (this.TemplateRegisterFormGroup.get('escalaTempo')?.value == "0" ? 'Dia ' : 'Semana ')  + index.toString(),
+          listAtividades: []
+        });
+      }
+      
+      this.dataSource.data.forEach(element => {
+        this.lAtividadesCronograma.push(element);
+      });
+
+    }
+  }
+
+  verficaValorAtividade(){
+    if(this.TemplateRegisterFormGroup.get('quantidade')?.value == "e" || this.TemplateRegisterFormGroup.get('quantidade')?.value == undefined){
+      this.TemplateRegisterFormGroup.get('quantidade')?.setValue(undefined);
+      return
+    }
+
+    let value = parseInt(this.TemplateRegisterFormGroup.get('quantidade')?.value);
+    let escala = this.TemplateRegisterFormGroup.get('escalaTempo')?.value == "0" ? 'dias' : 'semanas' 
+
+    let valueAtividade = parseInt(this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.value);
+    if(valueAtividade > value){
+      this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.setValue(value);
+      this.toastr.warning('<small>Valor inválido: Este valor ultrapassa a quantidade máxima de '+ escala +' cadastrada para o template!</small>', 'Mensagem:');
+      return
+    }
+  }
+
+  //Cronograma
+  lCronograma:Array<Cronograma> = [];
+  lAtividadesCronograma: Array<any> = [];
+
+  drop(event: CdkDragDrop<Cronograma[]>) {
+    if(this.disabledAll){
+      this.toastr.warning('Não é possível editar o cronograma em modo visualização!', 'Mensagem:');
+      return;
+    }
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
+    }
+    else if (event.previousContainer.id != "Atividades" && event.container.id != "Atividades") {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
+      let oldList: Array<GridAtvTarefas> = [];
+      let containerId = parseInt(event.container.id);
+      this.itemMovido = undefined;
+
+      //Remover
+      if (event.container.id == "Atividades") {
+        containerId = parseInt(event.previousContainer.id);
+
+        this.lCronograma[containerId].listAtividades.forEach(element => {
+          oldList.push(element);
+        });
+  
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );    
+  
+        this.lAtividadesCronograma.forEach(element => {
+          if(this.lCronograma[containerId].listAtividades.findIndex(x => x.position == element.position) == -1){
+            this.itemMovido = element;
+          }
+        });
+
+        if(this.lCronograma[containerId].listAtividades.length == 0){
+          this.itemMovido = oldList[0];
+        }
+
+        this.lCronograma.forEach(element => {
+          for (let index = 0; index < element.listAtividades.length; index++) {
+            if(element.listAtividades[index].atividade == this.itemMovido?.atividade){
+              element.listAtividades.splice(index,1);
+            }
+          }
+        });
+
+        return;
+      }
+
+      if(this.lAtividadesCronograma.length == 1){
+        this.itemMovido = this.lAtividadesCronograma[0];
+      }
+
+      this.lAtividadesCronograma.forEach(element => {
+        oldList.push(element);
+      });
+
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
+
+      oldList.forEach(element => {
+        if(this.lAtividadesCronograma.findIndex(x => x.position == element.position) == -1){
+          this.itemMovido = element;
+        }
+      });
+
+      let tempo = parseInt(this.itemMovido?.escalaTempoAtividade ?? '0')
+      if(tempo <= (this.lCronograma.length - containerId)){
+        let itensTamanho = (tempo - 1)
+        for (let index = 1; index <= itensTamanho; index++) {
+          this.lCronograma[containerId + index].listAtividades.push(this.itemMovido);
+        }
+      }
+      else{
+        this.toastr.warning('O periodo informado para esta atividade não é compatível com a semana escolhida!', 'Mensagem:');
+        transferArrayItem(
+          event.container.data,
+          event.previousContainer.data,
+          event.currentIndex,
+          event.previousIndex
+        );
+      } 
     }
-  }
-
-  evenPredicate(item: CdkDrag<number>) {
-    return item.data % 2 === 0;
-  }
-
-  noReturnPredicate() {
-    return false;
   }
 
   //Interação das abas

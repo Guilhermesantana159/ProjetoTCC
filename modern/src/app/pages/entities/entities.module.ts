@@ -43,6 +43,7 @@ import { ExtraPagesRoutingModule } from '../extrapages/extrapages-routing.module
 import { KambamGridTarefasComponent } from './kamban-tarefas/kamban-tarefas-grid/kamban-tarefas-grid.component';
 import { KambamTarefasComponent } from './kamban-tarefas/kamban-tarefas/kamban-tarefas.component';
 import { CountToModule } from 'angular-count-to';
+import { allIcons } from 'angular-feather/icons';
 import { DndModule } from 'ngx-drag-drop';
 import { SimplebarAngularModule } from 'simplebar-angular';
 import lottie from 'lottie-web';
@@ -58,6 +59,8 @@ import { CronogramaComponent } from './cronograma/cronograma-crud/cronograma.com
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { TemplateCrudComponent } from './template/template-crud/template-crud.component';
 import { TemplateComponent } from './template/template-grid/template-grid.component';
+import { ChatComponent } from './chat/chat.component';
+import { FeatherModule } from 'angular-feather';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -87,6 +90,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         CronogramaComponent,
         AdministracaoTarefasComponent,
         AdministracaoTarefasCrudComponent,
+        ChatComponent,
         NgbdListViewSortableHeaderAdministracaoTarefa
     ],
     exports: [  
@@ -110,6 +114,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         DetalhesTarefasComponent,
         AdministracaoTarefasComponent,
         AdministracaoTarefasCrudComponent,
+        ChatComponent,
         NgbdListViewSortableHeaderAdministracaoTarefa
     ],
     imports: [  
@@ -127,6 +132,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         MatIconModule,
         MatProgressBarModule,
         MatInputModule,
+        FeatherModule.pick(allIcons),
         MatBadgeModule,
         MatSelectModule,
         MatSlideToggleModule,

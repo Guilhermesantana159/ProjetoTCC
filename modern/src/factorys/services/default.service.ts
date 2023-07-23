@@ -74,6 +74,23 @@ export class DefaultService{
                   Tooltip:  'Foto do usuário',
                   OnlyImage: false
                 },    
+              },
+              {
+                Field: 'cpf',
+                DisplayName: 'CPF',
+                CellTemplate: undefined,
+                ActionButton: undefined,
+                Type: TypeFilter.String,
+                EnumName: undefined,
+                OrderBy: true,
+                Filter: true,
+                ServerField: 'CPF',
+                StyleColuna: 'min-width: 20vh; max-width: 30vh;',
+                EnumOptions: [],
+                StyleCell: undefined,
+                ClassCell: undefined,
+                CellGraphics: undefined,
+                CellImage: undefined    
               }
             ]
         },

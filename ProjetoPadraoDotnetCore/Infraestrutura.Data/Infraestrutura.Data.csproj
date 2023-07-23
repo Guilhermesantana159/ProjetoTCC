@@ -53,6 +53,7 @@
       <Compile Remove="Entity\Profissao.cs" />
       <Compile Remove="Entity\AtividadeTarefa.cs" />
       <Compile Remove="Entity\ProjetoAtividade.cs" />
+      <Compile Remove="Repository\Interface\CategoriaTemplate\IUsuarioReadRepository.cs" />
     </ItemGroup>
 
     <ItemGroup>

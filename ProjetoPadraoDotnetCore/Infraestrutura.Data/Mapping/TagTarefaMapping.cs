@@ -11,8 +11,8 @@ public class TagTarefaMapping : IEntityTypeConfiguration<TagTarefa>
         builder.ToTable("TagTarefa");
 
         builder.HasKey(o => o.IdTagTarefa);
-        builder.Property(o => o.IdTarefa).IsRequired();
         builder.Property(o => o.Descricao).IsRequired();
+        builder.Property(o => o.IdTarefa);
 
         builder
             .HasOne(x => x.Tarefa)

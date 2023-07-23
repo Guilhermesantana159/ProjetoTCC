@@ -33,7 +33,7 @@
                             <tr>
                                 <th class="ps-0" scope="row">Cód :</th>
                                 <td class="text-muted">
-                                    {{'#' +TemplateRegisterFormGroup.get('idProjeto')?.value}}
+                                    {{'#' +TemplateRegisterFormGroup.get('idTemplate')?.value}}
                                 </td>
                             </tr>
                             <tr>
@@ -94,12 +94,12 @@
                                                 Escala de tempo<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
                                             </label>
                                             <mat-select class="form-control" formControlName="escalaTempo" [disabled]="disabledAll">
-                                                <mat-option value="0">
+                                                <mat-option value="0" [disabled]="disabledAll">
                                                     <span class="text-uppercase">                                        
                                                         Dias
                                                     </span>
                                                 </mat-option>
-                                                <mat-option value="1">
+                                                <mat-option value="1" [disabled]="disabledAll">
                                                     <span class="text-uppercase">
                                                         Semanas
                                                     </span>
@@ -114,7 +114,11 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label class="col-lg-6" for="firstnameInput" class="form-label">                                
-                                                Quantidade<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
+                                                Quantidade
+                                                <span matTooltip="Ao modificar este campo as tarefas (se cadastradas) que excedem o novo valor estipulado seram readequados e o cronograma (se definido) será readequado a nova estimativa." matTooltipPosition="right">
+                                                    <i class="ri-information-line"></i>
+                                                </span>
+                                                <span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
                                             </label>
                                             <input class="col-lg-6" class="form-control input-form" type="number" [readonly]="disabledAll" (change)="VerificarValor()" formControlName="quantidade" 
                                             placeholder="Insira a quantidade de {{TemplateRegisterFormGroup.get('escalaTempo')?.value == '1' ? 'semanas':'dias'}}..."/>
@@ -191,10 +195,10 @@
                                             <label for="escalaTempo" class="form-label">                                
                                                 Tempo previsto ({{TemplateRegisterFormGroup.get('escalaTempo')?.value == '1' ? 'semanas':'dias'}})<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
                                             </label>
-                                            <input class="col-lg-6" class="form-control input-form" type="number" [readonly]="disabledAll" (change)="VerificarValor()" formControlName="escalaTempoAtividade" 
+                                            <input class="col-lg-6" class="form-control input-form" type="number" [readonly]="disabledAll" (change)="verficaValorAtividade()" formControlName="escalaTempoAtividade" 
                                             placeholder="Insira a quantidade de {{TemplateRegisterFormGroup.get('escalaTempoAtividade')?.value == '1' ? 'semanas':'dias'}}..."/>
                                             <text-error-message  
-                                                *ngIf="AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.errors?.['required'] && submitRegister"
+                                                *ngIf="AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.errors?.['required'] && submitAtv"
                                                 text="Este campo é obrigatório">
                                             </text-error-message>
                                         </div>
@@ -250,7 +254,7 @@
                                                 <div *ngIf="dataSource.data.length == 0" class="text-center">
                                                     <strong>Você não possui atividades cadastradas!</strong>
                                                 </div>
-                                                <div *ngFor="let grid of atividade | async" class="col-lg-3 col-md-6">
+                                                <div *ngFor="let grid of this.dataSource.data" class="col-lg-3 col-md-6">
                                                     <div class="card">
                                                         <div class="card-body"> 
                                                             <button type="button" class="btn btn-icon btn-soft-primary float-end" data-bs-toggle="button" aria-pressed="true">
@@ -327,38 +331,63 @@
                             <div cdkDropListGroup>
                                 <div class="row">
                                     <div class="col-lg-9">
-                                        <div class="text-uppercase">
-                                            <h2>{{TemplateRegisterFormGroup.get('escalaTempo')?.value == '1' ? 'Semanas':'Dias'}}</h2>
+                                        <div class="text-muted text-center mt-3 mb-3" *ngIf="lCronograma.length == 0">
+                                            Preencha a duração estimada do template..
                                         </div>
-                                        <div class="col-lg-12">
-                                            <div class="mb-3">
-                                                <hr class="hr-text" data-content="SEMANA 1">
+                                        <div *ngIf="lCronograma.length > 0">
+                                            <div class="text-uppercase">
+                                                <h2>Estimativa da atividade</h2>
+                                            </div>
+                                            <div class="mb-3" *ngFor="let semana of lCronograma; let i = index">
+                                                <div class="col-lg-12">
+                                                    <div class="mb-3">
+                                                        <hr class="hr-text" [attr.data-content]="semana.title">
+                                                    </div>
+                                                </div>
+                                                <div 
+                                                  cdkDropList
+                                                  [id]="i.toString()"
+                                                  [cdkDropListData]="semana.listAtividades"
+                                                  class="example-list mt-3"
+                                                  cdkDropListSortingDisabled
+                                                  (cdkDropListDropped)="drop($event)">
+                                                    <div class="example-box" *ngFor="let item of semana.listAtividades" cdkDrag>
+                                                        <span class="w-75" [id]="item.atividade">
+                                                            <h6 class="d-inline p-1" matTooltip="Atividade">{{item.atividade}}:</h6>
+                                                            <ol class="d-inline p-1" *ngFor="let tarefa of item.listTarefas">
+                                                                <li class="text-muted d-inline p-1">
+                                                                    &bull; 
+                                                                    <span matTooltip="Tarefa" style="cursor: pointer;text-decoration: underline;" (click)="openModalcomplementar(contentComplementar,tarefa,item.atividade)">{{tarefa.descricao}}</span>  
+                                                                </li>
+                                                            </ol>
+                                                        </span>
+                                                        <div>
+                                                            <i class="ri-information-line text-primary me-1 align-bottom pd-1" 
+                                                            matTooltip="Mova para atividades novamente para selecionar nova data!" 
+                                                            matTooltipPosition="right"></i>
+                                                            <i class="ri-time-line text-primary me-1 align-bottom"></i> 
+                                                            {{item.escalaTempoAtividade}}                                                                
+                                                            {{TemplateRegisterFormGroup.get('escalaTempo')?.value == '1' ? 'semanas':'dias'}}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div
-                                          cdkDropList
-                                          [cdkDropListData]="items"
-                                          class="example-list mt-3"
-                                          cdkDropListSortingDisabled
-                                          (cdkDropListDropped)="drop($event)">
-                                          <div class="example-box" *ngFor="let item of items" cdkDrag>
-                                            <h6>{{item}}</h6>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-3">
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
                                         <div class="text-uppercase">
                                             <h2>Atividades</h2>
                                         </div>
                                         <div
-                                          cdkDropList
-                                          [cdkDropListData]="atividade | async"
-                                          class="example-list mt-3"
-                                          (cdkDropListDropped)="drop($event)">
+                                            cdkDropList
+                                            [cdkDropListData]="lAtividadesCronograma"
+                                            id="Atividades"
+                                            class="example-list mt-3"
+                                            (cdkDropListDropped)="drop($event)">
                                             <div *ngIf="dataSource.data.length == 0" class="text-center text-muted mt-3">
                                                 Nenhuma atividade cadastrada
                                             </div>
-                                            <div class="example-box" *ngFor="let item of atividade | async" cdkDrag>
+                                            <div class="example-box" *ngFor="let item of lAtividadesCronograma" cdkDrag>
                                                 <h6>{{item.atividade}}</h6>
                                                 <div>
                                                     <i class="ri-time-line text-primary me-1 align-bottom"></i> 
@@ -367,8 +396,23 @@
                                                 </div>
                                             </div>
                                         </div>
-                                      </div>
+                                    </div>
                                   </div>
+                                  <div class="col-lg-12">
+                                    <div class="hstack gap-2 justify-content-end">
+                                        <button type="button" class="btn btn-soft-dark" (click)="ButtonEventAba(-1)">Voltar</button>
+                                        <button type="button" class="btn btn-success btn-load" [disabled]="loading" (click)="Salvar(TemplateRegisterFormGroup)">
+                                            <span class="d-flex align-items-center">
+                                                <span class="spinner-border flex-shrink-0" role="status" [hidden]="!loading">
+                                                    <span class="visually-hidden" ></span>
+                                                </span>
+                                                <span class="flex-grow-1 ms-2" [hidden]="loading">
+                                                    {{IsNew != true ? 'Editar' : 'Salvar'}}
+                                                </span>
+                                            </span>
+                                        </button>                                    
+                                    </div>
+                                </div>
                             </div>
                         </ng-template>
                     </li>
@@ -406,23 +450,23 @@
                         <label for="firstnameInput" class="form-label">                                
                             Prioridade
                         </label>
-                        <mat-select class="form-control" formControlName="prioridade">
-                            <mat-option value="0">
+                        <mat-select class="form-control" formControlName="prioridade" [disabled]="disabledAll">
+                            <mat-option value="0" [disabled]="disabledAll">
                                 <span class="badge bg-success text-uppercase" ngClass="bg-success">                                        
                                     Não informado
                                 </span>
                             </mat-option>
-                            <mat-option value="1">
+                            <mat-option value="1" [disabled]="disabledAll">
                                 <span class="badge bg-info text-uppercase" ngClass="bg-info">
                                     Baixa
                                 </span>
                             </mat-option>
-                            <mat-option value="2">
+                            <mat-option value="2" [disabled]="disabledAll">
                                 <span class="badge bg-warning text-uppercase" ngClass="bg-warning">
                                     Média
                                 </span>
                             </mat-option>
-                            <mat-option value="3">
+                            <mat-option value="3" [disabled]="disabledAll">
                                 <span class="badge bg-danger text-uppercase" ngClass="bg-danger">
                                     Alta
                                 </span>
@@ -436,8 +480,8 @@
                     <div class="mb-3">
                         <label for="countryInput" class="form-label">Tags</label>
                         <div class="form-control">
-                            <mat-chip-grid #chipGrid aria-label="Enter keywords">
-                              <mat-chip-row *ngFor="let option of ltags" (removed)="RemoveTag(option)">
+                            <mat-chip-grid #chipGrid aria-label="Enter keywords" [disabled]="disabledAll">
+                              <mat-chip-row *ngFor="let option of ltags" (removed)="RemoveTag(option)" [disabled]="disabledAll">
                                 {{option}}
                                 <button matChipRemove aria-label="'remove ' + keyword">
                                   <mat-icon>cancel</mat-icon>
@@ -457,7 +501,7 @@
                 <div class="col-lg-12">
                     <div class="mb-3">
                         <label  class="form-label">Descrição</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea"
+                        <textarea class="form-control" id="exampleFormControlTextarea" [readonly]="disabledAll"
                             placeholder="Descrição do projeto..." maxlength="500" formControlName="descricaoTarefa"
                             rows="3">
                         </textarea>
@@ -468,7 +512,7 @@
                 <div class="col-lg-12">
                     <div class="hstack gap-2 justify-content-end">
                         <button type="button" class="btn btn-soft-dark" (click)="modal.dismiss('Cross click')">Voltar</button>
-                        <button type="button" class="btn btn-success btn-load" [disabled]="loading" (click)="ComplementarTarefa(tarefaFormGroup)" >
+                        <button type="button" class="btn btn-success btn-load" [disabled]="loading" (click)="ComplementarTarefa(tarefaFormGroup)" [disabled]="disabledAll">
                             <span class="d-flex align-items-center">
                                 <span class="spinner-border flex-shrink-0" role="status" [hidden]="!loading">
                                     <span class="visually-hidden" ></span>

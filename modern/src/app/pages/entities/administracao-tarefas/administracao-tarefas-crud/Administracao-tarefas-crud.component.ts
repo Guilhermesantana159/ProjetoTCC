@@ -80,7 +80,8 @@ export class AdministracaoTarefasCrudComponent{
       Required: false,
       GridOptions: defaultService.Modal.ConsultaPadraoUsuarioMulti,
       SelectedText: '',
-      SelectedValue: ''
+      SelectedValue: '',
+      OnlyButton: false
     };
 
     this.route.params.subscribe(params => {

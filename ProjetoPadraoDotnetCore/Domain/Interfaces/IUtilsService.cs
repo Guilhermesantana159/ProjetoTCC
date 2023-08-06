@@ -6,4 +6,5 @@ namespace Domain.Interfaces;
 public interface IUtilsService
 {
     public Task<EnderecoExternalReponse> ConsultarEnderecoCep(string cep);
+    public void SalvarFeedback(Feedback feedback);
 }

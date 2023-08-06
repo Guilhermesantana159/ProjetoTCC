@@ -72,7 +72,6 @@ export class KanbanComponent implements OnInit {
    * On task drop event
    */
   onDrop(event: DndDropEvent, filteredList?: any[], targetStatus?: string) {
-    debugger
 
     if (filteredList && event.dropEffect === 'move') {
       let index = event.index;

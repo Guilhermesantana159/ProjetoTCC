@@ -16,17 +16,18 @@ public class ProjetoReadRepository : BaseReadRepository<Projeto>,IProjetoReadRep
     public Projeto GetByIdWithInclude(int id)
     {
         return _context.Projeto
-                   .Include(x => x.Atividades)
-                   .ThenInclude(x => x.Tarefas)
-                   .ThenInclude(x => x.TarefaUsuario)
-                   .ThenInclude(x => x.Usuario)
-                   .Include(x => x.Usuario)
-                   .FirstOrDefault(x => x.IdProjeto == id) ?? throw new InvalidOperationException($"Projeto com Id: {id} não encontrado!");
+            .Include(x => x.Atividades)
+            .ThenInclude(x => x.Tarefas)
+            .ThenInclude(x => x.TarefaUsuario)
+               .ThenInclude(x => x.Usuario)
+               .Include(x => x.Usuario)
+               .FirstOrDefault(x => x.IdProjeto == id) ?? throw new InvalidOperationException($"Projeto com Id: {id} não encontrado!");
     }
     
     public IQueryable<Projeto> GetAllWithIncludeQuery()
     {
         return _context.Projeto
+            .Include(x => x.Usuario)
             .Include(x => x.Atividades)
             .ThenInclude(x => x.Tarefas)
             .ThenInclude(x => x.TarefaUsuario)

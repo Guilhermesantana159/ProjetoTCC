@@ -9,7 +9,12 @@ export interface ContatoResponse extends RetornoPadrao
 export interface DataContatoResponse
 {
     nome: string,
+    telefone: string,
+    sobre: string,
+    email: string,
+    dataNascimento: string,
     foto: string,
+    online: boolean,
     statusContato: EStatusContato,
     idUsuarioContato: number
     idContatoChat: number

@@ -14,7 +14,6 @@ import { GridTarefaEquipe, TarefaEquipe } from 'src/app/objects/Projeto/GridTare
 import { TarefaReponsavel } from 'src/app/objects/Tarefa/TarefaResponsavel';
 import { ProjetoRequest, AtividadeRequest } from 'src/app/objects/Projeto/ProjetoRequest';
 import { RetornoPadrao } from 'src/app/objects/RetornoPadrao';
-import { BaseOptions } from 'src/app/objects/Select/SelectPadrao';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { ProjetoResponse } from 'src/app/objects/Projeto/ProjetoResponse';
@@ -68,12 +67,11 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
   editTarefa: boolean = false;
 
   //Aba Principal
-  optionsTipoProjeto: Array<BaseOptions> = [
-    { 
-      description: "Outros",
-      value: 0
-    }];
   paramsConsultaUsuario: ConsultaModalParams;
+  paramsConsultaTemplate: ConsultaModalParams;
+  dateInicio!: Date;
+  dateFim!: Date;
+
   index: any;
 
   constructor(private formBuilder: FormBuilder,private modalService: NgbModal,private response: BaseService,private defaultService: DefaultService,private router: Router,
@@ -90,16 +88,35 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       OnlyButton: false
     };
 
+    this.paramsConsultaTemplate = {
+      Label: 'Carregar Template',
+      Title: 'Consulta de Template',
+      Disabled: false,
+      Class: 'col-sm-12 col-xs-8 col-md-8 col-lg-8',
+      Required: false,
+      GridOptions: defaultService.Modal.ConsultaPadraoTemplate,
+      SelectedText: '',
+      SelectedValue: '',
+      OnlyButton: false
+    };
+
     this.ProjetoRegisterFormGroup = this.formBuilder.group({
       idProjeto: [undefined],
       titulo: [undefined, [Validators.required]],
       dataFim: [null, [Validators.required]],
       dataInicio: [undefined, [Validators.required]],      
       descricao: [undefined],     
-      listarAtvProjeto: [false],
+      emailProjetoAtrasado: [true],
+      portalProjetoAtrasado: [true],
+      emailTarefaAtrasada: [true],
+      portalTarefaAtrasada: [true],
+      alteracaoStatusProjetoNotificar: [true],
+      alteracaoTarefasProjetoNotificar: [true],
       foto: [undefined],
       idUsuarioCadastro: [undefined],
-      dataCadastro: [undefined]
+      dataCadastro: [undefined],
+      tituloTemplate: [undefined],
+      idTemplate: [undefined]
     });
 
     this.AtividadeRegisterFormGroup = this.formBuilder.group({
@@ -117,6 +134,40 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       responsavel: [undefined, [Validators.required]],
       idResponsavel: [undefined, [Validators.required]],
       position: [undefined]
+    });
+
+    this.ProjetoRegisterFormGroup.get('idTemplate')?.valueChanges.subscribe((newIdTemplate) => {
+      if(newIdTemplate != undefined && newIdTemplate != ""){
+        //Reset tela
+        this.ProjetoRegisterFormGroup.reset();
+        this.ResetarCamposAtividades();
+        this.ResetarCamposTarefaEquipe();
+        this.dataSource.data = [];
+        this.dataSource.filter = "";
+        this.dataSourcelTarefaFuncoes.data = [];
+        this.dataSourcelTarefaFuncoes.filter = "";
+
+        this.loading = true;
+        this.response.Get("Template","CarregarTemplate/" + newIdTemplate).subscribe(
+        (response: ProjetoResponse) =>{        
+          if(response.sucesso){       
+            this.ProjetoRegisterFormGroup.patchValue(response.data);
+
+            response.data.listAtividade.forEach(element => {
+              this.position = this.position + 1;
+              element.position = this.position;
+              element.statusAtividade = undefined;
+              this.dataSource.data.push(element);
+              this.dataSource.filter = "";          
+            });
+          } 
+          else{
+            this.toastr.error(response.mensagem, 'Mensagem:');
+          };
+          
+          this.loading = false;
+        });
+      }
     });
   }
 
@@ -201,11 +252,16 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       DataInicio: form.get('dataInicio')?.value,
       DataFim: form.get('dataFim')?.value,
       Descricao: form.get('descricao')?.value,
-      ListarParaParticipantes: form.get('listarAtvProjeto')?.value,
       Atividade: [],
       IdUsuarioCadastro: this.IdUsuarioLogado,
       Tarefa: [],
-      Foto: form.get('foto')?.value
+      Foto: form.get('foto')?.value,
+      EmailProjetoAtrasado: form.get('emailProjetoAtrasado')?.value,
+      PortalProjetoAtrasado: form.get('portalProjetoAtrasado')?.value,
+      EmailTarefaAtrasada: form.get('emailTarefaAtrasada')?.value,
+      PortalTarefaAtrasada: form.get('portalTarefaAtrasada')?.value,
+      AlteracaoStatusProjetoNotificar: form.get('alteracaoStatusProjetoNotificar')?.value,
+      AlteracaoTarefasProjetoNotificar: form.get('alteracaoTarefasProjetoNotificar')?.value
     }
 
     //Tarefa Usuario
@@ -219,6 +275,7 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     });
 
     //Atividade
+    debugger
     this.dataSource.data.forEach(function(element){
       //Formatacao data
       let dataInicial:any = element.dataInicial.split("/"); 
@@ -230,8 +287,13 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
         Atividade: element.atividade,
         DataInicial: new Date(dataInicial[2], dataInicial[1]-1, dataInicial[0]),
         DataFim:  new Date(dataFim[2], dataFim[1]-1, dataFim[0]),
-        ListTarefas: element.listTarefas
+        ListTarefas: []
       };
+
+      element.listTarefas.forEach(element => {
+        element.prioridade = parseInt(element.prioridade);
+        Atv.ListTarefas.push(element);
+      });
       
       projetoRequest.Atividade.push(Atv);
     });
@@ -267,6 +329,8 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
 
   //AbaPricipal
   ChangeDataPrevisao(){
+
+    //mudarrr
     let dataInicio = this.ProjetoRegisterFormGroup.get('dataInicio')?.value; 
     let dataFim =  this.ProjetoRegisterFormGroup.get('dataFim')?.value; 
     
@@ -467,7 +531,7 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     this.AtividadeRegisterFormGroup.get('position')?.setValue(Atv.position);
     
     Atv.listTarefas.forEach(element => {
-      this.lTarefa.push({descricao:element.descricao,idTarefa: element.idTarefa});
+      this.lTarefa.push({descricao:element.descricao,idTarefa: element.idTarefa,prioridade: element.prioridade,lTagsTarefa:element.lTagsTarefa,descricaoTarefa: element.lTagsTarefa});
     });
   };
 
@@ -491,7 +555,7 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     const value = (event.value || '').trim();
 
     if (value) {
-      this.lTarefa.push({descricao:value,idTarefa: undefined});
+      this.lTarefa.push({descricao:value,idTarefa: undefined,prioridade: '0',lTagsTarefa:[],descricaoTarefa: undefined});
     }
 
     event.chipInput!.clear();
@@ -582,7 +646,6 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     this.ResetarCamposTarefaEquipe();
     this.FuncoesRegisterFormGroup.get('responsavel')?.setValue(Atv.responsavel);
     this.FuncoesRegisterFormGroup.get('idResponsavel')?.setValue(Atv.idResponsavel);
-    console.log(Atv.listTarefas);
     this.FuncoesRegisterFormGroup.get('listTarefas')?.setValue(Atv.listTarefas);
     this.FuncoesRegisterFormGroup.get('position')?.setValue(Atv.position);
   };

@@ -3,6 +3,7 @@ using System.Linq.Dynamic.Core;
 using Aplication.Interfaces;
 using Aplication.Models.Grid;
 using Aplication.Models.Request.Projeto;
+using Aplication.Models.Response.Base;
 using Aplication.Models.Response.Projeto;
 using Aplication.Models.Response.Tarefa;
 using Aplication.Utils.FilterDynamic;
@@ -14,6 +15,8 @@ using Domain.Interfaces;
 using Infraestrutura.Entity;
 using Infraestrutura.Enum;
 using Infraestrutura.Reports.Projeto.Objeto;
+using Infraestrutura.Repository.Interface.Feedback;
+using Infraestrutura.Repository.Interface.MovimentacaoTarefa;
 
 namespace Aplication.Controllers;
 
@@ -27,9 +30,11 @@ public class ProjetoApp : IProjetoApp
     protected readonly IProjetoValidator Validation;
     protected readonly INotificacaoService NotificaService;
     protected readonly IMapper Mapper;
+    protected readonly IFeedbackReadRepository FeedbackReadRepository;
+    protected readonly IMovimentacaoTarefaReadRepository MovimentacaoTarefaReadRepository;
     private readonly IConfiguration _configuration;
 
-    public ProjetoApp(IProjetoService service, INotificacaoService notificaService, IMapper mapper, IProjetoValidator validation, IUsuarioService usuarioService, ITarefaService tarefaService, IAtividadeService atividadeService, IConfiguration configuration, ITarefaApp tarefaApp)
+    public ProjetoApp(IProjetoService service, INotificacaoService notificaService, IMapper mapper, IProjetoValidator validation, IUsuarioService usuarioService, ITarefaService tarefaService, IAtividadeService atividadeService, IConfiguration configuration, ITarefaApp tarefaApp, IFeedbackReadRepository feedbackReadRepository, IMovimentacaoTarefaReadRepository movimentacaoTarefaReadRepository)
     {
         _service = service;
         Mapper = mapper;
@@ -39,6 +44,8 @@ public class ProjetoApp : IProjetoApp
         AtividadeService = atividadeService;
         _configuration = configuration;
         TarefaApp = tarefaApp;
+        this.FeedbackReadRepository = feedbackReadRepository;
+        MovimentacaoTarefaReadRepository = movimentacaoTarefaReadRepository;
         NotificaService = notificaService;
     }
 
@@ -69,7 +76,7 @@ public class ProjetoApp : IProjetoApp
             {
                 foreach (var atv in request.Atividade)
                 {
-                    var atividadeEntity = Mapper.Map<AtividadeRequest, Atividade>(atv);
+                    var atividadeEntity = Mapper.Map<ProjetoRequest.AtividadeRequest, Atividade>(atv);
 
                     atividadeEntity.IdProjeto = projeto.IdProjeto;
 
@@ -106,6 +113,12 @@ public class ProjetoApp : IProjetoApp
                             
                             TarefaService.CadastrarComRetorno(new Tarefa()
                             {
+                                Prioridade = tarefa.Prioridade,
+                                DescricaoTarefa = tarefa.DescricaoTarefa,
+                                TagTarefa = tarefa.LTagsTarefa?.Select(x => new TagTarefa()
+                                {
+                                    Descricao = x
+                                }).ToList(), 
                                 Descricao = tarefa.Descricao,
                                 IdAtividade = atividade.IdAtividade,
                                 TarefaUsuario = listaUsuarioTarefa
@@ -128,8 +141,8 @@ public class ProjetoApp : IProjetoApp
                             DataCadastro = DateTime.Now,
                             Lido = ESimNao.Nao,
                             ClassficacaoMensagem = EMensagemNotificacao.ParticipacaoProjeto,
-                            Corpo = $"Olá, você incluído como participante no projeto {cadastro.Titulo}. Este projeto é administrado e orientado pelo" +
-                                    $" {cadastro.Usuario?.Nome},para acessar suas tarefas nesse projeto entre em \"Projetos > MinhasTarefas\" e acesse o respectivo projeto!",
+                            Corpo = $"Olá, você foi incluído como participante no projeto {cadastro.Titulo}. Este projeto é administrado e orientado por" +
+                                    $" {usuarioCadastro?.Nome},para acessar suas tarefas nesse projeto entre em \"Tarefas > Registro\"!",
                             Titulo = $"Participação no projeto {cadastro.Titulo}",
                             DataVisualização = null,
                         };
@@ -149,7 +162,6 @@ public class ProjetoApp : IProjetoApp
         var validation = Validation.ValidacaoCadastro(request);
         var lUsuario = UsuarioService.GetAllQuery();
         var projetoOld = _service.GetByIdWithIncludes(request.IdProjeto ?? 0);
-        var listIdsUsuarioNotificados = new List<int>();
 
         Projeto projeto = null!;
 
@@ -188,7 +200,7 @@ public class ProjetoApp : IProjetoApp
             {
                 foreach (var atv in request.Atividade)
                 {
-                    var atividadeEntity = Mapper.Map<AtividadeRequest, Atividade>(atv);
+                    var atividadeEntity = Mapper.Map<ProjetoRequest.AtividadeRequest, Atividade>(atv);
 
                     atividadeEntity.IdProjeto = projeto.IdProjeto;
 
@@ -244,6 +256,11 @@ public class ProjetoApp : IProjetoApp
                                 TarefaService.EditarComRetorno(new Tarefa()
                                 {
                                     IdTarefa = tarefa.IdTarefa ?? 0,
+                                    DescricaoTarefa = tarefa.DescricaoTarefa,
+                                    TagTarefa = tarefa.LTagsTarefa?.Select(x => new TagTarefa()
+                                    {
+                                        Descricao = x
+                                    }).ToList(), 
                                     Descricao = tarefa.Descricao,
                                     IdAtividade = atividade.IdAtividade,
                                     TarefaUsuario = listaUsuarioTarefa
@@ -253,6 +270,12 @@ public class ProjetoApp : IProjetoApp
                             {
                                 TarefaService.CadastrarComRetorno(new Tarefa()
                                 {
+                                    Prioridade = tarefa.Prioridade,
+                                    DescricaoTarefa = tarefa.DescricaoTarefa,
+                                    TagTarefa = tarefa.LTagsTarefa?.Select(x => new TagTarefa()
+                                    {
+                                        Descricao = x
+                                    }).ToList(), 
                                     Descricao = tarefa.Descricao,
                                     IdAtividade = atividade.IdAtividade,
                                     TarefaUsuario = listaUsuarioTarefa
@@ -260,36 +283,10 @@ public class ProjetoApp : IProjetoApp
                             }
                         }
                     }
-                }   
-                
-                
-                if (listIdsUsuarioNotificados.Any())
-                {
-                    //Notificar participantes da sua participação do projeto
-                    foreach (var usuarioNotificacao in listIdsUsuarioNotificados)
-                    {
-                        if (usuarioNotificacao != projeto.IdUsuarioCadastro)
-                        {
-                            var pushMensagem = new Notificacao()
-                            {
-                                IdUsuario = usuarioNotificacao,
-                                DataCadastro = DateTime.Now,
-                                Lido = ESimNao.Nao,
-                                ClassficacaoMensagem = EMensagemNotificacao.ParticipacaoProjeto,
-                                Corpo = $"Olá, você incluído como participante no projeto {cadastro.Titulo}. Este projeto é administrado e orientado pelo" +
-                                        $" {cadastro.Usuario?.Nome},para acessar suas tarefas nesse projeto entre em \"Projetos > MinhasTarefas\" e acesse o respectivo projeto!",
-                                Titulo = $"Participação no projeto {cadastro.Titulo}",
-                                DataVisualização = null,
-                            };
-            
-                            NotificaService.Cadastrar(pushMensagem);
-                        }
-                    }
                 }
             }
         }
-            
-
+        
         return validation;    
     }
 
@@ -361,8 +358,44 @@ public class ProjetoApp : IProjetoApp
             validation.LErrors.Add("Projeto não encontrado na base!");
         else
         {
+            var statusOld = projeto.Status;
             projeto.Status = request.Status;
             _service.Editar(projeto);
+            
+            var listUsuario = new List<Usuario>();
+            var lTarefas = TarefaService
+                .GetTarefasPorAtividades(projeto.Atividades.Select(x => x.IdAtividade)
+                    .ToList()).ToList();
+
+            foreach (var tarefa in lTarefas)
+            {
+                foreach (var tarefaUsuario in tarefa.TarefaUsuario.ToList())
+                {
+                    if (!listUsuario.Contains(tarefaUsuario.Usuario))
+                    {
+                        listUsuario.Add(tarefaUsuario.Usuario);
+                    }
+                }
+            }
+
+            if (projeto.AlteracaoStatusProjetoNotificar)
+            {
+                foreach (var usuario in listUsuario)
+                {
+                    var pushMensagem = new Notificacao()
+                    {
+                        IdUsuario = usuario.IdUsuario,
+                        DataCadastro = DateTime.Now,
+                        Lido = ESimNao.Nao,
+                        ClassficacaoMensagem = EMensagemNotificacao.ProjetoAlteracaoStatus,
+                        Corpo = $"O projeto {projeto.Titulo} teve seu status alterado de {statusOld.ToString()} para {projeto.Status.ToString()}!",
+                        Titulo = $"O projeto {projeto.Titulo} teve seu status alterado!",
+                        DataVisualização = null,
+                    };
+            
+                    NotificaService.Cadastrar(pushMensagem);
+                }    
+            }
         }
 
         return validation;
@@ -377,6 +410,42 @@ public class ProjetoApp : IProjetoApp
             validation.LErrors.Add("Projeto não encontrado na base!");
         else
         {
+            //Notificação
+            var listUsuario = new List<Usuario>();
+            var lTarefas = TarefaService
+                .GetTarefasPorAtividades(projeto.Atividades.Select(x => x.IdAtividade)
+                    .ToList()).ToList();
+
+            foreach (var tarefa in lTarefas)
+            {
+                foreach (var tarefaUsuario in tarefa.TarefaUsuario.ToList())
+                {
+                    if (!listUsuario.Contains(tarefaUsuario.Usuario))
+                    {
+                        listUsuario.Add(tarefaUsuario.Usuario);
+                    }
+                }
+            }
+
+            if (projeto.AlteracaoStatusProjetoNotificar)
+            {
+                foreach (var usuario in listUsuario)
+                {
+                    var pushMensagem = new Notificacao()
+                    {
+                        IdUsuario = usuario.IdUsuario,
+                        DataCadastro = DateTime.Now,
+                        Lido = ESimNao.Nao,
+                        ClassficacaoMensagem = EMensagemNotificacao.ProjetoExcluido,
+                        Corpo = $"O projeto {projeto.Titulo} que você participou foi excluído!",
+                        Titulo = $"O projeto {projeto.Titulo} que você participou foi excluído!",
+                        DataVisualização = null,
+                    };
+            
+                    NotificaService.Cadastrar(pushMensagem);
+                }
+            }
+
             //Delete Atividade / Tarefas
             AtividadeService.DeleteRangeAtividades(projeto.Atividades.ToList());
             //Delete Projeto
@@ -457,7 +526,9 @@ public class ProjetoApp : IProjetoApp
                 ListTarefas = item.Tarefas.AsQueryable().Select(x => new TarefaAtividadeResponse
                 {
                     Descricao = x.Descricao,
-                    IdTarefa = x.IdTarefa
+                    IdTarefa = x.IdTarefa,
+                    DescricaoTarefa = x.DescricaoTarefa,
+                    Prioridade = x.Prioridade.GetHashCode().ToString()
                 }).ToList()
             };
 
@@ -494,7 +565,7 @@ public class ProjetoApp : IProjetoApp
                         {
                             Atividade = y?.AtividadeFk.Titulo,
                             Tarefa = y?.Descricao,
-
+                            
                         }).ToList()
                 };
                 
@@ -593,5 +664,137 @@ public class ProjetoApp : IProjetoApp
                   DataFim = x.DataFim.ToString("yyyy-M-d "),
                 }).ToList()
         };
+    }
+
+    public ProjetoDashboardResponse ConsultarDashboard(int idProjeto,int idUsuario)
+    {
+        var feedback = FeedbackReadRepository.GetAll();
+        var tarefasUsuario = TarefaService.GetTarefaUsuarioWithInclude()
+            .Where(x => x.IdUsuario == idUsuario && x.Tarefa.Status != EStatusTarefa.Completo
+                                                 && x.Tarefa.AtividadeFk.DataInicial <= DateTime.Now).ToList();
+
+        var retorno = new ProjetoDashboardResponse
+        {
+            LProjetos = _service
+                .GetAllQuery()
+                .Where(x => x.IdUsuarioCadastro == idUsuario && x.Status != EStatusProjeto.Cancelado && x.Status != EStatusProjeto.Concluido)
+                .Select(x => new SelectBase()
+                {
+                    Description = x.Titulo,
+                    Value = x.IdProjeto
+                }).ToList(),
+            LTarefas = tarefasUsuario.GroupBy(x => x.Tarefa.AtividadeFk.ProjetoFk)
+                .Select(x => new TarefaDashboard()
+                {
+                    Projeto = $"#{x.Key.IdProjeto} {x.Key.Titulo}",
+                    LTarefa = x.Select(y => y.Tarefa.Descricao).ToList()
+                }).ToList(),
+            Feedback = new FeedbackDataDashboard()
+            {
+                TotalFeedback = feedback.Count(),
+                MediaFeedback = !feedback.Any() ? 0 : feedback.Sum(x => x.Rating) / feedback.Count(),
+                Estrela1 = feedback.Count(x => x.Rating == 1),
+                Estrela2 = feedback.Count(x => x.Rating == 2),
+                Estrela3 = feedback.Count(x => x.Rating == 3),
+                Estrela4 = feedback.Count(x => x.Rating == 4),
+                Estrela5 = feedback.Count(x => x.Rating == 5)
+            }
+        };
+
+
+        if (retorno.LProjetos.Any())
+        {
+            Projeto? projeto = null;
+        
+            if (idProjeto != 0)
+            {
+                projeto = _service.GetByIdWithIncludes(idProjeto);
+        
+                if (projeto == null)
+                    throw new Exception("Não foi encontrado nenhum registro de projeto!");
+            }
+            else
+            {
+                var projetoAny = _service.GetAllQuery()
+                    .FirstOrDefault(x =>
+                        x.IdUsuarioCadastro == idUsuario && x.Status != EStatusProjeto.Cancelado &&
+                        x.Status != EStatusProjeto.Concluido);
+
+                if (projetoAny != null)
+                    projeto = _service.GetByIdWithIncludes(projetoAny.IdProjeto);
+            }
+
+            if (projeto != null)
+            {
+                var tarefa = TarefaService.GetTarefasPorAtividades(projeto.Atividades.Select(x => x.IdAtividade).ToList()).ToList();
+                var movimentacaoTarefa = MovimentacaoTarefaReadRepository.GetAll();
+
+                retorno.Projeto = new ProjetoDataDashboard()
+                {
+                    IdProjeto = projeto.IdProjeto,
+                    LAtividade = projeto.Atividades.Select(x => new AtividadeDataDashboard
+                    {
+                        Atividade = x.Titulo,
+                        LAtividadeTarefas = x.Tarefas.Select(y => new AtividadeTarefaDataDashboard
+                        {
+                            TempoTotalTarefasTotal = (y.AtividadeFk.DataFim - y.AtividadeFk.DataInicial).Hours,
+                            LTarefas = x.Tarefas.Select(z => new TarefaIndicadoresDataDashboard
+                            {
+                                Tarefa = z.Descricao,
+                                TempoTarefaRealizado =  movimentacaoTarefa?
+                                    .Where(q => q.From == EStatusTarefa.Aguardando || q.From == EStatusTarefa.Progresso && q.IdTarefa == z.IdTarefa)
+                                    .Sum(q => q.TempoUtilizadoUltimaColuna),
+                                TempoTarefaEspera = movimentacaoTarefa?
+                                    .Where(q => q.From == EStatusTarefa.Aguardando && q.IdTarefa == z.IdTarefa)
+                                    .Sum(q => q.TempoUtilizadoUltimaColuna),
+                                TempoTarefaProgresso = movimentacaoTarefa?
+                                    .Where(q => q.From == EStatusTarefa.Progresso && q.IdTarefa == z.IdTarefa)
+                                    .Sum(q => q.TempoUtilizadoUltimaColuna),
+                                TempoTarefaTotal = (x.DataInicial - x.DataInicial).Hours
+                            }).ToList()
+                        }).ToList(),
+                        Indicador = new Indicadores()
+                        {
+                            TarefasFazer = x.Tarefas.Count(y => y.Status == EStatusTarefa.Aguardando && y.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
+                            TarefasProgresso = x.Tarefas.Count(y => y.Status == EStatusTarefa.Progresso && y.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
+                            TarefasCompletas = x.Tarefas.Count(y => y.Status == EStatusTarefa.Completo),
+                            TarefasAtrasadas = x.Tarefas.Count(y => y.AtividadeFk.StatusAtividade ==  EStatusAtividade.Atrasado && y.Status != EStatusTarefa.Completo)
+                        },
+                    }).ToList(),
+                    LTarefaIndicador = new Indicadores()
+                    {
+                        TarefasFazer = tarefa.Count(x => x.Status == EStatusTarefa.Aguardando && x.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
+                        TarefasProgresso = tarefa.Count(x => x.Status == EStatusTarefa.Progresso && x.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
+                        TarefasCompletas = tarefa.Count(x => x.Status == EStatusTarefa.Completo),
+                        TarefasAtrasadas = tarefa.Count(x => x.AtividadeFk.StatusAtividade ==  EStatusAtividade.Atrasado && x.Status != EStatusTarefa.Completo)
+                    }
+                };
+
+                foreach (var atividade in retorno.Projeto.LAtividade)
+                {
+                    if (atividade.LAtividadeTarefas != null)
+                    {
+                        foreach (var atividadeTarefa in atividade.LAtividadeTarefas)
+                        {
+                            if (atividadeTarefa.LTarefas != null)
+                            {
+                                atividadeTarefa.TempoTotalTarefasEspera =
+                                    atividadeTarefa.LTarefas.Sum(x => x.TempoTarefaEspera);
+
+                                atividadeTarefa.TempoTotalTarefasRealizado =
+                                    atividadeTarefa.LTarefas.Sum(x => x.TempoTarefaRealizado);
+                                
+                                atividadeTarefa.TempoTotalTarefasProgresso =
+                                    atividadeTarefa.LTarefas.Sum(x => x.TempoTarefaProgresso);
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        return retorno;
     }
 }

@@ -2,20 +2,23 @@
 using System.Text.Json;
 using Domain.DTO.Correios;
 using Domain.Interfaces;
+using Infraestrutura.Entity;
 using Infraestrutura.Repository.External;
+using Infraestrutura.Repository.Interface.Feedback;
 
 namespace Domain.Services;
 
 public class UtilService : IUtilsService
 {
     protected readonly IExternalRepository External;
-
+    protected readonly IFeedbackWriteRepository FeedbackWriteRepository;
 
     private readonly IConfiguration _configuration;
-    public UtilService(IExternalRepository external,IConfiguration config)
+    public UtilService(IExternalRepository external,IConfiguration config, IFeedbackWriteRepository feedbackWriteRepository)
     {
         External = external;
         _configuration = config;
+        this.FeedbackWriteRepository = feedbackWriteRepository;
     }
     public async Task<EnderecoExternalReponse> ConsultarEnderecoCep(string cep)
     {
@@ -51,5 +54,10 @@ public class UtilService : IUtilsService
         }
 
         return retorno;
+    }
+
+    public void SalvarFeedback(Feedback feedback)
+    {
+        FeedbackWriteRepository.Add(feedback);
     }
 }

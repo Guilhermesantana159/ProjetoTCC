@@ -9,4 +9,10 @@ public interface IChatApp
     public void AlterarStatusContato(AlterarStatusContatoRequest request);
     public void DeletarContato(int id);
     public ContatoListaResponse ConsultarContatoPorIdPessoa(int id);
+    public MensagemChatResponse SalvarMensagem(MensagemChatRequest request);
+    public ConversaChatResponse ConsultarMensagens(int idUsuarioMandante,int idUsuarioRecebe);
+    public void DeletarMensagem(int id);
+    public ContatoListaResponse ConsultarMensagensDireta(int id);
+    public void ExcluirConversa(ExcluirConversaRequest request);
+
 }

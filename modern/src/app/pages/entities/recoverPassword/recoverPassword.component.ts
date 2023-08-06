@@ -100,7 +100,6 @@ export class RecoverPasswordComponent {
   }
 
   AutenticarCodigo(){
-    debugger
     let codigo = this.child.EnviarCodes();
     
     if(codigo.length < 6){

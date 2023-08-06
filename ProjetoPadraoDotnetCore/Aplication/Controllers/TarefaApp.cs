@@ -90,26 +90,28 @@ public class TarefaApp : ITarefaApp
         if (!request.IdTarefa.HasValue)
         {
             _service.Cadastrar(tarefa);
-            
-            //Notificar participantes da sua participação do projeto
-            foreach (var user in lUsuario)
+
+            if (atividade.ProjetoFk.AlteracaoTarefasProjetoNotificar)
             {
-                if (user.IdUsuario != atividade.ProjetoFk.IdUsuarioCadastro)
+                //Notificar participantes da sua participação do projeto
+                foreach (var user in lUsuario)
                 {
-                    var pushMensagem = new Notificacao()
+                    if (user.IdUsuario != atividade.ProjetoFk.IdUsuarioCadastro)
                     {
-                        IdUsuario = user.IdUsuario,
-                        DataCadastro = DateTime.Now,
-                        Lido = ESimNao.Nao,
-                        ClassficacaoMensagem = EMensagemNotificacao.ParticipacaoProjeto,
-                        Corpo = $"Olá, você incluído como participante no projeto {atividade.ProjetoFk.Titulo}. Este projeto é administrado e orientado pelo" +
-                                $" {atividade.ProjetoFk.Usuario?.Nome},para acessar suas tarefas nesse projeto entre em \"Projetos > MinhasTarefas\" e acesse o respectivo projeto!",
-                        Titulo = $"Participação no projeto {atividade.ProjetoFk.Titulo}",
-                        DataVisualização = null,
-                    };
+                        var pushMensagem = new Notificacao()
+                        {
+                            IdUsuario = user.IdUsuario,
+                            DataCadastro = DateTime.Now,
+                            Lido = ESimNao.Nao,
+                            ClassficacaoMensagem = EMensagemNotificacao.ParticipacaoProjeto,
+                            Corpo = $"Olá, novas tarefas foram atribuido a você no projeto {atividade.ProjetoFk.Titulo}.Acesse \"Tarefas > Registro\" para visualizar",
+                            Titulo = $"Participação no projeto {atividade.ProjetoFk.Titulo}",
+                            DataVisualização = null,
+                        };
             
-                    NotificaService.Cadastrar(pushMensagem);
-                }
+                        NotificaService.Cadastrar(pushMensagem);
+                    }
+                }    
             }
         }
         else
@@ -125,7 +127,7 @@ public class TarefaApp : ITarefaApp
 
             if (oldTarefa.TarefaUsuario != null && oldTarefa.TarefaUsuario.Any())
                 _service.DeletarTarefaUsuarioAntigos(oldTarefa.TarefaUsuario.ToList());
-
+            
             _service.Editar(tarefa);
         }
 
@@ -140,7 +142,7 @@ public class TarefaApp : ITarefaApp
             throw new Exception("Projeto não encontrado!");
 
         var lAtividadeIds = AtividadeService.GetByIdProjeto(idProjeto)
-            .Select(x => new AtividadeResponse()
+            .Select(x => new AtividadeAdmResponse()
             {
                 IdAtividade = x.IdAtividade,
                 Nome = x.Titulo,
@@ -159,14 +161,14 @@ public class TarefaApp : ITarefaApp
                 TarefasCompletas = tarefas.Count(x => x.Status == EStatusTarefa.Completo),
                 TarefasAtrasadas = tarefas.Count(x => x.AtividadeFk.StatusAtividade ==  EStatusAtividade.Atrasado && x.Status != EStatusTarefa.Completo)
             },
-            ListTarefas = new List<TarefaListResponse>(),
+            ListTarefas = new List<TarefaAdmListResponse>(),
             ListAtividade = lAtividadeIds,
             IsView = projeto.Status is EStatusProjeto.Cancelado or EStatusProjeto.Concluido,
         };
 
         foreach (var item  in tarefas)
         {
-            var tarefaList = new TarefaListResponse()
+            var tarefaList = new TarefaAdmListResponse()
             {
                 IdTarefa = item.IdTarefa,
                 NomeAtividade = item.AtividadeFk.Titulo,
@@ -216,7 +218,7 @@ public class TarefaApp : ITarefaApp
 
          var retorno = new TarefaRegistroResponse()
          {
-             ListTarefas = new List<TarefaListResponse>()
+             ListTarefas = new List<TarefaAdmListResponse>()
          };
 
          var lAtividadeIds = AtividadeService
@@ -228,7 +230,7 @@ public class TarefaApp : ITarefaApp
 
         foreach (var item  in tarefas)
         {
-            var tarefaList = new TarefaListResponse()
+            var tarefaList = new TarefaAdmListResponse()
             {
                 IdTarefa = item.IdTarefa,
                 NomeAtividade = item.AtividadeFk.Titulo,
@@ -281,10 +283,10 @@ public class TarefaApp : ITarefaApp
             retorno.LErrors.Add("IdTarefa não encontrado!");
         else
         {
+            var projeto = _projetoService.GetByIdWithIncludes(tarefa.AtividadeFk.IdProjeto);
+
             if (tarefa.AtividadeFk.Tarefas.Count() == 1)
             {
-                var projeto = _projetoService.GetByIdWithIncludes(tarefa.AtividadeFk.IdProjeto);
-                
                 if (projeto != null)
                 {
                     if (projeto.Atividades.Count() == 1)
@@ -295,6 +297,36 @@ public class TarefaApp : ITarefaApp
 
             if (retorno.IsValid())
                 _service.DeletarTarefaWithIncludes(tarefa);
+            
+            if (projeto != null && projeto.AlteracaoTarefasProjetoNotificar)
+            {
+                var lUsuarioNotificados = new List<Usuario>();
+            
+                foreach (var item in tarefa.TarefaUsuario)
+                {
+                    if (!lUsuarioNotificados.Contains(item.Usuario))
+                    {
+                        lUsuarioNotificados.Add(item.Usuario);
+                    }
+                }
+            
+                //Notificar participantes da sua participação do projeto
+                foreach (var user in lUsuarioNotificados)
+                {
+                    var pushMensagem = new Notificacao()
+                    {
+                        IdUsuario = user.IdUsuario,
+                        DataCadastro = DateTime.Now,
+                        Lido = ESimNao.Nao,
+                        ClassficacaoMensagem = EMensagemNotificacao.TarefaExcluida,
+                        Corpo = $"A tarefa {tarefa.Descricao} ,que foi atribuída a você, foi removida do projeto {projeto?.Titulo}!",
+                        Titulo = $"A tarefa {tarefa.Descricao} foi removida!",
+                        DataVisualização = null,
+                    };
+        
+                    NotificaService.Cadastrar(pushMensagem);
+                }    
+            }
         }
 
         return retorno;
@@ -447,6 +479,20 @@ public class TarefaApp : ITarefaApp
             }
             
             _service.IntegrarMovimentacaoTarefa(entity);
+            
+            var pushMensagem = new Notificacao()
+            {
+                IdUsuario = atividade.ProjetoFk.IdUsuarioCadastro,
+                DataCadastro = DateTime.Now,
+                Lido = ESimNao.Nao,
+                ClassficacaoMensagem = EMensagemNotificacao.MovimentacaoTarefa,
+                Corpo = $"Olá, a tarefa {tarefa.Descricao} do projeto {atividade.ProjetoFk.Titulo} foi " +
+                        $"movimentada de {entity.From.ToString()} para {entity.To.ToString()}",
+                Titulo = $"Movimentação da tarefa {tarefa.Descricao} do projeto {atividade.ProjetoFk.Titulo}",
+                DataVisualização = null,
+            };
+            
+            NotificaService.Cadastrar(pushMensagem);
         }
 
         return retorno;

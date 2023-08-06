@@ -44,7 +44,6 @@ export class RegisterComponent {
     this.response.Post("Usuario","CadastroInicial",form.value).subscribe(
       (response: Usuario) =>{        
         if(response.sucesso){
-          debugger
           window.localStorage.setItem('NomeUsuario',response.data.nome);
           window.localStorage.setItem('IdUsuario',response.data.idUsuario.toString());
           window.localStorage.setItem('Token',response.data.sessionKey.acess_token);

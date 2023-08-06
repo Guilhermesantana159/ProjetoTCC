@@ -16,22 +16,21 @@ public class TarefaReadRepository : BaseReadRepository<Tarefa>,ITarefaReadReposi
     public IQueryable<Tarefa> GetAllWithInclude()
     {
         return _context.Tarefa
-            .AsQueryable()
-            .Include(x => x.MovimentacaoTarefa)!
+            .Include(x => x.MovimentacaoTarefa)
             .ThenInclude(x => x.Usuario)
             .Include(x => x.AtividadeFk)
             .ThenInclude(x => x.Tarefas)
             .Include(x => x.TagTarefa)
-            .Include(x => x.ComentarioTarefa)!
+            .Include(x => x.ComentarioTarefa)
             .ThenInclude(x => x.Usuario)
             .Include(x => x.TagTarefa)
-            .Include(x => x.TarefaUsuario)!
+            .Include(x => x.TarefaUsuario)
             .ThenInclude(x => x.Usuario);
     }
     
     public Tarefa? GetByIdWithInclude(int idAtividade)
     {
-        return _context.Tarefa!
+        return _context.Tarefa
             .AsQueryable()
             .Include(x => x.TarefaUsuario)!
             .ThenInclude(x => x.Usuario)
@@ -44,6 +43,7 @@ public class TarefaReadRepository : BaseReadRepository<Tarefa>,ITarefaReadReposi
             .AsQueryable()
             .Include(x => x.Usuario)
             .Include(x => x.Tarefa)
-            .ThenInclude(x => x!.AtividadeFk);
+            .ThenInclude(x => x.AtividadeFk)
+            .ThenInclude(x => x.ProjetoFk);
     }
 }

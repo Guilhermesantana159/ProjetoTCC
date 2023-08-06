@@ -167,6 +167,82 @@ namespace Infraestrutura.Migrations
                     b.ToTable("ContatoChat", (string)null);
                 });
 
+            modelBuilder.Entity("Infraestrutura.Entity.Feedback", b =>
+                {
+                    b.Property<int>("IdFeedback")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdFeedback"), 1L, 1);
+
+                    b.Property<string>("Comentario")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdUsuarioCadastro")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdFeedback");
+
+                    b.HasIndex("IdUsuarioCadastro");
+
+                    b.ToTable("Feedback", (string)null);
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.MensagemChat", b =>
+                {
+                    b.Property<int>("IdMensagemChat")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMensagemChat"), 1L, 1);
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdContatoRecebe")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdUsuarioExclusao")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuarioMandante")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuarioRecebe")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReplayMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusMessage")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdMensagemChat");
+
+                    b.HasIndex("IdContatoRecebe");
+
+                    b.HasIndex("IdUsuarioExclusao");
+
+                    b.HasIndex("IdUsuarioMandante");
+
+                    b.HasIndex("IdUsuarioRecebe");
+
+                    b.ToTable("MensagemChat", (string)null);
+                });
+
             modelBuilder.Entity("Infraestrutura.Entity.Menu", b =>
                 {
                     b.Property<int>("IdMenu")
@@ -306,6 +382,12 @@ namespace Infraestrutura.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdProjeto"), 1L, 1);
 
+                    b.Property<bool>("AlteracaoStatusProjetoNotificar")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AlteracaoTarefasProjetoNotificar")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
 
@@ -318,6 +400,12 @@ namespace Infraestrutura.Migrations
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("EmailProjetoAtrasado")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EmailTarefaAtrasada")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Foto")
                         .HasColumnType("nvarchar(max)");
 
@@ -325,6 +413,12 @@ namespace Infraestrutura.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("ListarParaParticipantes")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PortalProjetoAtrasado")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PortalTarefaAtrasada")
                         .HasColumnType("bit");
 
                     b.Property<int>("Status")
@@ -730,6 +824,44 @@ namespace Infraestrutura.Migrations
                     b.Navigation("UsuarioCadastro");
 
                     b.Navigation("UsuarioContato");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.Feedback", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioCadastro")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioCadastro")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UsuarioCadastro");
+                });
+
+            modelBuilder.Entity("Infraestrutura.Entity.MensagemChat", b =>
+                {
+                    b.HasOne("Infraestrutura.Entity.ContatoChat", "ContatoRecebeChat")
+                        .WithMany()
+                        .HasForeignKey("IdContatoRecebe");
+
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioExclusao")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioExclusao");
+
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioMandante")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioMandante");
+
+                    b.HasOne("Infraestrutura.Entity.Usuario", "UsuarioRecebe")
+                        .WithMany()
+                        .HasForeignKey("IdUsuarioRecebe");
+
+                    b.Navigation("ContatoRecebeChat");
+
+                    b.Navigation("UsuarioExclusao");
+
+                    b.Navigation("UsuarioMandante");
+
+                    b.Navigation("UsuarioRecebe");
                 });
 
             modelBuilder.Entity("Infraestrutura.Entity.Menu", b =>

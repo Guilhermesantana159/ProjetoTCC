@@ -196,4 +196,19 @@ public class ProjetoController : DefaultController
             return ResponderErro(e.Message);
         }
     }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("ConsultarDashboard/{idProjeto}/{idUsuario}")]
+    public JsonResult ConsultarDashboard(int idProjeto,int idUsuario)
+    {
+        try
+        {
+            return ResponderSucesso(_app.ConsultarDashboard(idProjeto,idUsuario));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
 }

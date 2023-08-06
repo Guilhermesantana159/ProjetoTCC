@@ -11,4 +11,6 @@ public interface IAtividadeService
     public List<Atividade> GetByIdProjeto(int idProjeto);
     public void DeleteById(Atividade atividade);
     public Atividade? GetById(int idAtividade);
+    public IQueryable<Atividade> GetAllWithInclude();
+
 }

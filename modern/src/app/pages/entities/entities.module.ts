@@ -33,7 +33,7 @@ import { ProjetoCrudComponent } from './projeto/projeto-crud/projeto-crud.compon
 import { EntitiesPagesRoutingModule } from './entities-routing.module';
 import { MaintenanceComponent } from './extrapages/maintenance/maintenance.component';
 import { ComingSoonComponent } from './extrapages/coming-soon/coming-soon.component';
-import { NgbNavModule, NgbDropdownModule, NgbAccordionModule, NgbTooltipModule, NgbPaginationModule, NgbProgressbarModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbDropdownModule, NgbAccordionModule, NgbTooltipModule, NgbPaginationModule, NgbProgressbarModule, NgbTypeaheadModule, NgbToastModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
@@ -61,6 +61,13 @@ import { TemplateCrudComponent } from './template/template-crud/template-crud.co
 import { TemplateComponent } from './template/template-grid/template-grid.component';
 import { ChatComponent } from './chat/chat.component';
 import { FeatherModule } from 'angular-feather';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { WidgetModule } from 'src/app/shared/widget/widget.module';
+import { DashboardsRoutingModule } from '../dashboards/dashboards-routing.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { RatingModule } from 'primeng/rating';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -75,6 +82,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         UsuarioComponent,
         ProjetoComponent,
         UsuarioCrudComponent,
+        DashboardComponent,
         ProjetoCrudComponent,
         RecoverPasswordComponent,
         RegisterComponent,
@@ -122,11 +130,14 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         ComponentModule,   
         ReactiveFormsModule,
         FormsModule,
+        PickerModule,
         FullCalendarModule,
         MatChipsModule,
         MatTableModule,
         DragDropModule,
+        RatingModule,
         HttpClientModule,
+        NgbModule,
         MatPaginatorModule,
         MatTabsModule,
         MatIconModule,
@@ -159,7 +170,12 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         SharedModule,
         NgbTypeaheadModule,
         SimplebarAngularModule,
-        DndModule
+        DndModule,
+        NgbToastModule,
+        LeafletModule,
+        NgApexchartsModule,
+        DashboardsRoutingModule,
+        WidgetModule,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },

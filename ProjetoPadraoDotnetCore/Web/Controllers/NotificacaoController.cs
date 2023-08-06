@@ -52,4 +52,34 @@ public class NotificacaoController : DefaultController
             return ResponderErro(e.Message);
         }
     }
+    
+    [HttpGet]
+    [Route("NotificarProjetosAtrasados")]
+    public JsonResult NotificarProjetosAtrasados()
+    {
+        try
+        {
+            App.NotificarProjetosAtrasados();
+            return ResponderSucesso("Notificação concluída com sucesso!");
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Route("NotificarAtividadesAtrasadas")]
+    public JsonResult NotificarAtividadesAtrasadas()
+    {
+        try
+        {
+            App.NotificarAtividadesAtrasadas();
+            return ResponderSucesso("Notificação concluída com sucesso!");
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
 }

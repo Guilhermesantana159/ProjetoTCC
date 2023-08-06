@@ -15,8 +15,7 @@ public class TarefaController : DefaultController
     {
         _app = app;
     }
-    
-    
+
     [HttpPost]
     [Authorize]
     [Route("Integrar")]

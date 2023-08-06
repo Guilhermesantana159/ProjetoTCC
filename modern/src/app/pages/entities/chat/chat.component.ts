@@ -1,13 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { UntypedFormBuilder, Validators, UntypedFormGroup, FormGroup } from '@angular/forms';
-import { GroupUser, ChatUser, ChatMessage } from './chat.model';
-import {   chatData, chatMessagesData } from './data';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-
-// Date Format
 import {DatePipe} from '@angular/common';
-
-// Light Box
 import { Lightbox } from 'ngx-lightbox';
 import { BaseService } from 'src/factorys/services/base.service';
 import { ToastrService } from 'ngx-toastr';
@@ -16,8 +10,10 @@ import { RetornoPadrao } from 'src/app/objects/RetornoPadrao';
 import { ConsultaModalParams } from 'src/app/objects/Consulta-Padrao/ConsultaModalParams';
 import { DefaultService } from 'src/factorys/services/default.service';
 import { ChatContatos } from 'src/app/objects/Chat/ChatContatos';
-import { ContatoResponse, DataContatoResponse } from 'src/app/objects/Chat/ContatoResponseResponse';
+import { ContatoResponse, DataContatoResponse } from 'src/app/objects/Chat/ContatoResponse';
 import { EStatusContato } from 'src/app/enums/EStatusContato';
+import { MessageChat } from 'src/app/objects/Chat/MessageChat';
+import { MensagemChatResponse } from 'src/app/objects/Chat/MensagemChatResponse';
 
 @Component({
   selector: 'app-chat',
@@ -25,24 +21,10 @@ import { EStatusContato } from 'src/app/enums/EStatusContato';
   styleUrls: ['./chat.component.scss']
 })
 
-/**
- * Chat Component
- */
-export class ChatComponent implements OnInit {
-  chatData!: ChatUser[];
-  chatMessagesData!: ChatMessage[];
-  formData!: UntypedFormGroup;
-  usermessage!: string;
-  isFlag: boolean = false;
-  submitted = false;
-  isStatus: string = 'online';
-  isProfile: string = 'assets/images/users/avatar-2.jpg';
-  username: any = 'Lisa Parker';
-  @ViewChild('scrollRef') scrollRef:any;
-  isreplyMessage = false;
-  emoji = '';
 
-  images: { src: string; thumb: string; caption: string }[] = [];
+export class ChatComponent implements OnInit {
+  @ViewChild('scrollRef') scrollRef:any;
+  emoji = '';
 
   //Operação
   loadingSidebar: boolean = false;
@@ -60,6 +42,16 @@ export class ChatComponent implements OnInit {
   submitRegisterGrupo: Boolean = false;
   lContatosGrupo: DataContatoResponse[] = [];
 
+  //Chat
+  userChat: DataContatoResponse | undefined;
+  loadingMsgSend: boolean = false;
+  formData!: UntypedFormGroup;
+  chatMessagesData: MessageChat[] = [];
+  lMensagensDireta: DataContatoResponse[] = [];
+  loadingMsg: boolean = false;
+  isreplyMessage = false;
+  submitted = false;
+  
   constructor(public formBuilder: UntypedFormBuilder, private lightbox: Lightbox, 
     private offcanvasService: NgbOffcanvas, private datePipe: DatePipe,private response: 
     BaseService,private toastr: ToastrService,private defaultService: DefaultService,private modalService: NgbModal) { 
@@ -91,20 +83,6 @@ export class ChatComponent implements OnInit {
       titulo: [undefined, [Validators.required]],
       contatos: [undefined, [Validators.required]]
     });
-  
-    
-    for (let i = 1; i <= 24; i++) {
-      const src = '../../../../assets/images/small/img-' + i + '.jpg';
-      const caption = 'Image ' + i + ' caption here';
-      const thumb = '../../../../assets/images/small/img-' + i + '-thumb.jpg';
-      const item = {
-        src: src,
-        caption: caption,
-        thumb: thumb
-      };
-      this.images.push(item);
-    }
-
   }
 
   ngOnInit(): void {
@@ -112,6 +90,7 @@ export class ChatComponent implements OnInit {
 
     //Iniciar tela
     this.consultarContatos()
+    this.consultarMensagensDireta()
 
     this.formData = this.formBuilder.group({
       message: ['', [Validators.required]],
@@ -134,7 +113,12 @@ export class ChatComponent implements OnInit {
                 foto: contato.foto,
                 statusContato: contato.statusContato,
                 idUsuarioContato: contato.idUsuarioContato,
-                idContatoChat: contato.idContatoChat
+                idContatoChat: contato.idContatoChat,
+                online: true,
+                telefone: contato.telefone,
+                sobre: contato.sobre,
+                email: contato.email,
+                dataNascimento: contato.dataNascimento
               });
             }
             return groups;
@@ -159,7 +143,6 @@ export class ChatComponent implements OnInit {
         }
 
         this.loadingSidebar = false;
-        this._fetchData();
       }
     );
   };
@@ -193,7 +176,6 @@ export class ChatComponent implements OnInit {
     }).subscribe(
       (response: ContatoResponse) =>{        
         if(response.sucesso){
-          debugger
           if(this.lContatos.length == 0){
             this.lContatos.push({
               title: response.data.nome.substring(0,1).toUpperCase(),
@@ -255,15 +237,6 @@ export class ChatComponent implements OnInit {
     );
   }
 
-  infoUsuario(content: TemplateRef<any>) {    
-    this.offcanvasService.open(content, { position: 'end' });
-  }
-
-  ngAfterViewInit() {
-    this.scrollRef.SimpleBar.getScrollElement().scrollTop = 300;
-    this.onListScroll();
-  }
-
   alterarStatusContato(contato:DataContatoResponse,status: EStatusContato){
     if(contato.statusContato == EStatusContato.Disponivel){
       contato.statusContato = status;
@@ -290,16 +263,113 @@ export class ChatComponent implements OnInit {
     );
   };
 
-  openModal(content: any) {
-    this.modalService.open(content, { size: 'md', centered: true });
+  carregarUsuario(data: DataContatoResponse) {
+    this.userChat = data;
+    this.loadingMsg = true;
+    this.response.Get("Chat","ConsultarMensagens/" + localStorage.getItem('IdUsuario') + '/' + data.idUsuarioContato).subscribe(
+    (response: MensagemChatResponse) =>{      
+      if(response.sucesso){ 
+        response.data.mensagemChat.forEach(element => {
+            this.chatMessagesData.push(element);
+        });      
+      } 
+      else{
+        this.toastr.error(response.mensagem, 'Mensagem:');
+      };
+
+      this.loadingMsg = false;
+    });
+
+    const userChatShow = document.querySelector('.user-chat');
+    if(userChatShow != null){
+      userChatShow.classList.add('user-chat-show');
+    }
   }
 
+  salvarMensagem() {
+    const message = this.formData.get('message')!.value;  
+    var chatReplyUser = (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .conversation-name") as HTMLAreaElement).innerHTML;
+    var chatReplyMessage = (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .mb-0")as HTMLAreaElement).innerText;
 
 
-  // Chat Data Fetch
-  private _fetchData() {
-    this.chatData = chatData;
-    this.chatMessagesData = chatMessagesData;
+    if(this.lMensagensDireta.findIndex(x => x.idContatoChat == this.userChat?.idContatoChat) == -1){
+      if(this.userChat != undefined){
+        this.lMensagensDireta.push(this.userChat);
+      }
+    };
+
+    this.loadingMsgSend = true;
+    this.response.Post("Chat","SalvarMensagem/",{
+      IdUsuarioMandante: localStorage.getItem('IdUsuario'),
+      IdUsuarioRecebe: this.userChat?.idUsuarioContato,
+      IdContatoRecebe: this.userChat?.idContatoChat,
+      Message: message,
+      ReplayName: this.isreplyMessage ? chatReplyUser: undefined,
+      ReplayMessage: this.isreplyMessage ? chatReplyMessage : undefined,
+    }).subscribe(
+    (response: any) =>{      
+      if(response.sucesso){       
+        if (this.isreplyMessage == true) {
+          var dateTime = this.datePipe.transform(new Date(),'dd/MM/yyyy HH:mm:ss');
+          this.chatMessagesData.push({
+            align: 'right',
+            replayName: chatReplyUser,
+            replayMessage: chatReplyMessage,
+            message: message,
+            dataCadastro: dateTime,
+            idMensagemChat: response.data.IdMensagemChat,
+            statusMessage: 0
+          });
+        }
+        else{
+          if (this.formData.valid && message) {
+            this.chatMessagesData.push({
+              align: 'right',
+              message,
+              dataCadastro: this.datePipe.transform(new Date(),'dd/MM/yyyy HH:mm:ss'),
+              idMensagemChat: response.data.IdMensagemChat,
+              statusMessage: 0
+            });
+          }
+        }    
+      } 
+      else{
+        this.toastr.error(response.mensagem, 'Mensagem:');
+      };
+
+      //Reset
+      this.formData.get('message')?.setValue(undefined);
+      this.onListScroll();
+      this.loadingMsgSend = false;  
+
+      document.querySelector('.replyCard')?.classList.remove('show');
+      this.emoji = '';
+      
+      this.submitted = true;
+      this.isreplyMessage = false;
+    });
+  }
+
+  MessageSearch(){
+    var input:any, filter:any, ul:any, li:any, a:any | undefined, i:any, txtValue:any;
+    input = document.getElementById("searchMessage") as HTMLAreaElement;
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("users-conversation");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+      a = li[i].getElementsByTagName("p")[0];
+      txtValue = a?.innerText;
+      if (txtValue?.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+    } else {
+        li[i].style.display = "none";
+    }
+    }
+  }
+  
+  ngAfterViewInit() {
+    this.scrollRef.SimpleBar.getScrollElement().scrollTop = 300;
+    this.onListScroll();
   }
 
   onListScroll() {
@@ -309,84 +379,28 @@ export class ChatComponent implements OnInit {
       }, 500);
     }
   }
+  
+  replyMessage(event:any){
+    this.isreplyMessage = true;
+    document.querySelector('.replyCard')?.classList.add('show');
+    var copyText = event.target.closest('.chat-list').querySelector('.ctext-content').innerHTML;
+    (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .mb-0") as HTMLAreaElement).innerHTML = copyText;
+    var msgOwnerName:any = event.target.closest(".chat-list").classList.contains("right") == true ? 'You' : document.querySelector('.username')?.innerHTML;
+    (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .conversation-name") as HTMLAreaElement).innerHTML = msgOwnerName;
+  }
 
-  /**
-   * Returns form
-   */
-   get form() {
+  copyMessage(event:any){
+    navigator.clipboard.writeText(event.target.closest('.chat-list').querySelector('.ctext-content').innerHTML);
+    (document.getElementById("copyClipBoard") as HTMLElement).style.display = "block";
+    setTimeout(() => {
+    (document.getElementById("copyClipBoard") as HTMLElement).style.display = "none";
+    }, 1000);
+  }
+
+  get form() {
     return this.formData.controls;
   }
-
-  /**
-   * Save the message in chat
-   */
-  messageSave() {
-    const message = this.formData.get('message')!.value;  
-    if (this.isreplyMessage == true) {
-     var itemReplyList:any = document.getElementById("users-chat")?.querySelector(".chat-conversation-list");
-     var dateTime = this.datePipe.transform(new Date(),"h:mm a");
-     var chatReplyUser = (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .conversation-name") as HTMLAreaElement).innerHTML;
-     var chatReplyMessage = (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .mb-0")as HTMLAreaElement).innerText;
- 
-     this.chatMessagesData.push({
-       align: 'right',
-       name: 'Marcus',
-       replayName: chatReplyUser,
-       replaymsg: chatReplyMessage,
-       message,
-       time: dateTime,
-     });
-     this.onListScroll();
- 
-   // Set Form Data Reset
-   this.formData = this.formBuilder.group({
-     message: null,
-   });
-   this.isreplyMessage = false;
-
-    }
-    else{
-     if (this.formData.valid && message) {
-       // Message Push in Chat
-       this.chatMessagesData.push({
-         align: 'right',
-         name: 'Marcus',
-         message,
-         time: this.datePipe.transform(new Date(),"h:mm a"),
-       });
-       this.onListScroll();
-       // Set Form Data Reset
-       this.formData = this.formBuilder.group({
-         message: null,
-       });
-     }
-   }
-   document.querySelector('.replyCard')?.classList.remove('show');
-   this.emoji = '';
-   
-   this.submitted = true;
-  }
-
-  /***
-  * OnClick User Chat show
-  */
-  chatUsername(name: string, profile: any, status: string) {
-    this.isFlag = true;
-    this.username = name;
-    const currentDate = new Date();
-    this.isStatus = status;
-    this.isProfile = profile ? profile : 'assets/images/users/user-dummy-img.jpg';
-    this.chatMessagesData.map((chat) => { if (chat.profile) { chat.profile = this.isProfile } });
-    const userChatShow = document.querySelector('.user-chat');
-    if(userChatShow != null){
-      userChatShow.classList.add('user-chat-show');
-    }
-  }
-
-   /**
-   * SidebarHide modal
-   * @param content modal content
-   */
+  
   SidebarHide() {
     const recentActivity = document.querySelector('.user-chat');
       if(recentActivity != null){
@@ -394,12 +408,68 @@ export class ChatComponent implements OnInit {
       }
   }
 
-  open(index: number): void {
-    // open lightbox
-    this.lightbox.open(this.images, index, { });
+  deleteMessage(event:any,data: MessageChat){
+    event.target.closest('.chat-list').remove();
+
+    this.response.Post("Chat","DeletarMensagem/" + data.idMensagemChat,{}).subscribe(
+    (response: RetornoPadrao) =>{      
+      if(!response.sucesso){       
+        this.toastr.error(response.mensagem, 'Mensagem:');
+      }
+    })
+  };
+    
+  openModal(content: any) {
+    this.modalService.open(content, { size: 'md', centered: true });
   }
 
-   // Contact Search
+  infoUsuario(content: TemplateRef<any>) {    
+    this.offcanvasService.open(content, { position: 'end' });
+  }
+
+  consultarMensagensDireta(){
+    this.response.Get("Chat","ConsultarMensagensDireta/" + this.idUsuario).subscribe(
+      (response: ChatContatoResponse) =>{        
+        if(response.sucesso){
+          response.data.lContatos.forEach(element => {
+            this.lMensagensDireta.push(element)
+          });
+        }
+        else
+        {
+          this.toastr.error('<small>' + response.mensagem + '</small>', 'Mensagem:');
+        }
+
+        this.loadingSidebar = false;
+      }
+    );
+  }
+
+  deleteAllMessage(){
+    var allMsgDelete:any = document.getElementById('users-conversation')?.querySelectorAll('.chat-list');
+    
+    allMsgDelete.forEach((item:any)=>{
+      item.remove();
+    })
+
+
+    let listIdsMensagens: Array<number> = [];
+
+    this.chatMessagesData.forEach(element => {
+      listIdsMensagens.push(element.idMensagemChat ?? 0);
+    });
+
+    this.response.Post("Chat","ExcluirConversa/",{
+      IdUsuarioExclusao: localStorage.getItem('IdUsuario'),
+      ListIdMensagemChat: listIdsMensagens
+    }).subscribe(
+    (response: RetornoPadrao) =>{      
+      if(!response.sucesso){       
+        this.toastr.error(response.mensagem, 'Mensagem:');
+      };
+    });
+  }
+
    ContactSearch(){
     var input:any, filter:any, ul:any, li:any, a:any | undefined, i:any, txtValue:any;
     input = document.getElementById("searchContact") as HTMLAreaElement;
@@ -417,58 +487,6 @@ export class ChatComponent implements OnInit {
         }
       }
     })    
-  }
-
-  // Message Search
-  MessageSearch(){
-    var input:any, filter:any, ul:any, li:any, a:any | undefined, i:any, txtValue:any;
-    input = document.getElementById("searchMessage") as HTMLAreaElement;
-    filter = input.value.toUpperCase();
-    ul = document.getElementById("users-conversation");
-    li = ul.getElementsByTagName("li");
-    for (i = 0; i < li.length; i++) {
-      a = li[i].getElementsByTagName("p")[0];
-      txtValue = a?.innerText;
-      if (txtValue?.toUpperCase().indexOf(filter) > -1) {
-        li[i].style.display = "";
-    } else {
-        li[i].style.display = "none";
-    }
-    }
-  }
-
-
-
-  // Replay Message
-  replyMessage(event:any,align:any){
-    this.isreplyMessage = true;
-    document.querySelector('.replyCard')?.classList.add('show');
-    var copyText = event.target.closest('.chat-list').querySelector('.ctext-content').innerHTML;
-    (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .mb-0") as HTMLAreaElement).innerHTML = copyText;
-    var msgOwnerName:any = event.target.closest(".chat-list").classList.contains("right") == true ? 'You' : document.querySelector('.username')?.innerHTML;
-    (document.querySelector(".replyCard .replymessage-block .flex-grow-1 .conversation-name") as HTMLAreaElement).innerHTML = msgOwnerName;
-  }
-
-  // Copy Message
-  copyMessage(event:any){
-    navigator.clipboard.writeText(event.target.closest('.chat-list').querySelector('.ctext-content').innerHTML);
-    (document.getElementById("copyClipBoard") as HTMLElement).style.display = "block";
-    setTimeout(() => {
-    (document.getElementById("copyClipBoard") as HTMLElement).style.display = "none";
-    }, 1000);
-  }
-
-  // Delete Message
-  deleteMessage(event:any){
-    event.target.closest('.chat-list').remove();
-  }
-
-  // Delete All Message
-  deleteAllMessage(event:any){
-    var allMsgDelete:any = document.getElementById('users-conversation')?.querySelectorAll('.chat-list');
-    allMsgDelete.forEach((item:any)=>{
-      item.remove();
-    })
   }
 
    // Emoji Picker
@@ -503,12 +521,4 @@ export class ChatComponent implements OnInit {
    closeReplay(){
     document.querySelector('.replyCard')?.classList.remove('show');
   }
-
-  /**
-   * Delete Chat Contact Data 
-   */
-   delete(event:any) {
-    event.target.closest('li')?.remove();
-  }
-
 }

@@ -4,6 +4,7 @@ using Aplication.Models.Request.Projeto;
 using Aplication.Models.Request.Tarefa;
 using Aplication.Models.Request.Template;
 using Aplication.Models.Request.Usuario;
+using Aplication.Models.Request.Utils;
 using Aplication.Models.Response.Projeto;
 using Aplication.Models.Response.Usuario;
 using Aplication.Utils.HashCripytograph;
@@ -65,6 +66,12 @@ public class Mapping : Profile
                 map => map.MapFrom(src => src.uf))
             .ForMember(dst => dst.Rua,
                 map => map.MapFrom(src => src.logradouro));
+        
+        CreateMap<FeedbackRequest, Feedback>()  
+            .ForMember(dst => dst.DataCadastro,
+            map => map.MapFrom(src => DateTime.Now));
+
+
 
         #endregion
 
@@ -76,9 +83,18 @@ public class Mapping : Profile
             .ForMember(dst => dst.Status,
                 map => map.MapFrom(src => EStatusProjeto.Aberto));
 
-        CreateMap<AtividadeRequest, Atividade>()
+        CreateMap<ProjetoRequest.AtividadeRequest, Atividade>()
             .ForMember(dst => dst.Titulo,
                 map => map.MapFrom(src => src.Atividade));
+      
+        CreateMap<string, Tarefa>()
+            .ForMember(dst => dst.Descricao,
+                map => map.MapFrom(src => src));
+
+        CreateMap<ProjetoRequest.TarefaRequest, Tarefa>()
+            .ForMember(dst => dst.TagTarefa,
+                map => map.MapFrom(src => src.LTagsTarefa));
+
         
         CreateMap<Projeto, ProjetoResponse>()
             .ForMember(dst => dst.ListarAtvProjeto,
@@ -94,7 +110,7 @@ public class Mapping : Profile
 
         #region Tarefa
         CreateMap<TarefaAdmRequest, Tarefa>();
-        CreateMap<TarefaRequest, Tarefa>();
+        CreateMap<ProjetoRequest.TarefaRequest, Tarefa>();
         CreateMap<ComentarioTarefaRequest, ComentarioTarefa>()
             .ForMember(dst => dst.Data,
                 map => map.MapFrom(src => DateTime.Now));
@@ -110,6 +126,12 @@ public class Mapping : Profile
         CreateMap<ContatoRequest, ContatoChat>()
             .ForMember(dst => dst.StatusContato,
                 map => map.MapFrom(src => StatusContato.Disponivel))
+            .ForMember(dst => dst.DataCadastro,
+                map => map.MapFrom(src => DateTime.Now));
+        
+        CreateMap<MensagemChatRequest, MensagemChat>()
+            .ForMember(dst => dst.StatusMessage,
+                map => map.MapFrom(src => EStatusMessage.Normal))
             .ForMember(dst => dst.DataCadastro,
                 map => map.MapFrom(src => DateTime.Now));
         

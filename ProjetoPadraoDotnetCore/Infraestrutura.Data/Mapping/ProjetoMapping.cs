@@ -19,6 +19,13 @@ public class ProjetoMapping : IEntityTypeConfiguration<Projeto>
         builder.Property(o => o.DataCadastro).IsRequired();
         builder.Property(o => o.Status).IsRequired();
         builder.Property(o => o.Foto);
+        builder.Property(o => o.EmailProjetoAtrasado).IsRequired();
+        builder.Property(o => o.PortalProjetoAtrasado).IsRequired();
+        builder.Property(o => o.EmailTarefaAtrasada).IsRequired();
+        builder.Property(o => o.PortalTarefaAtrasada).IsRequired();
+        builder.Property(o => o.AlteracaoStatusProjetoNotificar).IsRequired();
+        builder.Property(o => o.AlteracaoTarefasProjetoNotificar).IsRequired();
+
 
         builder
             .HasOne(t => t.Usuario)

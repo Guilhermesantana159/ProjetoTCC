@@ -101,7 +101,6 @@ export class CodeInputComponent implements AfterViewInit{
   EnviarCodes(){
     let value = "";
 
-    debugger
     this.inputs.forEach(element => {
       value = value + element.value;
     });

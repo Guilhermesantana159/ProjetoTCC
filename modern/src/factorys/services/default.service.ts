@@ -20,6 +20,114 @@ export class DefaultService{
     };
 
     public Modal = {
+      ConsultaPadraoTemplate: {
+            Parametros: {
+                Controller: 'Template',
+                Metodo: 'ConsultarGridTemplate',
+                PaginatorSizeOptions: [5,10],
+                UrlRelatorio: '',
+                MultiModal: false,
+                Modal: {
+                  SelectedText: 'tituloTemplate',
+                  SelectedValue: 'idTemplate'
+                },
+                PageSize: 5,
+                Params: undefined
+              },
+              Colunas: [
+              {
+                Field: 'idTemplate',
+                DisplayName: 'Cód template',
+                CellTemplate: undefined,
+                ActionButton: undefined,
+                Type: TypeFilter.Number,
+                EnumName: undefined,
+                Filter: true,
+                OrderBy: true,
+                ServerField: 'IdTemplate',
+                StyleColuna: 'min-width: 15vh; max-width: 20vh;',
+                EnumOptions: [],
+                StyleCell: undefined,
+                ClassCell: undefined,   
+                CellGraphics: undefined,
+                CellImage: undefined,
+              },
+              {
+                Field: 'tituloTemplate',
+                DisplayName: 'Template',
+                CellTemplate: undefined,
+                ActionButton: undefined,
+                Type: TypeFilter.String,
+                EnumName: undefined,
+                OrderBy: true,
+                Filter: true,
+                ServerField: 'Template',
+                StyleColuna: 'min-width: 25vh; max-width: 35vh;',
+                EnumOptions: [],
+                StyleCell: 'margin-left:5pt; padding: 3pt; border-radius: 2pt;',
+                ClassCell: 'd-inline',
+                CellGraphics: undefined,
+                CellImage: {
+                  PropertyLink: 'fotoTemplate',
+                  ClassImage: 'rounded float-start d-inline',
+                  StyleImage: 'max-width: 30pt;',
+                  Tooltip:  '',
+                  OnlyImage: false
+                },    
+              },
+              {
+                Field: 'duracao',
+                DisplayName: 'Duração estimada template do projeto',
+                CellTemplate: undefined,
+                ActionButton: undefined, 
+                Type: TypeFilter.String,
+                EnumName: undefined,
+                ServerField: 'duracao',
+                Filter: true,
+                OrderBy: true,
+                StyleColuna: 'min-width: 10vh; max-width: 15vh;',
+                EnumOptions: [],
+                StyleCell: undefined,
+                ClassCell: undefined,
+                CellGraphics: undefined,
+                CellImage: undefined,  
+              },
+              {
+                Field: 'categoria',
+                DisplayName: 'Categoria do template',
+                CellTemplate: undefined,
+                ActionButton: undefined, 
+                Type: TypeFilter.String,
+                EnumName: undefined,
+                ServerField: 'Categoria',
+                Filter: true,
+                OrderBy: true,
+                StyleColuna: 'min-width: 10vh; max-width: 15vh;',
+                EnumOptions: [],
+                StyleCell: undefined,
+                ClassCell: undefined,
+                CellGraphics: undefined,
+                CellImage: undefined,  
+              },
+              {
+                Field: 'autor',
+                DisplayName: 'Autor do template',
+                CellTemplate: undefined,
+                ActionButton: undefined, 
+                Type: TypeFilter.String,
+                EnumName: undefined,
+                ServerField: 'autor',
+                Filter: true,
+                OrderBy: true,
+                StyleColuna: 'min-width: 10vh; max-width: 15vh;',
+                EnumOptions: [],
+                StyleCell: undefined,
+                ClassCell: undefined,
+                CellGraphics: undefined,
+                CellImage: undefined,  
+              }
+            ]
+        },
         ConsultaPadraoUsuario: {
             Parametros: {
                 Controller: 'Usuario',
@@ -150,6 +258,6 @@ export class DefaultService{
               },    
             }
           ]
-      }
+      },
     }
 };

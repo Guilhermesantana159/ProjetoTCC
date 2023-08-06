@@ -23,6 +23,8 @@ using Infraestrutura.Repository.Interface.Base;
 using Infraestrutura.Repository.Interface.CategoriaTemplate;
 using Infraestrutura.Repository.Interface.ComentarioTarefa;
 using Infraestrutura.Repository.Interface.ContatoChat;
+using Infraestrutura.Repository.Interface.Feedback;
+using Infraestrutura.Repository.Interface.MensagemChat;
 using Infraestrutura.Repository.Interface.Menu;
 using Infraestrutura.Repository.Interface.Modulo;
 using Infraestrutura.Repository.Interface.MovimentacaoTarefa;
@@ -145,6 +147,12 @@ namespace CrossCutting.IOC
             
             services.AddScoped<ITagTarefaTemplateReadRepository, TagTarefaTemplateReadRepository>();
             services.AddScoped<ITagTarefaTemplateWriteRepository, TagTarefaTemplateWriteRepository>();
+            
+            services.AddScoped<IMensagemChatReadRepository, MensagemChatReadRepository>();
+            services.AddScoped<IMensagemChatWriteRepository, MensagemChatWriteRepository>();
+            
+            services.AddScoped<IFeedbackReadRepository, FeedbackReadRepository>();
+            services.AddScoped<IFeedbackWriteRepository, FeedbackWriteRepository>();
 
             #endregion
 

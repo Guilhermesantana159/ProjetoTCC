@@ -136,7 +136,7 @@ export class TemplateComponent{
           CellImage: undefined,
         },
         {
-          Field: 'titulo',
+          Field: 'tituloTemplate',
           DisplayName: 'Template',
           CellTemplate: undefined,
           ActionButton: undefined,

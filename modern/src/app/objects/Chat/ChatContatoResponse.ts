@@ -1,5 +1,5 @@
 import { RetornoPadrao } from "../RetornoPadrao";
-import { DataContatoResponse } from "./ContatoResponseResponse";
+import { DataContatoResponse } from "./ContatoResponse";
 
 export interface ChatContatoResponse extends RetornoPadrao
 {

@@ -135,4 +135,19 @@ public class TemplateController : DefaultController
             return ResponderErro(e.Message);
         }
     }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("CarregarTemplate/{id}")]
+    public JsonResult CarregarTemplate(int id)
+    {
+        try
+        {
+            return ResponderSucesso(TemplateApp.CarregarTemplate(id));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
 }

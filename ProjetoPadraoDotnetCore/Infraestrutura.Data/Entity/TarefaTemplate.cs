@@ -7,7 +7,7 @@ public class TarefaTemplate
     public string? Descricao { get; set; }
     public int IdAtividadeTemplate { get; set; }
     public string? DescricaoTarefa { get; set; }
-    public EPrioridadeTarefa? Prioridade { get; set; }
+    public EPrioridadeTarefa? Prioridade { get; set; } = EPrioridadeTarefa.NãoInformada;
 
     #region Relacionamento
     public virtual AtividadeTemplate AtividadeTemplate {get; set; } = null!;

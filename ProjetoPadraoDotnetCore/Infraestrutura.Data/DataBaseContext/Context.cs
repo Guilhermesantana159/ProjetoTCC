@@ -35,4 +35,6 @@ public class Context : DbContext
     public DbSet<TarefaTemplate> TarefaTemplate { get; set; } = null!;
     public DbSet<CategoriaTemplate> CategoriaTemplate { get; set; } = null!;
     public DbSet<TagTarefaTemplate> TagTarefaTemplate { get; set; } = null!;
+    public DbSet<Feedback> Feedback { get; set; } = null!;
+    public DbSet<MensagemChat> MensagemChat { get; set; } = null!;
 }

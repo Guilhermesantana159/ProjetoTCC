@@ -3,12 +3,12 @@
 public class TarefaAdmResponse
 { 
     public Indicadores? Indicadores { get; set; }
-    public List<AtividadeResponse>? ListAtividade { get; set; }
-    public List<TarefaListResponse>? ListTarefas { get; set; }
+    public List<AtividadeAdmResponse>? ListAtividade { get; set; }
+    public List<TarefaAdmListResponse>? ListTarefas { get; set; }
     public bool IsView { get; set; }
 }
 
-public class TarefaListResponse
+public class TarefaAdmListResponse
 {
     public int IdTarefa { get; set; }
     public int IdAtividade { get; set; }
@@ -42,7 +42,7 @@ public class ResponsavelTarefa
     public int? IdUsuario { get; set; }
 }
 
-public class AtividadeResponse
+public class AtividadeAdmResponse
 {
     public List<string?> LTarefas { get; set; }
     public string? Nome { get; set; }

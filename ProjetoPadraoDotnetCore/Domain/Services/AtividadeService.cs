@@ -37,6 +37,11 @@ public class AtividadeService : IAtividadeService
         return ReadRepository.GetById(idAtividade);
     }
 
+    public IQueryable<Atividade> GetAllWithInclude()
+    {
+        return ReadRepository.GetAllWithInclude();
+    }
+
     public List<Atividade> GetByIdProjeto(int idProjeto)
     {
         return ReadRepository.GetByIdProjeto(idProjeto);

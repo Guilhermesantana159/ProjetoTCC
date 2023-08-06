@@ -32,4 +32,13 @@ public class AtividadeReadRepository : BaseReadRepository<Atividade>,IAtividadeR
             .Where(x => x.IdProjeto == idProjeto)
             .ToList();
     }
+
+    public IQueryable<Atividade> GetAllWithInclude()
+    {
+        return _context.Atividade
+            .Include(x => x.ProjetoFk)
+            .Include(x => x.Tarefas)
+            .ThenInclude(x => x.TarefaUsuario)
+            .ThenInclude(x => x.Usuario);
+    }
 }

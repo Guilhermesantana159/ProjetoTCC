@@ -136,7 +136,6 @@ export class AdministracaoTarefasCrudComponent{
 
   //Grid
   onSort({ column, direction }: any) {
-    debugger
     // resetting other headers
     this.headers.forEach(header => {
       if (header.sortable !== column) {

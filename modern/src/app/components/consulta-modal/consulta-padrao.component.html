@@ -1,7 +1,7 @@
 <div class="inline-block w-100" >
   <label class="form-label">{{ParamsConsulta.Label}}
     <span class="span-required" [hidden]="!ParamsConsulta.Required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
-    <div *ngIf="gridOptions.Parametros.MultiModal" && !ParamsConsulta.OnlyButton>
+    <div *ngIf="gridOptions.Parametros.MultiModal && !ParamsConsulta.OnlyButton">
       <div class="form-control" style="display: inline-block; width: 100%;">
         <mat-chip-grid #chipGrid aria-label="Enter keywords">
           <mat-chip-row *ngFor="let item of this.form.get(this.multiForm)?.value"

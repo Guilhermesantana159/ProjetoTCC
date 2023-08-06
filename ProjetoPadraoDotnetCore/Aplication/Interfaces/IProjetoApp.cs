@@ -19,4 +19,6 @@ public interface IProjetoApp
     public void DeletarAtividade(int idAtividade);
     public TarefaKambamResponse ConsultarPorProjeto(int idProjeto, int idUsuario);
     public CronogramaAtividadeResponse ConsultarAtividadeCronogramaPorProjeto(int idProjeto);
+    public ProjetoDashboardResponse ConsultarDashboard(int idProjeto,int idUsuario);
+
 }

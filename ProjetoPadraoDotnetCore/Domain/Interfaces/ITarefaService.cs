@@ -26,4 +26,5 @@ public interface ITarefaService
     public void DeletarComentarioTarefa(List<ComentarioTarefa> lcomentario);
     public void IntegrarMovimentacaoTarefa(MovimentacaoTarefa entity);
     public IQueryable<MovimentacaoTarefa>? GetMovimentacaoTarefaPorUsuarioTarefa(int? idUsuario,int? tarefa);
+    public IQueryable<TarefaUsuario> GetTarefaUsuarioWithInclude();
 }

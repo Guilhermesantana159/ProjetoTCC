@@ -9,5 +9,5 @@ public enum StatusContato
     [Description("Silenciado")]
     Silenciado = 1,
     [Description("Bloqueado")]
-    Bloqueado = 2
+    Bloqueado = 2,
 }

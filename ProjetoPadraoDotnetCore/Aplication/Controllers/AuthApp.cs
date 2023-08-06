@@ -31,20 +31,9 @@ public class AuthApp : IAuthApp
     {
         var retorno = new LoginResponse();
 
-        Usuario? usuario; 
-
-        if (isRecuperacaoSenha)
-        {
-            usuario = UsuarioService.GetAllList()
+        var usuario = UsuarioService.GetAllList()
                 .FirstOrDefault(x => x.Email == request.EmailLogin && x.Senha ==
-                   request.SenhaLogin);
-        }
-        else
-        {
-            usuario = UsuarioService.GetAllList()
-                .FirstOrDefault(x => x.Email == request.EmailLogin);
-        }
-      
+                    new HashCripytograph().Hash(request.SenhaLogin));
 
         if (usuario == null)
             retorno.Autenticado = false;

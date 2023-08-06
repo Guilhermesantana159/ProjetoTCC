@@ -78,4 +78,82 @@ public class ChatController : DefaultController
             return ResponderErro(e.Message);
         }
     }
+    
+    [HttpPost]
+    [Authorize]
+    [Route("SalvarMensagem")]
+    public JsonResult SalvarMensagem(MensagemChatRequest request)
+    {
+        try
+        {
+            return ResponderSucesso(ChatApp.SalvarMensagem(request));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("ConsultarMensagens/{idUsuarioMandante}/{idUsuarioRecebe}")]
+    public JsonResult ConsultarMensagens(int idUsuarioMandante,int idUsuarioRecebe)
+    {
+        try
+        {
+            return ResponderSucesso(ChatApp.ConsultarMensagens(idUsuarioMandante,idUsuarioRecebe));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpPost]
+    [Authorize]
+    [Route("DeletarMensagem/{idMensagem}")]
+    public JsonResult DeletarMensagem(int idMensagem)
+    {
+        try
+        {
+            ChatApp.DeletarMensagem(idMensagem);
+            return ResponderSucesso("Mensagem deletada com sucesso!");
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("ConsultarMensagensDireta/{id}")]
+    public JsonResult ConsultarMensagensDireta(int id)
+    {
+        try
+        {
+            return ResponderSucesso(ChatApp.ConsultarMensagensDireta(id));
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    
+    [HttpPost]
+    [Authorize]
+    [Route("ExcluirConversa")]
+    public JsonResult ExcluirConversa(ExcluirConversaRequest request)
+    {
+        try
+        {
+            ChatApp.ExcluirConversa(request);
+            return ResponderSucesso("Mensagens excluída com sucesso!");
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
 }

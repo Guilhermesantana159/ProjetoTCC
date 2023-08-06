@@ -1,5 +1,5 @@
 ﻿//Criar Migration
-dotnet ef migrations add AddTagTarefaTemplate
+dotnet ef migrations add FeedBack
 
 //Remover ultimo migration
 dotnet ef migrations remove 

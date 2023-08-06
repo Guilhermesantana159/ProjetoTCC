@@ -186,8 +186,6 @@ export class DataGridComponent implements OnInit{
       QueryFilters: this.QueryFilters
     }
 
-    debugger
-
     if(this.gridOptions.Parametros.Params != undefined){
       request = Object.assign(request,this.gridOptions.Parametros.Params)
     }

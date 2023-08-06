@@ -1,4 +1,5 @@
 using Aplication.Interfaces;
+using Aplication.Models.Request.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Controllers.Base;
@@ -29,6 +30,23 @@ public class UtilsController : DefaultController
                 return ResponderErro("Cep inválido!");
 
             return ResponderSucesso(retorno);
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpPost]
+    [Authorize]
+    [Route("CadastrarFeedback")]
+    public JsonResult CadastrarFeedback(FeedbackRequest request)
+    {
+        try
+        {
+            var retorno = UtilsApp.CadastrarFeedback(request);
+
+            return ResponderSucesso("Obrigado pela sua avaliação!",retorno);
         }
         catch (Exception e)
         {

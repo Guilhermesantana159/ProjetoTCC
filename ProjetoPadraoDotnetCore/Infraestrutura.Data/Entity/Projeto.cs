@@ -13,6 +13,12 @@ public class Projeto
     public int IdUsuarioCadastro { get; set; }
     public DateTime DataCadastro { get; set; }
     public EStatusProjeto Status { get; set; }
+    public bool EmailProjetoAtrasado { get; set; }
+    public bool PortalProjetoAtrasado { get; set; }
+    public bool EmailTarefaAtrasada { get; set; }
+    public bool PortalTarefaAtrasada { get; set; }
+    public bool AlteracaoStatusProjetoNotificar { get; set; }
+    public bool AlteracaoTarefasProjetoNotificar { get; set; }
 
     #region Relacionamento
     public IEnumerable<Atividade> Atividades { get; set; } = null!;

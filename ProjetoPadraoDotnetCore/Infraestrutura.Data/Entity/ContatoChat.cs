@@ -10,7 +10,7 @@ public class ContatoChat
     public StatusContato StatusContato { get; set; }
 
     #region Relacionamento
-    public virtual Usuario UsuarioCadastro {get; set; } = null!;
-    public virtual Usuario UsuarioContato {get; set; } = null!;
+    public virtual Usuario UsuarioCadastro {get; set; }
+    public virtual Usuario UsuarioContato {get; set; }
     #endregion
 }

@@ -1,4 +1,4 @@
-import { DataContatoResponse } from "./ContatoResponseResponse";
+import { DataContatoResponse } from "./ContatoResponse";
 
 export interface ChatContatos {
     title: string;

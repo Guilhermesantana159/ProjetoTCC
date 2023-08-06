@@ -3,6 +3,7 @@ using Aplication.Interfaces;
 using Aplication.Models.Grid;
 using Aplication.Models.Request.Template;
 using Aplication.Models.Response.Base;
+using Aplication.Models.Response.Projeto;
 using Aplication.Models.Response.Template;
 using Aplication.Utils.FilterDynamic;
 using Aplication.Utils.Helpers;
@@ -106,7 +107,7 @@ public class TemplateApp : ITemplateApp
                 .Select(x => new TemplateGridResponse()
                 {
                     IdTemplate = x.IdTemplate,
-                    Titulo = x.Titulo,
+                    TituloTemplate = x.Titulo,
                     Duracao = $"{x.QuantidadeTotal} {(x.Escala == EEscala.Semana ? "Semanas":"Dias")}",
                     Categoria = x.CategoriaTemplate.Descricao,
                     Autor = x.UsuarioCadastro.Nome,
@@ -198,6 +199,54 @@ public class TemplateApp : ITemplateApp
                      LTagsTarefa = y.TagTarefaTemplate.Select(z => z.Descricao).ToList()
                  }).ToList()
              }).ToList()
+         };
+     }
+
+     public ProjetoResponse CarregarTemplate(int id)
+     {
+         var template = Service.ConsultarPorIdWithIncludes(id);
+
+         if (template == null)
+             throw new Exception("Template não encontrado!");
+
+         return new ProjetoResponse()
+         {
+            IdProjeto = null,
+            Titulo = template.Titulo,
+            DataInicio = DateTime.Now,
+            DataFim = DateTime.Now.AddDays(template.Escala == EEscala.Semana
+             ? 7 * template.QuantidadeTotal
+             : template.QuantidadeTotal),
+            Descricao = template.Descricao,
+            ListarAtvProjeto = true,
+            EmailProjetoAtrasado = true,
+            PortalProjetoAtrasado = true,
+            EmailTarefaAtrasada = true,
+            PortalTarefaAtrasada = true,
+            AlteracaoStatusProjetoNotificar = true,
+            AlteracaoTarefasProjetoNotificar = true, 
+             ListAtividade = template.LAtividadesTemplate.Select(x => new AtvidadeResponse()
+             {
+                 IdAtividade = null,
+                 Atividade = x.Titulo,
+                 DataInicial = DateTime.Now
+                     .AddDays(template.Escala == EEscala.Semana
+                         ? 7 * ((x.Posicao ?? 1) - 1)
+                         : template.QuantidadeTotal * ((x.Posicao ?? 1) - 1)).FormatDateBr(),
+                 DataFim = DateTime.Now
+                     .AddDays(template.Escala == EEscala.Semana
+                         ? 7 * ((x.Posicao ?? 1) - 1)
+                         : template.QuantidadeTotal * ((x.Posicao ?? 1) - 1))
+                     .AddDays(template.Escala == EEscala.Semana ? 7 * (x.TempoPrevisto ?? 1) : x.TempoPrevisto ?? 1)
+                     .FormatDateBr(),
+                 ListTarefas = x.LTarefaTemplate.Select(y => new TarefaAtividadeResponse
+                 {
+                     Descricao = y.Descricao,
+                     DescricaoTarefa = y.DescricaoTarefa,
+                     Prioridade = y.Prioridade.GetHashCode().ToString(),
+                     LTagsTarefa = y.TagTarefaTemplate.Select(z => z.Descricao).ToList()
+                 }).ToList()
+             }).ToList(),
          };
      }
 }

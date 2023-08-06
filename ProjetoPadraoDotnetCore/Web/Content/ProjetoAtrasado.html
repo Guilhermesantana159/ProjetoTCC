@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Projeto atrasado</title>
+    <style>
+        @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+        @import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Bungee+Spice&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Bungee+Spice&display=swap');
+
+        .section {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            color: #444;
+        }
+        .center{
+            width: 500px; /* largura da div */
+            height: 200px; /* altura da div */
+            position: absolute; /* torna a posição absoluta */
+            top: 20%; /* posiciona no meio na vertical */
+            left: 50%; /* posiciona no meio na horizontal */
+            transform: translate(-50%, -50%); /* ajusta a posição para o centro */
+        }
+        .header{
+            padding: 10px;
+            background: #0074b4;
+            border-bottom: 1px solid #036599;
+            box-shadow: 0.1px 0.1px 0.1px 0.1px black;
+            font-family: 'Bree Serif', serif;
+            color: whitesmoke;
+            font-size: 25pt;
+            text-align: center;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .section{
+            border: 0.1px solid rgba(128, 128, 128, 0.599);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            font-weight: 300;
+        }
+        footer{
+            padding-left: 15pt;
+            border: 0.1px solid rgba(128, 128, 128, 0.199);
+            background-color: rgba(128, 128, 128, 0.199);
+            font-weight: bold;
+        }
+        ul{
+            margin-left: 20%;
+        }
+    </style>
+</head>
+<body>
+<div class="center">
+    <header class="header">
+        <p>Projeto Padrao</p>
+    </header>
+    <section class="section">
+        <h2>Olá,</h2>
+        <p>
+            o projeto <strong>#NomeProjeto#</strong>  Cód(<strong>#Cod#</strong>) com data fim #DataFim# está com status atrasado. As atividade que estão pendentes são:
+        </p>
+        <div class="main">
+            <ul>
+                {0}
+            </ul>
+        </div>
+    </section>
+    <footer class="footer">
+        <p>Atenciosamente,</p>
+        <p>Equipe de Suporte</p>
+    </footer>
+</div>
+</body>
+</html>

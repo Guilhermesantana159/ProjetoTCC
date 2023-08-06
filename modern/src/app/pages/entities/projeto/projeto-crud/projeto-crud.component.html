@@ -62,7 +62,7 @@
                         <ng-template ngbNavContent>
                             <form [formGroup]="ProjetoRegisterFormGroup" action="javascript:void(0);">
                                 <div class="row">
-                                    <div class="col-lg-12">
+                                    <div [class]="IsNew ? 'col-lg-6' : 'col-lg-12'">
                                         <div class="mb-3">
                                             <label class="col-lg-6" for="firstnameInput" class="form-label">                                
                                                 Título<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
@@ -74,12 +74,26 @@
                                             </text-error-message>
                                         </div>
                                     </div>
+                                    <div class="col-lg-6" [hidden]="!IsNew">
+                                        <div class="mb-3">
+                                            <consulta-padrao 
+                                                [disabled]="disabledAll"
+                                                selectedText="tituloTemplate"   
+                                                selectedValue="idTemplate"                                                                     
+                                                [ParamsConsulta]="paramsConsultaTemplate">
+                                            </consulta-padrao>
+                                            <text-error-message  
+                                                *ngIf="FuncoesRegisterFormGroup.get('responsavel')?.errors?.['required'] && submitFuncoes"
+                                                text="Este campo é obrigatório">
+                                            </text-error-message>
+                                        </div>
+                                    </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label class="form-label">
                                                 Data Início<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
                                             </label>
-                                            <input matInput class="form-control" [matDatepicker]="from" readonly maxlength="10" formControlName="dataInicio" placeholder="Data início" (change)="ChangeDataPrevisao()">
+                                            <input matInput class="form-control" [matDatepicker]="from" readonly maxlength="100" formControlName="dataInicio" placeholder="Data início">
                                             <mat-datepicker-toggle matSuffix [for]="from" [disabled]="disabledAll || !IsNew"></mat-datepicker-toggle>
                                             <mat-datepicker #from>
                                                 <mat-datepicker-actions>
@@ -105,8 +119,8 @@
                                             <label class="form-label">
                                                 Data Fim<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span>
                                             </label>
-                                            <input matInput class="form-control" [matDatepicker]="to" readonly maxlength="10" formControlName="dataFim" placeholder="Data Fim" (change)="ChangeDataPrevisao()">
-                                            <mat-datepicker-toggle matSuffix [for]="to" [disabled]="disabledAll"></mat-datepicker-toggle>
+                                            <input matInput class="form-control" [matDatepicker]="to" readonly maxlength="100" formControlName="dataFim" placeholder="Data Fim">
+                                            <mat-datepicker-toggle  matSuffix [for]="to" [disabled]="disabledAll"></mat-datepicker-toggle>
                                             <mat-datepicker #to>
                                                 <mat-datepicker-actions>
                                                 <button mat-button matDatepickerCancel>Voltar</button>
@@ -438,16 +452,65 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="mb-3">
-                                            <h5 class="card-title text-decoration-underline mb-3">Especificações técnica do projeto:</h5>
+                                            <h4 class="card-title text-decoration-underline mb-3">Notificações:</h4>
                                             <ul class="list-unstyled mb-0">
                                                 <li class="d-flex">
                                                     <div class="flex-grow-1">
-                                                        <label for="directMessage" class="form-check-label fs-15">Atividades:</label>
-                                                        <p class="text-muted">Listar todas as atividades para os participantes do projeto</p>
+                                                        <p class="text-muted">Notificar via meu email se o projeto atrasou</p>
                                                     </div>
                                                     <div class="flex-shrink-0">
                                                         <div class="form-check form-switch">
-                                                            <input class="form-check-input" type="checkbox" role="switch" formControlName="listarAtvProjeto" [readonly]="disabledAll" />
+                                                            <input class="form-check-input" type="checkbox" role="switch" formControlName="emailProjetoAtrasado" [readonly]="disabledAll" />
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <p class="text-muted">Notificar via portal se o projeto atrasou</p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" role="switch" formControlName="portalProjetoAtrasado" [readonly]="disabledAll" />
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <p class="text-muted">Notificar via email tarefas atrasadas</p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" role="switch" formControlName="emailTarefaAtrasada" [readonly]="disabledAll" />
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <p class="text-muted">Notificar via portal tarefas atrasadas</p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" role="switch" formControlName="portalTarefaAtrasada" [readonly]="disabledAll" />
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <p class="text-muted">Notificar aos participantes alteração de status do projeto</p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" role="switch" formControlName="alteracaoStatusProjetoNotificar" [readonly]="disabledAll" />
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="d-flex">
+                                                    <div class="flex-grow-1">
+                                                        <p class="text-muted">Notificar novas tarefas ou a retirada de tarefas aos envolvidos</p>
+                                                    </div>
+                                                    <div class="flex-shrink-0">
+                                                        <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" role="switch" formControlName="alteracaoTarefasProjetoNotificar" [readonly]="disabledAll" />
                                                         </div>
                                                     </div>
                                                 </li>

@@ -3,7 +3,7 @@
 public class TemplateGridResponse
 {
     public int IdTemplate { get; set; }
-    public string? Titulo { get; set; }
+    public string? TituloTemplate { get; set; }
     public string? Duracao { get; set; }
     public string? Categoria { get; set; }
     public string? Autor { get; set; }

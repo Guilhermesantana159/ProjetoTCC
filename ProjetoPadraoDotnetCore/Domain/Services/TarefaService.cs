@@ -34,7 +34,7 @@ public class TarefaService : ITarefaService
     
     public Tarefa EditarComRetorno(Tarefa tarefa)
     {
-        if (tarefa.TarefaUsuario != null && tarefa.TarefaUsuario.Any())
+        if (tarefa.TarefaUsuario != null)
             WriteRepository.AddTarefaUsuario(tarefa.TarefaUsuario.ToList());
 
         return  WriteRepository.UpdateWithReturn(tarefa);
@@ -154,7 +154,12 @@ public class TarefaService : ITarefaService
     {
         return ReadRepository
             .GetAllTarefaUsuarioWithInclude()
-            .Where(x => x.Tarefa != null && atividadesId.Contains(x.Tarefa.IdAtividade));
+            .Where(x => atividadesId.Contains(x.Tarefa.IdAtividade));
+    }
+    
+    public IQueryable<TarefaUsuario> GetTarefaUsuarioWithInclude()
+    {
+        return ReadRepository.GetAllTarefaUsuarioWithInclude();
     }
     
     public IQueryable<TarefaUsuario> GetTarefaUsuario()
@@ -165,7 +170,6 @@ public class TarefaService : ITarefaService
     
     public IQueryable<Tarefa> GetTarefaWithInclude()
     {
-        return ReadRepository
-            .GetAllWithInclude();
+        return ReadRepository.GetAllWithInclude();
     }
 }

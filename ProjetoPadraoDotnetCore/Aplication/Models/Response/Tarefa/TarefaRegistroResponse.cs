@@ -2,5 +2,5 @@
 
 public class TarefaRegistroResponse
 { 
-    public List<TarefaListResponse>? ListTarefas { get; set; }
+    public List<TarefaAdmListResponse>? ListTarefas { get; set; }
 }

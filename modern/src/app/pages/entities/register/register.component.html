@@ -11,8 +11,7 @@
       <div class="auth-box-3">
         <div class="mobile-logo text-center mb-6 lg:hidden block">
           <a routerLink="">
-            <img src="../../../assets/svg/logo/logo.svg" alt="" class="mb-10 dark_logo">
-            <img src="../../../assets/svg/logo/logo-white.svg" alt="" class="mb-10 white_logo">
+            <img src="../../../../assets/images/logo-light-png.png" alt=""  height="40" class="dark_logo">
           </a>
         </div>
         <div class="text-center 2xl:mb-10 mb-5">
@@ -74,17 +73,17 @@
           <div class="fromGroup">
             <label class="block capitalize form-label">Senha<span class="span-required" matTooltip="Campo obrigatório" matTooltipPosition="right">*</span></label>
             <div class="relative">
-              <input [type]="ActiveEyePasswordRegister ? 'text' : 'password'" 
-              class="form-control py-2" 
-              formControlName="senha"
-              placeholder="Insira sua senha" 
-              maxlength="10" id="pwd"  name="pswd"             
-              aria-label="Senha" 
-              aria-describedby="div-eye">
-              <div class="input-group-append">
-                <div class="eye-password" id="div-eye" (click)="EyePasswordRegister()">
-                  <i [class]="ActiveEyePasswordRegister ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
-                </div>
+              <div class="input-group">
+                <input [type]="ActiveEyePasswordRegister ? 'text' : 'password'" 
+                class="form-control py-2" 
+                formControlName="senha"
+                placeholder="Insira sua senha" 
+                maxlength="15" id="pwd"  name="pswd"             
+                aria-label="Senha" 
+                aria-describedby="div-eye">
+                <span  class="input-group-text" (click)="EyePasswordRegister()">
+                  <i [class]="ActiveEyePasswordRegister ? 'ri-eye-off-line' : 'ri-eye-line'"></i>
+                </span>
               </div>
             </div>
             <text-error-message  
@@ -102,38 +101,7 @@
             <span [hidden]="loading">Cadastrar</span>
           </button>       
         </form>  
-
-        <div class=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6">
-          <div class=" absolute inline-block bg-white dark:bg-slate-800 dark:text-slate-400 left-1/2 top-1/2 transform -translate-x-1/2
-                              px-4 min-w-max text-sm text-slate-500 dark:text-slate-400font-normal ">
-            Ou continue com
-          </div>
-        </div>
-        <div class="max-w-[242px] mx-auto mt-8 w-full">
-          <ul class="flex">
-            <li class="flex-1">
-              <a routerLink="" class="inline-flex h-10 w-10 bg-[#1C9CEB] text-white text-2xl flex-col items-center justify-center rounded-full">
-                <img src="../../../assets/svg/icon/tw.svg" alt="">
-              </a>
-            </li>
-            <li class="flex-1">
-              <a routerLink="" class="inline-flex h-10 w-10 bg-[#395599] text-white text-2xl flex-col items-center justify-center rounded-full">
-                <img src="../../../assets/svg/icon/fb.svg" alt="">
-              </a>
-            </li>
-            <li class="flex-1">
-              <a routerLink="" class="inline-flex h-10 w-10 bg-[#0A63BC] text-white text-2xl flex-col items-center justify-center rounded-full">
-                <img src="../../../assets/svg/icon/in.svg" alt="">
-              </a>
-            </li>
-            <li class="flex-1">
-              <a routerLink="" class="inline-flex h-10 w-10 bg-[#EA4335] text-white text-2xl flex-col items-center justify-center rounded-full">
-                <img src="../../../assets/svg/icon/gp.svg" alt="">
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div routerLink="" class="mx-auto font-normal text-slate-500 dark:text-slate-400 mt-6 text-sm text-center">
+        <div routerLink="/login" class="mx-auto font-normal text-slate-500 dark:text-slate-400 mt-6 text-sm text-center">
           Já registrado?
           <a class="text-slate-900 dark:text-white font-medium pointer">
             Login

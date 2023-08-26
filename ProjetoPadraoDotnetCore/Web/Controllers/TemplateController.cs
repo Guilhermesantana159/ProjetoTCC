@@ -27,7 +27,7 @@ public class TemplateController : DefaultController
             var retorno = TemplateApp.IntegrarTemplate(request);
 
             if (retorno.IsValid())
-                return ResponderSucesso("Template adicionado com sucesso!");
+                return ResponderSucesso(request.IdTemplate.HasValue ? "Template editado com sucesso!" : "Template adicionado com sucesso!");
             
             return ResponderErro(retorno.LErrors.FirstOrDefault());
 

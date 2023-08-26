@@ -111,8 +111,8 @@ public class TemplateApp : ITemplateApp
                     Duracao = $"{x.QuantidadeTotal} {(x.Escala == EEscala.Semana ? "Semanas":"Dias")}",
                     Categoria = x.CategoriaTemplate.Descricao,
                     Autor = x.UsuarioCadastro.Nome,
-                    IsEdit = usuarioConsulta != null && x.IdUsuarioCadastro != usuarioConsulta.IdUsuarioCadastro,
-                    IsView = usuarioConsulta != null && x.IdUsuarioCadastro == usuarioConsulta.IdUsuarioCadastro,
+                    IsEdit = usuarioConsulta != null && x.IdUsuarioCadastro == usuarioConsulta.IdUsuario,
+                    IsView = usuarioConsulta != null && x.IdUsuarioCadastro != usuarioConsulta.IdUsuario,
                     FotoTemplate = string.IsNullOrEmpty(x.Foto) ? _configuration.GetSection("ImageDefaultTemplate:Imagem").Value 
                         : x.Foto
                 }).ToList(),
@@ -213,8 +213,8 @@ public class TemplateApp : ITemplateApp
          {
             IdProjeto = null,
             Titulo = template.Titulo,
-            DataInicio = DateTime.Now,
-            DataFim = DateTime.Now.AddDays(template.Escala == EEscala.Semana
+            DataInicio = DateTime.Now.Date,
+            DataFim = DateTime.Now.Date.AddDays(template.Escala == EEscala.Semana
              ? 7 * template.QuantidadeTotal
              : template.QuantidadeTotal),
             Descricao = template.Descricao,
@@ -229,11 +229,11 @@ public class TemplateApp : ITemplateApp
              {
                  IdAtividade = null,
                  Atividade = x.Titulo,
-                 DataInicial = DateTime.Now
+                 DataInicial = DateTime.Now.Date
                      .AddDays(template.Escala == EEscala.Semana
                          ? 7 * ((x.Posicao ?? 1) - 1)
                          : template.QuantidadeTotal * ((x.Posicao ?? 1) - 1)).FormatDateBr(),
-                 DataFim = DateTime.Now
+                 DataFim = DateTime.Now.Date
                      .AddDays(template.Escala == EEscala.Semana
                          ? 7 * ((x.Posicao ?? 1) - 1)
                          : template.QuantidadeTotal * ((x.Posicao ?? 1) - 1))

@@ -12,8 +12,9 @@ import { ETipoArquivo } from 'src/app/enums/ETipoArquivo';
 import { ResponseData } from 'src/app/objects/Grid/GridResponse';
 import { Filter } from 'src/app/objects/Grid/Filter';
 import { ToastrService } from 'ngx-toastr';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,9 @@ export class DataGridComponent implements OnInit{
 
   //Variaveis Filters
   QueryFilters: Filter[] = [];
+  @ViewChild(MatDatepicker)
+  datepicker!: MatDatepicker<Date | null>;
+
 
   //Variaveis style e funcionais
   loading: boolean = true;
@@ -284,11 +288,9 @@ export class DataGridComponent implements OnInit{
     });  
   }
 
-  LimparCampoDataDe(){
-    this.FilterFormGroup.get('de')?.setValue(undefined);
-  }
-
-  LimparCampoDataAte(){
-    this.FilterFormGroup.get('ate')?.setValue(undefined);
+  LimparCampoData(datepicker: MatDatepicker<Date | null>){
+    if (datepicker) {
+      datepicker.select(null)
+    }
   }
 }

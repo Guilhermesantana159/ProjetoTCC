@@ -14,7 +14,7 @@ public class JwtAuthentication : IJwtTokenAuthentication
             new("CPF", cpf.Trim())
         };
 
-        var expires = DateTime.Now.AddHours(5);			
+        var expires = DateTime.Now.AddHours(1);			
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ProjetoPadraoDotnet6"));
         var tokenData = new JwtSecurityToken(			
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),

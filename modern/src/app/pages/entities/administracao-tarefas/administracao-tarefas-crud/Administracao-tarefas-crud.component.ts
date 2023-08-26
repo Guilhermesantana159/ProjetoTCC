@@ -98,8 +98,7 @@ export class AdministracaoTarefasCrudComponent{
       this.listViewList.subscribe(x => {
         this.dataSource = x;
       });
-      document.getElementById('elmLoader')?.classList.add('d-none')
-    }, 1000);
+    }, 3000);
   }
 
   ngOnInit(): void {
@@ -237,10 +236,13 @@ export class AdministracaoTarefasCrudComponent{
 
   ListResponsavelId(list: Array<ConsultaModal>){
     let retorno: string[] = [];
-    
-    list.forEach(element => {
-      retorno.push(element.SelectedValue ?? "0");
-    });
+
+    if(list != undefined){
+      list.forEach(element => {
+        retorno.push(element.SelectedValue ?? "0");
+      });
+    }
+  
 
     return retorno;
   };

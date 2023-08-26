@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { Observable, startWith, map } from 'rxjs';
 import { ELido } from '../../../enums/ELido';
 import { NotificacaoRequest } from 'src/app/objects/Notificacao/NotificacaoRequestLida';
-import { DataNotificacao, NotificacaoResponse } from 'src/app/objects/Notificacao/NotificacaoResponse';
+import { DataNotificacao } from 'src/app/objects/Notificacao/NotificacaoResponse';
 import { EventService } from 'src/factorys/services/event.service';
 import { LAYOUT_HORIZONTAL, LAYOUT_TWOCOLUMN, LAYOUT_VERTICAL } from 'src/app/objects/Main/layout.model';
 

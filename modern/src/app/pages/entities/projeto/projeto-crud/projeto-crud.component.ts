@@ -71,6 +71,7 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
   paramsConsultaTemplate: ConsultaModalParams;
   dateInicio!: Date;
   dateFim!: Date;
+  idTemplate: number = 0;
 
   index: any;
 
@@ -137,7 +138,7 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     });
 
     this.ProjetoRegisterFormGroup.get('idTemplate')?.valueChanges.subscribe((newIdTemplate) => {
-      if(newIdTemplate != undefined && newIdTemplate != ""){
+      if(newIdTemplate != undefined && newIdTemplate != "" && this.idTemplate != newIdTemplate){
         //Reset tela
         this.ProjetoRegisterFormGroup.reset();
         this.ResetarCamposAtividades();
@@ -153,11 +154,16 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
           if(response.sucesso){       
             this.ProjetoRegisterFormGroup.patchValue(response.data);
 
+            this.idTemplate = newIdTemplate;
             response.data.listAtividade.forEach(element => {
               this.position = this.position + 1;
               element.position = this.position;
               element.statusAtividade = undefined;
-              this.dataSource.data.push(element);
+              
+              if(this.dataSource.data.findIndex(x => x.atividade == element.atividade) == -1){
+                this.dataSource.data.push(element);
+              }
+
               this.dataSource.filter = "";          
             });
           } 
@@ -219,6 +225,14 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     }else{
       this.disabledAll = false;
     }});
+
+    this.ProjetoRegisterFormGroup.controls['dataInicio'].valueChanges.subscribe(value => {
+      this.ChangeData();
+    });
+
+    this.ProjetoRegisterFormGroup.controls['dataFim'].valueChanges.subscribe(value => {
+      this.ChangeData();
+    });
   }
 
   ngOnDestroy() {
@@ -275,7 +289,6 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     });
 
     //Atividade
-    debugger
     this.dataSource.data.forEach(function(element){
       //Formatacao data
       let dataInicial:any = element.dataInicial.split("/"); 
@@ -328,9 +341,35 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
   
 
   //AbaPricipal
-  ChangeDataPrevisao(){
+  ChangeData(){
+    let dataInicio = this.ProjetoRegisterFormGroup.get('dataInicio')?.value; 
+    let dataFim =  this.ProjetoRegisterFormGroup.get('dataFim')?.value; 
 
-    //mudarrr
+    if(typeof(dataInicio) == "string"){
+      dataInicio = new Date(dataInicio);
+      this.ProjetoRegisterFormGroup.get('dataInicio')?.setValue(dataInicio)
+    }
+
+    if(typeof(dataFim) == "string"){
+      dataFim = new Date(dataFim);
+      this.ProjetoRegisterFormGroup.get('dataFim')?.setValue(dataFim)
+    }
+
+    if(dataFim != undefined && dataInicio != undefined){
+      if(dataInicio >= dataFim){
+        dataFim.setDate(dataInicio.getDate() + 1);
+        dataFim.setMonth(dataInicio.getMonth());
+        dataFim.setFullYear(dataInicio.getFullYear());
+
+        this.toastr.warning('Data inical não pode ser maior ou igual que a data fim!', 'Mensagem:');
+        this.ProjetoRegisterFormGroup.get('dataFim')?.setValue(dataFim);
+      }
+    }
+
+    this.ChangeDataPrevisaoTarefas();
+  }
+
+  ChangeDataPrevisaoTarefas(){
     let dataInicio = this.ProjetoRegisterFormGroup.get('dataInicio')?.value; 
     let dataFim =  this.ProjetoRegisterFormGroup.get('dataFim')?.value; 
     
@@ -375,7 +414,7 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       return;
     }
 
-    if(form.get('dataInicioAtv')?.value < this.ProjetoRegisterFormGroup.get('dataInicio')?.value ){
+    if(form.get('dataInicioAtv')?.value < this.ProjetoRegisterFormGroup.get('dataInicio')?.value){
       this.toastr.error('<small>A data de início da atividade não pode ser menor que a data inicial do projeto!</small>', 'Mensagem:');
       return;
     }
@@ -596,6 +635,8 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       return;
     }
 
+    debugger
+
     let objAtvFuncao:GridTarefaEquipe = {
       position: form.get('position')?.value ?? 0,
       responsavel: form.get('responsavel')?.value,
@@ -604,7 +645,8 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
     };
 
     if(objAtvFuncao.position == 0){
-      objAtvFuncao.position = this.positionlTarefaFuncoes + 1;
+      this.positionlTarefaFuncoes = this.positionlTarefaFuncoes + 1
+      objAtvFuncao.position = this.positionlTarefaFuncoes;
     }
     else{
       this.DeletarTarefaEquipe(objAtvFuncao);
@@ -621,6 +663,7 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
   }
 
   DeletarTarefaEquipe(objAtvFuncao: GridTarefaEquipe){
+    debugger
     for (let index = 0; index < this.dataSourcelTarefaFuncoes.data.length; index++) {
       if(this.dataSourcelTarefaFuncoes.data[index].position == objAtvFuncao.position){
         this.dataSourcelTarefaFuncoes.data.splice(index,1);

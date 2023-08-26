@@ -1,6 +1,6 @@
 <div class="position-relative mx-n4 mt-n4">
     <div class="profile-wid-bg profile-setting-img">
-        <img src="../../../../../assets/images/BackgrounUser.jpg" class="profile-wid-img" alt="">
+        <img src="../../../../../assets/images/register-user.jpg" class="profile-wid-img" alt="">
     </div>
 </div>
 <div class="row">
@@ -33,9 +33,9 @@
                     </div>
                 </div>
                 <div class="progress animated-progess custom-progress progress-label">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 30%" aria-valuenow="30"
+                    <div class="progress-bar bg-danger" role="progressbar" [style]="'width:' + porcentagem +'%'" aria-valuenow="30"
                         aria-valuemin="0" aria-valuemax="100">
-                        <div class="label">30%</div>
+                        <div class="label">{{porcentagem}}%</div>
                     </div>
                 </div>
             </div>
@@ -200,7 +200,7 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="hstack gap-2 justify-content-end">
-                                            <button type="button" class="btn btn-soft-dark" routerLink="/main-dashboard/entities/usuario/">Voltar</button>
+                                            <button type="button" class="btn btn-soft-dark" routerLink="/main-dashboard/entities/usuario/" *ngIf="IsAdmin == 'true'">Voltar</button>
                                             <button type="submit" class="btn btn-primary btn-label" (click)="ButtonEventAba(+1)"><i class="ri-arrow-right-line label-icon align-middle fs-16 me-2"></i>Próximo</button>
                                         </div>
                                     </div>
@@ -324,7 +324,7 @@
                             </form>
                         </ng-template>
                     </li>
-                    <li [ngbNavItem]="3" *ngIf="IsAdmin == 'true'" class="nav-item">
+                    <li [ngbNavItem]="3" class="nav-item">
                         <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" (click)="ControleAbas(3)">
                             <i class="far fa-envelope"></i>
                             Configurações
@@ -332,7 +332,7 @@
                         <ng-template ngbNavContent>
                             <form [formGroup]="UserRegisterFormGroup" action="javascript:void(0);">
                                 <div class="row">
-                                    <div class="mb-3">
+                                    <div class="mb-3" *ngIf="IsAdmin == 'true'">
                                         <h5 class="card-title text-decoration-underline mb-3">Perfil do Usuário:</h5>
                                         <ul class="list-unstyled mb-0">
                                             <li class="d-flex">
@@ -356,20 +356,22 @@
                                                 <div class="col-lg-6">
                                                     <div class="flex-grow-1">
                                                         <label for="directMessage" class="form-check-label fs-14">Nova Senha</label>
-                                                        <input 
-                                                            type="password"
-                                                            class="form-control" 
-                                                            formControlName="senha"
-                                                            placeholder="Insira sua senha" 
-                                                            maxlength="10" id="senha"  name="senha"             >
-                                                          <text-error-message  *ngIf="UserRegisterFormGroup.get('senha')?.errors?.['required'] && submitRegister"
+                                                        <div class="relative">
+                                                            <div class="input-group">
+                                                            <input [type]="ActiveEyePasswordLogin ? 'text' : 'password'" name="senha" maxlength="15" formControlName="senha" class="form-control py-2" placeholder="Insira sua senha" aria-label="Senha" aria-describedby="div-eye">
+                                                            <span  class="input-group-text" (click)="EyePasswordLogin()">
+                                                                <i [class]="ActiveEyePasswordLogin ? 'ri-eye-off-line' : 'ri-eye-line'"></i>
+                                                            </span>
+                                                            </div> 
+                                                        </div>
+                                                        <text-error-message  *ngIf="UserRegisterFormGroup.get('senha')?.errors?.['required'] && submitRegister"
                                                             text="Este campo é obrigatório">
-                                                          </text-error-message>
-                                                          <text-error-message  
+                                                        </text-error-message>
+                                                        <text-error-message  
                                                             *ngIf="UserRegisterFormGroup.get('senha')?.errors?.['invalidSenha'] && submitRegister && 
                                                             !UserRegisterFormGroup.get('senha')?.errors?.['required']"
                                                             [text]="UserRegisterFormGroup.get('senha')?.errors?.['Motivo']">
-                                                          </text-error-message>
+                                                        </text-error-message>                                                         
                                                     </div>
                                                 </div>
                                             </li>

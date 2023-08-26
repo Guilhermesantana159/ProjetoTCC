@@ -42,6 +42,7 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { KanbanColumnComponent } from './column/column.component';
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { FooterLandingComponent } from './footer-landing/footer-landing.component';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -63,6 +64,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
       FooterComponent,
       RightsidebarComponent,
       HorizontalComponent,
+      FooterLandingComponent,
       KanbanColumnComponent,
       HorizontalTopbarComponent,
       TwoColumnComponent,
@@ -76,6 +78,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
       TaskComponent,
       KanbanColumnComponent,
       VerticalComponent,
+      FooterLandingComponent,
       TopbarComponent,
       SidebarComponent,
       FooterComponent,

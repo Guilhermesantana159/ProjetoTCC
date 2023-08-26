@@ -42,7 +42,7 @@ export class UsuarioComponent{
         Parametros: {
           Controller: 'Usuario',
           Metodo: 'ConsultarGridUsuario',
-          PaginatorSizeOptions: [10,15,20],
+          PaginatorSizeOptions: [10,50,100],
           PageSize: 10,
           MultiModal: true,
           UrlRelatorio: 'Usuario/GerarRelatorioGridUsuario',
@@ -186,9 +186,9 @@ export class UsuarioComponent{
           ActionButton: undefined, 
           Type: TypeFilter.Enum,
           EnumName: undefined,
-          ServerField: 'perfil',
-          Filter: true,
-          OrderBy: true,
+          ServerField: 'perfilAdministrador',
+          Filter: false,
+          OrderBy: false,
           StyleColuna: 'min-width: 25vh; max-width: 30vh;',
           EnumOptions: this.optionsEnumPerfil,
           StyleCell: undefined,
@@ -211,6 +211,7 @@ export class UsuarioComponent{
   GerarRelatorio(tipo: ETipoArquivo){
     this.gridService.EmitirRelatorio(tipo);
   }
+  
 };
 
 

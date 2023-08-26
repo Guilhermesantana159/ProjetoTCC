@@ -298,12 +298,8 @@ public class ProjetoApp : IProjetoApp
         if (usuarioConsulta != null)
         {
             if (!usuarioConsulta.PerfilAdministrador)
-                itens = itens.Where(x => x.IdUsuarioCadastro == usuarioConsulta.IdUsuario);
-            else
             {
-                if (request.OnlyAdmin)
-                    itens = itens.Where(x => x.IdUsuarioCadastro == usuarioConsulta.IdUsuario);
-                else
+                if (!request.OnlyAdmin)
                 {
                     itens = itens
                         .Where(x => x.IdUsuarioCadastro == usuarioConsulta.IdUsuario || x.Atividades
@@ -311,6 +307,8 @@ public class ProjetoApp : IProjetoApp
                                 .Any(z => z.TarefaUsuario
                                     .Any(v => v.IdUsuario == request.IdUsuario))));
                 }
+                else
+                    itens = itens.Where(x => x.IdUsuarioCadastro == usuarioConsulta.IdUsuario);
             }
         }
         
@@ -336,12 +334,13 @@ public class ProjetoApp : IProjetoApp
                         : x.DataFim < DateTime.Now ? EStatusProjeto.Atrasado.ToString() : x.Status.ToString(),
                     ActionDisabled = x.Status != EStatusProjeto.Aberto && x.Status != EStatusProjeto.Atrasado,
                     Administrador = x.Usuario != null ? x.Usuario.Nome : "",
-                    FotoProjeto = x.Foto == null 
-                            ? _configuration.GetSection("ImageDefaultProjeto:Imagem").Value 
-                            : x.Foto,
+                    FotoProjeto = x.Foto ?? _configuration.GetSection("ImageDefaultProjeto:Imagem").Value,
                     Porcentagem = (x.Status == EStatusProjeto.Cancelado || x.Status == EStatusProjeto.Concluido) ? "100"
                         : x.DataInicio > DateTime.Now 
-                            ? "0" : Convert.ToInt64((DateTime.Now - x.DataInicio).TotalDays / (x.DataFim - x.DataInicio).TotalDays * 100).ToString(CultureInfo.InvariantCulture),
+                            ? "0" : 
+                            Convert.ToInt64((DateTime.Now - x.DataInicio).TotalDays / (x.DataFim - x.DataInicio).TotalDays * 100) > 0 
+                                ? Convert.ToInt64((DateTime.Now - x.DataInicio).TotalDays / (x.DataFim - x.DataInicio).TotalDays * 100).ToString(CultureInfo.InvariantCulture) 
+                                : (Convert.ToInt64((DateTime.Now - x.DataInicio).TotalDays / (x.DataFim - x.DataInicio).TotalDays * 100) * -1).ToString(CultureInfo.InvariantCulture),
                     DisabledView = x.Status == EStatusProjeto.Aberto || x.Status == EStatusProjeto.Atrasado,
                     DisabledAdminister = x.Status != EStatusProjeto.Aberto && x.Status != EStatusProjeto.Atrasado
                 }).ToList(),
@@ -505,7 +504,8 @@ public class ProjetoApp : IProjetoApp
                 item.StatusAtividade = EStatusAtividade.Completo;
                 AtividadeService.EditarComRetorno(item);
             } 
-            else if (DateTime.Now > item.DataFim && item.StatusAtividade != EStatusAtividade.Atrasado && item.Tarefas.All(x => x.Status != EStatusTarefa.Completo))
+            else if ((DateTime.Now > item.DataFim && item.StatusAtividade != EStatusAtividade.Atrasado && item.Tarefas.All(x => x.Status != EStatusTarefa.Completo)) 
+                     || (projeto.DataFim.Date < DateTime.Now.Date && projeto.Status != EStatusProjeto.Concluido || projeto.Status != EStatusProjeto.Cancelado))
             {
                 item.StatusAtividade = EStatusAtividade.Atrasado;
                 AtividadeService.EditarComRetorno(item);
@@ -740,33 +740,35 @@ public class ProjetoApp : IProjetoApp
                             TempoTotalTarefasTotal = (y.AtividadeFk.DataFim - y.AtividadeFk.DataInicial).Hours,
                             LTarefas = x.Tarefas.Select(z => new TarefaIndicadoresDataDashboard
                             {
+                                IdTarefa = z.IdTarefa,
                                 Tarefa = z.Descricao,
-                                TempoTarefaRealizado =  movimentacaoTarefa?
-                                    .Where(q => q.From == EStatusTarefa.Aguardando || q.From == EStatusTarefa.Progresso && q.IdTarefa == z.IdTarefa)
-                                    .Sum(q => q.TempoUtilizadoUltimaColuna),
                                 TempoTarefaEspera = movimentacaoTarefa?
                                     .Where(q => q.From == EStatusTarefa.Aguardando && q.IdTarefa == z.IdTarefa)
-                                    .Sum(q => q.TempoUtilizadoUltimaColuna),
-                                TempoTarefaProgresso = movimentacaoTarefa?
+                                    .Sum(q => q.TempoUtilizadoUltimaColuna) / 3600 == 0 
+                                    ? Convert.ToInt32((DateTime.Now - x.DataInicial).TotalHours)
+                                    : movimentacaoTarefa?
+                                        .Where(q => q.From == EStatusTarefa.Aguardando && q.IdTarefa == z.IdTarefa)
+                                        .Sum(q => q.TempoUtilizadoUltimaColuna) / 3600,
+                                TempoTarefaProgresso = (movimentacaoTarefa?
                                     .Where(q => q.From == EStatusTarefa.Progresso && q.IdTarefa == z.IdTarefa)
-                                    .Sum(q => q.TempoUtilizadoUltimaColuna),
-                                TempoTarefaTotal = (x.DataInicial - x.DataInicial).Hours
+                                    .Sum(q => q.TempoUtilizadoUltimaColuna) / 3600 ),
+                                TempoTarefaTotal = Convert.ToInt32((x.DataFim - x.DataInicial).TotalHours) 
                             }).ToList()
                         }).ToList(),
                         Indicador = new Indicadores()
                         {
-                            TarefasFazer = x.Tarefas.Count(y => y.Status == EStatusTarefa.Aguardando && y.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
-                            TarefasProgresso = x.Tarefas.Count(y => y.Status == EStatusTarefa.Progresso && y.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
+                            TarefasFazer = x.Tarefas.Count(y => y.Status == EStatusTarefa.Aguardando && DateTime.Now.Date <= y.AtividadeFk.DataFim.Date && projeto.DataFim.Date > DateTime.Now.Date),
+                            TarefasProgresso = x.Tarefas.Count(y => y.Status == EStatusTarefa.Progresso && DateTime.Now.Date <= y.AtividadeFk.DataFim.Date && projeto.DataFim.Date > DateTime.Now.Date),
                             TarefasCompletas = x.Tarefas.Count(y => y.Status == EStatusTarefa.Completo),
-                            TarefasAtrasadas = x.Tarefas.Count(y => y.AtividadeFk.StatusAtividade ==  EStatusAtividade.Atrasado && y.Status != EStatusTarefa.Completo)
+                            TarefasAtrasadas = x.Tarefas.Count(y => y.Status !=  EStatusTarefa.Completo && DateTime.Now.Date > y.AtividadeFk.DataFim.Date || projeto.DataFim.Date < DateTime.Now.Date)
                         },
                     }).ToList(),
                     LTarefaIndicador = new Indicadores()
                     {
-                        TarefasFazer = tarefa.Count(x => x.Status == EStatusTarefa.Aguardando && x.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
-                        TarefasProgresso = tarefa.Count(x => x.Status == EStatusTarefa.Progresso && x.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
+                        TarefasFazer = tarefa.Count(y => y.Status == EStatusTarefa.Aguardando && DateTime.Now.Date <= y.AtividadeFk.DataFim.Date && projeto.DataFim.Date > DateTime.Now.Date),
+                        TarefasProgresso = tarefa.Count(y => y.Status == EStatusTarefa.Progresso && DateTime.Now.Date <= y.AtividadeFk.DataFim.Date && projeto.DataFim.Date > DateTime.Now.Date),
                         TarefasCompletas = tarefa.Count(x => x.Status == EStatusTarefa.Completo),
-                        TarefasAtrasadas = tarefa.Count(x => x.AtividadeFk.StatusAtividade ==  EStatusAtividade.Atrasado && x.Status != EStatusTarefa.Completo)
+                        TarefasAtrasadas = tarefa.Count(y => y.Status !=  EStatusTarefa.Completo && DateTime.Now.Date > y.AtividadeFk.DataFim.Date || projeto.DataFim.Date < DateTime.Now.Date)
                     }
                 };
 
@@ -778,15 +780,21 @@ public class ProjetoApp : IProjetoApp
                         {
                             if (atividadeTarefa.LTarefas != null)
                             {
+                                //Somar tempo em progresso coluna atual
+                                foreach (var tarefaMov in atividadeTarefa.LTarefas)
+                                {
+                                    var colunaAtual = movimentacaoTarefa
+                                        .Where(x => x.IdTarefa == tarefaMov.IdTarefa).ToList().MaxBy(x => x.DataCadastro);
+
+                                    if (colunaAtual != null && colunaAtual.To == EStatusTarefa.Progresso)
+                                        tarefaMov.TempoTarefaProgresso += (int)(DateTime.Now - colunaAtual.DataCadastro).TotalHours;
+                                }
+                                
                                 atividadeTarefa.TempoTotalTarefasEspera =
                                     atividadeTarefa.LTarefas.Sum(x => x.TempoTarefaEspera);
 
-                                atividadeTarefa.TempoTotalTarefasRealizado =
-                                    atividadeTarefa.LTarefas.Sum(x => x.TempoTarefaRealizado);
-                                
                                 atividadeTarefa.TempoTotalTarefasProgresso =
                                     atividadeTarefa.LTarefas.Sum(x => x.TempoTarefaProgresso);
-                                
                             }
                         }
                     }

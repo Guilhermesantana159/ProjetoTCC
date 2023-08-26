@@ -117,7 +117,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-8">
+                <div class="col-xl-9">
                     <div class="card">
                         <div class="card-header border-0 align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Análise do tempo gasto em tarefas</h4>
@@ -139,35 +139,30 @@
                         </div>
                         <div class="card-header p-0 border-0 bg-soft-light">
                             <div class="row g-0 text-center">
-                                <div class="col-6 col-sm-3">
+                                <div class="col-6 col-sm-4">
                                     <div class="p-3 border border-dashed border-start-0">
-                                        <h5 class="mb-1">{{atividadeTarefas?.tempoTotalTarefasEspera}}</h5>
+                                        <h5 class="mb-1">{{(atividadeTarefas?.tempoTotalTarefasEspera ?? 0) > 0 ? atividadeTarefas?.tempoTotalTarefasEspera : 0}} hora(s)</h5>
                                         <p class="text-muted mb-0">Tempo total em espera</p>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-3">
+                                <div class="col-6 col-sm-4">
                                     <div class="p-3 border border-dashed border-start-0">
-                                        <h5 class="mb-1">{{atividadeTarefas?.tempoTotalTarefasProgresso}}</h5>
+                                        <h5 class="mb-1">{{(atividadeTarefas?.tempoTotalTarefasProgresso ?? 0) > 0 ? atividadeTarefas?.tempoTotalTarefasProgresso : 0}} hora(s)</h5>
                                         <p class="text-muted mb-0">Tempo total em progresso</p>
                                     </div>
                                 </div>
-                                <div class="col-6 col-sm-3">
-                                    <div class="p-3 border border-dashed border-start-0">
-                                        <h5 class="mb-1">{{atividadeTarefas?.tempoTotalTarefasRealizado}}</h5>
-                                        <p class="text-muted mb-0">Tempo total realizado</p>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-sm-3">
+                                <div class="col-6 col-sm-4">
                                     <div class="p-3 border border-dashed border-start-0 border-end-0">
-                                        <h5 class="mb-1 text-success">{{atividadeTarefas?.tempoTotalTarefasTotal}}</h5>
-                                        <p class="text-muted mb-0">Tempo total</p>
+                                        <h5 class="mb-1">
+                                            {{(atividadeTarefas?.tempoTotalTarefasEspera ?? 0) + (atividadeTarefas?.tempoTotalTarefasProgresso ?? 0) > 0 ? (atividadeTarefas?.tempoTotalTarefasEspera ?? 0) + (atividadeTarefas?.tempoTotalTarefasProgresso ?? 0) : 0}} hora(s)</h5>
+                                        <p class="text-muted mb-0">Tempo total realizado</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body p-0 pb-2">
-                            <div class="w-100">
-                                <apx-chart dir="ltr" class="apex-charts" [chart]="graficoAtividadeTarefa.chart"
+                            <div class="w-100 px-4">
+                                <apx-chart dir="ltr" class="apex-charts" [chart]="graficoAtividadeTarefa.chart" #chartTarefa
                                     [series]="graficoAtividadeTarefa.series" [legend]="graficoAtividadeTarefa.legend"
                                     [stroke]="graficoAtividadeTarefa.stroke" [colors]="graficoAtividadeTarefa.colors"
                                     [fill]="graficoAtividadeTarefa.fill" [dataLabels]="graficoAtividadeTarefa.dataLabels"
@@ -180,7 +175,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4">
+                <div class="col-xl-3">
                     <div class="card card-height-100">
                         <div class="card-header align-items-center d-flex">
                             <h4 class="card-title mb-0 flex-grow-1">Relatório de tarefas</h4>

@@ -69,8 +69,6 @@ public class UsuarioApp : IUsuarioApp
         {
             var usuario = Mapper.Map<UsuarioRequest,Usuario>(request);
             
-            //Hash da senha
-            usuario.Senha = new HashCripytograph().Hash(request.Senha);
             var cadastro = Service.CadastrarComRetorno(usuario);
             
             //Enviar Notificação de bem-vindo
@@ -117,7 +115,7 @@ public class UsuarioApp : IUsuarioApp
                 DataCadastro = DateTime.Now,
                 Lido = ESimNao.Nao,
                 ClassficacaoMensagem = EMensagemNotificacao.MensagemBemVindo,
-                Corpo = $"Seja bem vindo, este é um futuro software de gestão de projeto aproveite as funcionalidades!",
+                Corpo = "Seja bem vindo ao TaskMaster, aproveite as funcionalidades!",
                 Titulo = "Seja bem vindo",
                 DataVisualização = null,
             };

@@ -190,7 +190,7 @@ export class TopbarComponent implements OnInit {
    */
   logout() {
     window.localStorage.clear();
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/login');
   }
 
   windowScroll() {

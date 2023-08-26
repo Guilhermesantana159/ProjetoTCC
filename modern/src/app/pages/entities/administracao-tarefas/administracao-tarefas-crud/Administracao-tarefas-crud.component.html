@@ -1,6 +1,6 @@
 <app-breadcrumbs title="Administração de tarefas" [breadcrumbItems]="breadCrumbItems"></app-breadcrumbs>
 <mat-progress-bar mode="indeterminate" [hidden]="!loading"></mat-progress-bar>
-<div class="row">
+<div class="row" *ngIf="!data.isView">
     <div class="col-xxl-3 col-sm-6">
         <div class="card card-animate">
             <div class="card-body">
@@ -107,7 +107,7 @@
                     <div class="col-xxl-5 col-sm-12">
                         <div class="search-box">
                             <input type="text" name="searchTerm" class="form-control search bg-light border-light"
-                                placeholder="Filtrar" [(ngModel)]="service.searchTerm">
+                                placeholder="Filtrar atividades ou tarefas.." [(ngModel)]="service.searchTerm">
                             <i class="ri-search-line search-icon"></i>
                         </div>                                     
                     </div>
@@ -124,7 +124,7 @@
                                 <th class="sort" sortable="dataInicio">Data Início</th>
                                 <th class="sort" sortable="dataFim">Data Fim</th>
                                 <th class="sort">Responsável</th>
-                                <th class="sort" sortable="status" (sort)="onSort($event)">Status tarefa</th>
+                                <th class="sort" sortable="status" (sort)="onSort($event)" *ngIf="!data.isView">Status tarefa</th>
                                 <th class="sort" sortable="prioridade" (sort)="onSort($event)">Prioridade</th>
                             </tr>
                         </thead>
@@ -184,7 +184,7 @@
                                         </a>
                                     </div>
                                 </td>
-                                <td class="status">
+                                <td class="status" *ngIf="!data.isView">
                                     <span class="badge text-uppercase"
                                         [ngClass]=" { 'badge-soft-secondary': data.status === 'Progresso', 'badge-soft-info': data.status === 'Aguardando', 'badge-soft-success': data.status === 'Completo', 'badge-soft-danger': data.status === 'Atrasado' }">
                                         {{data.status}}
@@ -198,11 +198,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div id="elmLoader">
-                    <div class="spinner-border text-primary avatar-sm" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
                 </div>
                 <div class="row justify-content-md-between align-items-md-center">
                     <div class="col col-sm-6">

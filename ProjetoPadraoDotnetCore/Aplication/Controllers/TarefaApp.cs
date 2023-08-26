@@ -70,9 +70,6 @@ public class TarefaApp : ITarefaApp
             .GetAllQuery()
             .Where(x => request.LUsuarioIds.Contains(x.IdUsuario))
             .ToList();
-            
-        if(!lUsuario.Any())
-            throw new Exception("Nenhum responsável encontrado!");
 
         //Atribuições
         tarefa.TarefaUsuario = lUsuario.Select(x => new TarefaUsuario()
@@ -156,10 +153,10 @@ public class TarefaApp : ITarefaApp
         {
             Indicadores = new Indicadores()
             {
-                TarefasFazer = tarefas.Count(x => x.Status == EStatusTarefa.Aguardando && x.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
-                TarefasProgresso = tarefas.Count(x => x.Status == EStatusTarefa.Progresso && x.AtividadeFk.StatusAtividade != EStatusAtividade.Atrasado),
+                TarefasFazer = tarefas.Count(x => x.Status == EStatusTarefa.Aguardando && DateTime.Now.Date <= x.AtividadeFk.DataFim.Date && projeto.DataFim.Date > DateTime.Now.Date),
+                TarefasProgresso = tarefas.Count(x => x.Status == EStatusTarefa.Progresso && DateTime.Now.Date <= x.AtividadeFk.DataFim.Date  && projeto.DataFim.Date > DateTime.Now.Date),
                 TarefasCompletas = tarefas.Count(x => x.Status == EStatusTarefa.Completo),
-                TarefasAtrasadas = tarefas.Count(x => x.AtividadeFk.StatusAtividade ==  EStatusAtividade.Atrasado && x.Status != EStatusTarefa.Completo)
+                TarefasAtrasadas = tarefas.Count(x => x.Status !=  EStatusTarefa.Completo && DateTime.Now.Date > x.AtividadeFk.DataFim.Date || projeto.DataFim.Date < DateTime.Now.Date)
             },
             ListTarefas = new List<TarefaAdmListResponse>(),
             ListAtividade = lAtividadeIds,
@@ -176,7 +173,8 @@ public class TarefaApp : ITarefaApp
                 Prioridade = item.Prioridade.ToString(),
                 PrioridadeEnum = item.Prioridade.GetHashCode(),
                 Status =  projeto?.Status is EStatusProjeto.Cancelado or EStatusProjeto.Concluido ? item.Status.ToString() : 
-                item.Status != EStatusTarefa.Completo && DateTime.Now > item.AtividadeFk.DataFim ? "Atrasado" : item.Status.ToString(),
+                projeto != null && ((item.Status != EStatusTarefa.Completo && DateTime.Now.Date > item.AtividadeFk.DataFim) || (DateTime.Now.Date > projeto.DataFim.Date && item.Status != EStatusTarefa.Completo)) 
+                    ? "Atrasado" : item.Status.ToString(),
                 StatusEnum = item.Status.GetHashCode(),
                 DataInicio = item.AtividadeFk.DataInicial.FormatDateBr(),
                 DataFim = item.AtividadeFk.DataFim.FormatDateBr(),
@@ -268,7 +266,7 @@ public class TarefaApp : ITarefaApp
         }
         
         //Controle de visualização
-        if (projeto.IdUsuarioCadastro != idUsuario)
+        if (projeto.IdUsuarioCadastro != idUsuario && !usuario.PerfilAdministrador)
             retorno.ListTarefas = retorno.ListTarefas.Where(x => x.LResponsavelTarefa != null && x.LResponsavelTarefa.Any(y => y.IdUsuario == idUsuario)).ToList();
             
         return retorno;
@@ -278,6 +276,7 @@ public class TarefaApp : ITarefaApp
     {
         var retorno = new ValidationResult();
         var tarefa = _service.GetTarefaByIdWithInclude(idTarefa);
+        var deleteAtividade = false;
         
         if(tarefa == null)
             retorno.LErrors.Add("IdTarefa não encontrado!");
@@ -287,16 +286,22 @@ public class TarefaApp : ITarefaApp
 
             if (tarefa.AtividadeFk.Tarefas.Count() == 1)
             {
+                deleteAtividade = true;
                 if (projeto != null)
                 {
                     if (projeto.Atividades.Count() == 1)
-                        retorno.LErrors.Add("Não é possível deletar esta tarefa poís ela é a última do projeto,é necessário pelo menos um atividade com uma tarefa em um projeto!");
+                        retorno.LErrors.Add("Não é possível deletar esta tarefa poís ela é a última de sua atividade,em um projeto é necessário pelo menos um atividade com uma tarefa!");
                 }
     
             }
 
             if (retorno.IsValid())
+            {
                 _service.DeletarTarefaWithIncludes(tarefa);
+                
+                if(deleteAtividade)
+                    AtividadeService.DeleteById(tarefa.AtividadeFk);
+            }
             
             if (projeto != null && projeto.AlteracaoTarefasProjetoNotificar)
             {
@@ -392,11 +397,9 @@ public class TarefaApp : ITarefaApp
             LComentarios = entity.ComentarioTarefa.Select(x => new ComentarioTarefaResponse()
             {
                 Comentario = x.Descricao,
-                Foto = x.Usuario.Foto == null
-                    ? x.Usuario.Genero == EGenero.Masculino
-                        ? _configuration.GetSection("ImageDefaultUser:Masculino").Value
-                        : _configuration.GetSection("ImageDefaultUser:Feminino").Value
-                    : x.Usuario.Foto,
+                Foto = x.Usuario.Foto ?? (x.Usuario.Genero == EGenero.Masculino
+                    ? _configuration.GetSection("ImageDefaultUser:Masculino").Value
+                    : _configuration.GetSection("ImageDefaultUser:Feminino").Value),
                 Horario = x.Data.ToLongDateString() + " " + x.Data.ToLongTimeString(),
                 NomeUsuario = x.Usuario.Nome,
                 
@@ -406,9 +409,9 @@ public class TarefaApp : ITarefaApp
             NomeProjeto = projeto?.Titulo,
             IsView = projeto?.Status == EStatusProjeto.Cancelado || projeto?.Status == EStatusProjeto.Concluido,
             Titulo = entity.Descricao,
-            Status = entity.Status != EStatusTarefa.Completo && DateTime.Now > entity.AtividadeFk.DataFim ? "Atrasado" : entity.Status.ToString(),
+            Status = projeto != null && ((entity.Status != EStatusTarefa.Completo && DateTime.Now.Date > entity.AtividadeFk.DataFim.Date) || DateTime.Now.Date > projeto.DataFim.Date) ? "Atrasado" : entity.Status.ToString(),
             Prioridade = entity.Prioridade.ToString(),
-            ResponsavelTarefa = (entity.TarefaUsuario ?? Array.Empty<TarefaUsuario>()).Where(x => x.Usuario != null)
+            ResponsavelTarefa = (entity.TarefaUsuario).Where(x => x.Usuario != null)
                 .Select(x => new ResponsavelTarefa()
                 {
                     IdUsuario = x.IdUsuario,

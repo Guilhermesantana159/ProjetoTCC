@@ -26,4 +26,10 @@ public class UsuarioReadRepository : BaseReadRepository<Usuario>,IUsuarioReadRep
         return _context.Usuario
             .Include(x => x.TarefaUsuario);
     }
+    
+    public IQueryable<ContatoChat> GetAllContatoWithInclude()
+    {
+        return _context.ContatoChat
+            .Include(x => x.UsuarioContato);
+    }
 }

@@ -47,7 +47,6 @@ public class AtividadeTarefaDataDashboard
 {
     public long? TempoTotalTarefasEspera { get; set; }
     public long? TempoTotalTarefasProgresso { get; set; }
-    public long? TempoTotalTarefasRealizado { get; set; }
     public long? TempoTotalTarefasTotal { get; set; }
 
     public List<TarefaIndicadoresDataDashboard>? LTarefas { get; set; }
@@ -55,10 +54,10 @@ public class AtividadeTarefaDataDashboard
 
 public class TarefaIndicadoresDataDashboard
 {
+    public int IdTarefa { get; set; }
     public string? Tarefa { get; set; }
     public long? TempoTarefaEspera { get; set; }
     public long? TempoTarefaProgresso { get; set; }
-    public long? TempoTarefaRealizado { get; set; }
     public long? TempoTarefaTotal { get; set; }
 }
 

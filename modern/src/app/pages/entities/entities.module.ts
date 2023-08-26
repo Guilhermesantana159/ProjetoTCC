@@ -4,7 +4,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthTokenInterceptor } from 'src/factorys/interceptor/header.interceptor';
 import { LoginComponent } from './login/login.component';
-import { MainComponent } from './main/main.component';
 import { UsuarioCrudComponent } from './usuario/usuario-crud/usuario-crud.component';
 import {MAT_TABS_CONFIG, MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
@@ -68,6 +67,9 @@ import { WidgetModule } from 'src/app/shared/widget/widget.module';
 import { DashboardsRoutingModule } from '../dashboards/dashboards-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RatingModule } from 'primeng/rating';
+import { MainComponent } from './main/main.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 const maskConfigFunction: () => Partial<IConfig> = () => {
     return {
@@ -86,6 +88,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         ProjetoCrudComponent,
         RecoverPasswordComponent,
         RegisterComponent,
+        LandingPageComponent,
         MaintenanceComponent,
         ComingSoonComponent,
         TimeLineComponent,
@@ -173,6 +176,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
         DndModule,
         NgbToastModule,
         LeafletModule,
+        ScrollToModule.forRoot(),
         NgApexchartsModule,
         DashboardsRoutingModule,
         WidgetModule,

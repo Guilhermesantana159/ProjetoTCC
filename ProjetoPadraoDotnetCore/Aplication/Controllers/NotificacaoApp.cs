@@ -31,7 +31,7 @@ public class NotificacaoApp : INotificacaoApp
         var listNotificacao = Service.GetAllQuery().Where(x => x.IdUsuario == id).OrderByDescending(x => x.DataCadastro);
 
         var listNotificacaoAntigas = listNotificacao.Where(x =>
-            x.DataVisualização != null && x.Lido == ESimNao.Sim && x.DataVisualização.Value.AddDays(10) > DateTime.Now);
+            x.DataVisualização != null && x.Lido == ESimNao.Sim &&  DateTime.Now > x.DataVisualização.Value.AddDays(5));
 
         if (listNotificacaoAntigas.Any())
             Service.DeleteList(listNotificacaoAntigas.ToList());
@@ -87,7 +87,7 @@ public class NotificacaoApp : INotificacaoApp
                     if (string.IsNullOrEmpty(corpo))
                         throw new Exception("Arquivo html projeto atrasado não encontrado!");
 
-                    var email = EmailHelper.EnviarEmail(usuario, "Projeto Padrão - Projeto atrasado", corpo);
+                    var email = EmailHelper.EnviarEmail(usuario, "TaskMaster - Projeto atrasado", corpo);
                     
                     //Colocar Log
                 }
@@ -185,7 +185,7 @@ public class NotificacaoApp : INotificacaoApp
                 if (string.IsNullOrEmpty(corpo))
                     throw new Exception("Arquivo html projeto atrasado não encontrado!");
 
-                var email = EmailHelper.EnviarEmail(usuario,"Projeto Padrão - Tarefas atrasadas",corpo);
+                var email = EmailHelper.EnviarEmail(usuario,"TaskMaster - Tarefas atrasadas",corpo);
             
                 //Colocar Log
 

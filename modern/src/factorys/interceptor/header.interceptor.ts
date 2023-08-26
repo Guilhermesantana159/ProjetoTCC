@@ -24,7 +24,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
           {
             this.toastr.warning('<small>Sua sessão expirou!</small>');
             window.localStorage.clear();
-            this.router.navigateByUrl('/');
+            this.router.navigateByUrl('/login');
           }else if(err.status == 500){
             this.router.navigateByUrl('/manutencao/error/500');
             throwError(() => new Error(err.message))          

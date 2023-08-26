@@ -30,6 +30,8 @@ export class DashboardComponent implements OnInit {
   atividade!: AtividadeDataDashboard;
   lTarefaUsuario: Array<TarefaDashboard> = [];
   @ViewChild("chart", { static: false }) chart!: ChartComponent;
+  @ViewChild("chartTarefa", { static: false }) chartTarefa!: ChartComponent;
+
   public AtividadeChart: any;
   graficoAtividadeTarefa!: ChartType;
   atividadeTarefas: AtividadeTarefaDataDashboard | undefined;
@@ -61,6 +63,7 @@ export class DashboardComponent implements OnInit {
       }
       else
       {
+        this.projetoList = [];
         this.InitTela(value);
       }
     });
@@ -112,25 +115,25 @@ export class DashboardComponent implements OnInit {
       },
       colors: colors,
       series: [{
-        name: 'Tempo da tarefa em espera',
-        type: 'area',
-        data: []
-      }, {
-        name: 'Tempo total previsto da atividade',
+        name: 'Tempo da tarefa em espera hora(s)',
         type: 'bar',
         data: []
       }, {
-        name: 'Tempo da tarefa em progresso',
+        name: 'Tempo total previsto da atividade hora(s)',
+        type: 'bar',
+        data: []
+      }, {
+        name: 'Tempo da tarefa em progresso hora(s)',
         type: 'line',
-        data: [8, 12, 7, 17, 21, 11, 5, 9, 7, 29, 12, 35]
+        data: []
       },
       {
-        name: 'Tempo realizado da tarefa',
-        type: 'bar',
+        name: 'Tempo realizado da tarefa hora(s)',
+        type: 'area',
         data: []
       }],
       fill: {
-        opacity: [0.1, 0.9, 1],
+        opacity: [1, 1, 1,0.1],
       },
       markers: {
         size: [0, 0, 0],
@@ -185,35 +188,34 @@ export class DashboardComponent implements OnInit {
       },
       plotOptions: {
         bar: {
-          columnWidth: "30%",
+          columnWidth: "7%",
           barHeight: "70%",
         },
       },
     };
 
-
     this.atividadeTarefas?.lTarefas.forEach(element => {
       this.graficoAtividadeTarefa.xaxis.categories.push(element.tarefa)
 
       //Espera
-      this.graficoAtividadeTarefa.series[0].data.push(element.tempoTarefaEspera);
+      this.graficoAtividadeTarefa.series[0].data.push(element.tempoTarefaEspera > 0 ? element.tempoTarefaEspera : 0);
 
       //Previsto
-      this.graficoAtividadeTarefa.series[0].data.push(element.tempoTarefaTotal);
+      this.graficoAtividadeTarefa.series[1].data.push(element.tempoTarefaTotal > 0 ? element.tempoTarefaTotal : 0);
 
       //Progresso
-      this.graficoAtividadeTarefa.series[0].data.push(element.tempoTarefaProgresso);
+      this.graficoAtividadeTarefa.series[2].data.push(element.tempoTarefaProgresso > 0 ? element.tempoTarefaProgresso : 0);
 
       //Realizado
-      this.graficoAtividadeTarefa.series[0].data.push(element.tempoTarefaRealizado);
-
+      this.graficoAtividadeTarefa.series[3].data.push((element.tempoTarefaEspera + element.tempoTarefaProgresso) > 0 ? (element.tempoTarefaEspera + element.tempoTarefaProgresso) : 0);
     });
+
   }
 
   private InitChartAtividadeProjeto(colors: any) {
     colors = this.getChartColorsArray(colors);
     this.AtividadeChart = {
-      series: [this.atividade.indicador.tarefasFazer, this.atividade.indicador.tarefasProgresso, this.atividade.indicador.tarefasCompletas, this.atividade.indicador.tarefasAtrasadas],
+      series: [this.atividade?.indicador?.tarefasFazer, this.atividade?.indicador?.tarefasProgresso, this.atividade?.indicador?.tarefasCompletas, this.atividade?.indicador?.tarefasAtrasadas],
       labels: ["Aberto", "Progresso", "Completo", "Atrasado"],
       chart: {
         height: 333,
@@ -276,8 +278,8 @@ export class DashboardComponent implements OnInit {
             this.rate = response.data.feedback.mediaFeedback;
           }
 
-          this.InitChartAtividadeProjeto('["--vz-primary", "--vz-success", "--vz-warning", "--vz-danger", "--vz-info"]');
-          this.InitChartTarefa('["--vz-warning", "--vz-primary", "--vz-success"]');
+          this.InitChartAtividadeProjeto('["--vz-warning", "--vz-primary", "--vz-success", "--vz-danger", "--vz-info"]');
+          this.InitChartTarefa('["--vz-warning", "--vz-primary", "--vz-info", "--vz-success", "--vz-info"]');
         }
         else
         {
@@ -289,16 +291,51 @@ export class DashboardComponent implements OnInit {
   }
 
   AtividadeSelect(atividade: AtividadeDataDashboard){
+    //Donut
+    if(atividade == this.atividade){
+      return;
+    }
+    
     this.atividade = atividade;
 
     this.AtividadeChart.series = [];
 
-    this.AtividadeChart.series.push(this.atividade.indicador.tarefasFazer);
-    this.AtividadeChart.series.push(this.atividade.indicador.tarefasProgresso);
-    this.AtividadeChart.series.push(this.atividade.indicador.tarefasCompletas);
-    this.AtividadeChart.series.push(this.atividade.indicador.tarefasAtrasadas);
+    this.AtividadeChart.series.push(this.atividade.indicador?.tarefasFazer);
+    this.AtividadeChart.series.push(this.atividade.indicador?.tarefasProgresso);
+    this.AtividadeChart.series.push(this.atividade.indicador?.tarefasCompletas);
+    this.AtividadeChart.series.push(this.atividade.indicador?.tarefasAtrasadas);
 
     this.chart.updateSeries(this.AtividadeChart.series)
+
+    //Lines and bar
+    this.graficoAtividadeTarefa.series[0].data = [];
+    this.graficoAtividadeTarefa.series[1].data = [];
+    this.graficoAtividadeTarefa.series[2].data = [];
+    this.graficoAtividadeTarefa.series[3].data = [];
+
+
+    this.atividade?.lAtividadeTarefas.forEach(elementAtv => {
+
+      elementAtv.lTarefas.forEach(element => {
+        this.graficoAtividadeTarefa.xaxis.categories.push(element.tarefa)
+
+        //Espera
+        this.graficoAtividadeTarefa.series[0].data.push(element.tempoTarefaEspera > 0 ? element.tempoTarefaEspera : 0);
+  
+        //Previsto
+        this.graficoAtividadeTarefa.series[1].data.push(element.tempoTarefaTotal > 0 ? element.tempoTarefaTotal : 0);
+  
+        //Progresso
+        this.graficoAtividadeTarefa.series[2].data.push(element.tempoTarefaProgresso > 0 ? element.tempoTarefaProgresso : 0);
+  
+        //Realizado
+        this.graficoAtividadeTarefa.series[3].data.push((element.tempoTarefaEspera + element.tempoTarefaProgresso) > 0 ? (element.tempoTarefaEspera + element.tempoTarefaProgresso) : 0);
+      });
+
+      this.chartTarefa.updateSeries(this.graficoAtividadeTarefa.series)
+
+    });
+
   }
 
   openModalFeedback(content: any) {

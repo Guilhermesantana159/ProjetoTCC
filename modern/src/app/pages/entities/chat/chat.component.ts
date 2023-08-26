@@ -51,6 +51,7 @@ export class ChatComponent implements OnInit {
   loadingMsg: boolean = false;
   isreplyMessage = false;
   submitted = false;
+  abaActive = 0;
   
   constructor(public formBuilder: UntypedFormBuilder, private lightbox: Lightbox, 
     private offcanvasService: NgbOffcanvas, private datePipe: DatePipe,private response: 
@@ -269,6 +270,8 @@ export class ChatComponent implements OnInit {
     this.response.Get("Chat","ConsultarMensagens/" + localStorage.getItem('IdUsuario') + '/' + data.idUsuarioContato).subscribe(
     (response: MensagemChatResponse) =>{      
       if(response.sucesso){ 
+        this.chatMessagesData = [];
+        
         response.data.mensagemChat.forEach(element => {
             this.chatMessagesData.push(element);
         });      
@@ -470,11 +473,41 @@ export class ChatComponent implements OnInit {
     });
   }
 
-   ContactSearch(){
+  Search(){
+    if(this.abaActive == 0){
+      this.MessageDirectSearch();
+    }
+    else{
+      this.ContactSearch();
+    }
+  }
+
+  MessageDirectSearch(){
     var input:any, filter:any, ul:any, li:any, a:any | undefined, i:any, txtValue:any;
     input = document.getElementById("searchContact") as HTMLAreaElement;
     filter = input.value.toUpperCase();
     ul = document.querySelectorAll(".chat-user-list");
+    ul.forEach((item:any)=>{
+      let contNone = 1;
+      li = item.getElementsByTagName("li");
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("p")[0];
+        txtValue = a?.innerText;
+        if (txtValue?.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+            contNone = contNone + 1;
+        }
+      }
+    })    
+  }
+
+  ContactSearch(){
+    var input:any, filter:any, ul:any, li:any, a:any | undefined, i:any, txtValue:any;
+    input = document.getElementById("searchContact") as HTMLAreaElement;
+    filter = input.value.toUpperCase();
+    ul = document.querySelectorAll(".contact-list");
     ul.forEach((item:any)=>{
       li = item.getElementsByTagName("li");
       for (i = 0; i < li.length; i++) {
@@ -486,7 +519,7 @@ export class ChatComponent implements OnInit {
             li[i].style.display = "none";
         }
       }
-    })    
+    })   
   }
 
    // Emoji Picker

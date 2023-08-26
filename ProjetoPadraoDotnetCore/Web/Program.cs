@@ -11,9 +11,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Projeto Padrão",
+        Title = "TaskMaster",
         Version = "v1",
-        Description = "Aplicação Projeto Padrão"
+        Description = "Aplicação TaskMaster"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

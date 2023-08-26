@@ -2212,6 +2212,7 @@ textarea.form-control.is-valid{
   }
   .form-control:disabled, .form-control[readonly] {
     background-color: #6e6f708f;
+    cursor: not-allowed;
     color: #ced4da;
   }
 
@@ -2324,22 +2325,36 @@ button:disabled {
   pointer-events: all !important;
 }
 
-input:disabled {
-  cursor: not-allowed !important;
-  pointer-events: all !important;
-}
+// input:disabled {
+//   cursor: not-allowed !important;
+//   pointer-events: all !important;
+// }
 
-.form-control:disabled{
-  cursor: not-allowed !important;
-  pointer-events: all !important;
-}
+// .form-control:disabled[true]{
+//   cursor: not-allowed !important;
+//   pointer-events: all !important;
+// }
 
-.form-control:read-only{
-  cursor: not-allowed !important;
-  pointer-events: all !important;
+// .form-control:read-only[true]{
+//   cursor: not-allowed !important;
+//   pointer-events: all !important;
+// }
+.form-control {
+  &:disabled,
+  &[readonly] {
+    cursor: not-allowed !important;
+    pointer-events: all !important;
+  }
 }
-
 .profile-img-file-input:disabled > label{
   cursor: not-allowed !important;
   pointer-events: all !important;
+}
+
+.fc-icon-chevron-left{
+  display: none !important;
+}
+
+.fc-icon-chevron-right{
+  display: none !important;
 }

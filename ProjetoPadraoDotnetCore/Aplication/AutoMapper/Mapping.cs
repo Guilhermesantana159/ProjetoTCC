@@ -29,6 +29,8 @@ public class Mapping : Profile
             .ReverseMap();
 
         CreateMap<UsuarioRequest, Usuario>()
+            .ForMember(dst => dst.Senha,
+                map => map.MapFrom(src => new HashCripytograph().Hash(src.Senha)))
             .ForMember(dst => dst.LSkillUsuarios,
                 map => map.MapFrom(src => src.lSkills));
         CreateMap<Usuario, UsuarioCrudResponse>()
@@ -78,12 +80,20 @@ public class Mapping : Profile
         #region Projeto
 
         CreateMap<ProjetoRequest, Projeto>()
+            .ForMember(dst => dst.DataInicio,
+                map => map.MapFrom(src => src.DataInicio.Date))
+            .ForMember(dst => dst.DataFim,
+                map => map.MapFrom(src => src.DataFim.Date))
             .ForMember(dst => dst.DataCadastro,
                 map => map.MapFrom(src => DateTime.Now))
             .ForMember(dst => dst.Status,
                 map => map.MapFrom(src => EStatusProjeto.Aberto));
 
         CreateMap<ProjetoRequest.AtividadeRequest, Atividade>()
+            .ForMember(dst => dst.DataInicial,
+                map => map.MapFrom(src => src.DataInicial.Date))
+            .ForMember(dst => dst.DataFim,
+                map => map.MapFrom(src => src.DataFim.Date))
             .ForMember(dst => dst.Titulo,
                 map => map.MapFrom(src => src.Atividade));
       

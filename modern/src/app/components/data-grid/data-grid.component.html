@@ -74,31 +74,31 @@
         </td>
       </ng-container>
     </ng-container>
-
-    <!--Filtro -->
     <ng-container *ngFor="let item of gridOptions.Colunas">
       <ng-container [matColumnDef]="item.ServerField + 'Field'">
         <th class="px-2 mw-30 th-filter" mat-header-cell *matHeaderCellDef>
           <div class="input-group-sm">
-            <form [formGroup]="FilterFormGroup" action="javascript:void(0);">
+            <form action="javascript:void(0);">
               <div class="module-filter-date" *ngIf="item.Filter && item.Type == 'data'">
-                <input placeholder="De..." class="form-control group-input-search" matInput [matDatepicker]="to" [mask]= "'00/00/0000'" maxlength="10" #toInput 
+                <input placeholder="De..." class="form-control group-input-search" matInput [matDatepicker]="to" [mask]= "'00/00/0000'" maxlength="10" 
+                #toInput 
                 (dateChange)="FiltrarGrid({Value:$event.value,Type:item.Type,Field:item.ServerField,EOperadorFilter: 1})">
                 <mat-datepicker-toggle matSuffix [for]="to"></mat-datepicker-toggle>
                 <mat-datepicker #to>
                   <mat-datepicker-actions>
                     <button mat-button matDatepickerCancel>Voltar</button>
-                    <!-- <button mat-button matDatepickerCancel (click)="LimparCampoDataDe()">Limpar</button> -->
+                    <button mat-button matDatepickerCancel (click)="LimparCampoData(to)">Limpar</button>
                     <button mat-raised-button color="primary" matDatepickerApply>Aplicar</button>
                   </mat-datepicker-actions>
                 </mat-datepicker>
-                <input placeholder="Até..." class="form-control group-input-search" matInput [matDatepicker]="from" [mask]= "'00/00/0000'" maxlength="10" #fromInput 
+                <input placeholder="Até..." class="form-control group-input-search" matInput [matDatepicker]="from" [mask]= "'00/00/0000'" maxlength="10" 
+                  #fromInput 
                 (dateChange)="FiltrarGrid({Value:$event.value,Type:item.Type,Field:item.ServerField,EOperadorFilter: 2})">
                 <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
                 <mat-datepicker #from>
                   <mat-datepicker-actions>
                     <button mat-button matDatepickerCancel>Voltar</button>
-                    <!-- <button mat-button matDatepickerCancel (click)="LimparCampoDataAte()">Limpar</button> -->
+                    <button mat-button matDatepickerCancel (click)="LimparCampoData(from)">Limpar</button>
                     <button mat-raised-button color="primary" matDatepickerApply>Aplicar</button>
                   </mat-datepicker-actions>
                 </mat-datepicker>

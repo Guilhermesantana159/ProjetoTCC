@@ -124,26 +124,41 @@ public class ChatApp : IChatApp
 
     public ContatoListaResponse ConsultarMensagensDireta(int id)
     {
-        return new ContatoListaResponse()
+        var lUsuario = ChatService.GetAllMensagens()
+            .Where(x => x.IdUsuarioMandante == id || x.IdUsuarioRecebe == id)
+            .OrderByDescending(x => x.DataCadastro);
+
+        var listIdUsuario = new List<int>();
+        
+        foreach (var item in lUsuario)
         {
-            LContatos = ChatService.GetMensagensWithInclude()
-                .Where(x => x.IdUsuarioMandante == id || x.IdUsuarioRecebe == id)
+            listIdUsuario.Add(item.IdUsuarioMandante == id ? item.IdUsuarioRecebe : item.IdUsuarioMandante);
+        }
+
+        var retorno = UsuarioService
+                .GetAllUsuarioContato()
+                .Where(x => listIdUsuario.Contains(x.UsuarioContato.IdUsuario))
                 .Distinct()
                 .Select(x => new ContatoResponse()
                 {
-                    Nome = x.IdUsuarioMandante == id ? x.UsuarioRecebe.Nome: x.UsuarioMandante.Nome ,
-                    Foto = x.IdUsuarioMandante == id ? x.UsuarioRecebe.Foto : x.UsuarioMandante.Foto,
-                    IdUsuarioContato = x.IdUsuarioMandante == id ? x.IdUsuarioRecebe : x.IdUsuarioMandante,
-                    IdContatoChat = x.IdUsuarioMandante == id ? null : x.IdContatoRecebe,
-                    StatusContato = x.IdUsuarioMandante == id ? x.ContatoRecebeChat.StatusContato : StatusContato.Disponivel,
-                    Sobre = x.IdUsuarioMandante == id ? x.UsuarioRecebe.Observacao : x.UsuarioMandante.Observacao ,
-                    Email = x.IdUsuarioMandante == id ? x.UsuarioRecebe.Email : x.UsuarioMandante.Email,
-                    Telefone = x.IdUsuarioMandante == id ? x.UsuarioMandante.Telefone : x.UsuarioRecebe.Telefone,
-                    DataNascimento = x.IdUsuarioMandante == id 
-                        ? (x.UsuarioRecebe.DataNascimento.HasValue ? x.UsuarioRecebe.DataNascimento.Value.FormatDateBr() : null)
-                        : (x.UsuarioMandante.DataNascimento.HasValue ? x.UsuarioMandante.DataNascimento.Value.FormatDateBr() : null) 
-                }).ToList()
-        };    }
+                    Nome = x.UsuarioContato.Nome,
+                    Foto = x.UsuarioContato.Foto,
+                    IdUsuarioContato = x.UsuarioContato.IdUsuario,
+                    IdContatoChat = x.IdContatoChat,
+                    StatusContato = x.StatusContato,
+                    Sobre = x.UsuarioContato.Observacao,
+                    Email = x.UsuarioContato.Email,
+                    Telefone = x.UsuarioContato.Telefone,
+                    DataNascimento = x.UsuarioContato.DataNascimento.HasValue
+                        ? x.UsuarioContato.DataNascimento.Value.FormatDateBr()
+                        : null
+                }).ToList();
+
+        return new ContatoListaResponse()
+        {
+            LContatos = retorno.AsQueryable().OrderBy(x => listIdUsuario.IndexOf(x.IdUsuarioContato)).ToList()
+        };    
+    }
 
     public void ExcluirConversa(ExcluirConversaRequest request)
     {

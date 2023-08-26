@@ -50,7 +50,6 @@ export interface AtividadeTarefaDataDashboard
 {
     tempoTotalTarefasEspera: number,
     tempoTotalTarefasProgresso: number,
-    tempoTotalTarefasRealizado: number,
     tempoTotalTarefasTotal: number,
     lTarefas: Array<TarefaIndicadoresDataDashboard>
 }
@@ -60,7 +59,6 @@ export interface TarefaIndicadoresDataDashboard
     tarefa: string,
     tempoTarefaEspera: number,
     tempoTarefaProgresso: number,
-    tempoTarefaRealizado: number,
     tempoTarefaTotal: number
 }
 

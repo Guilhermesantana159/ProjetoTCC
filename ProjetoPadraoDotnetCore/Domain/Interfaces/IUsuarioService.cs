@@ -17,4 +17,5 @@ public interface IUsuarioService
     public Usuario GetByIdWithInclude(int id);
     public IQueryable<Usuario>? GetTarefaByUsuario(List<int> list);
     public IQueryable<Usuario>? GetUsuarioTarefa();
+    public IQueryable<ContatoChat> GetAllUsuarioContato();
 }

@@ -40,7 +40,7 @@
                                     </span>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr *ngIf="!data?.isView ?? false">
                                 <td class="fw-medium">Status</td>
                                 <td>
                                     <span class="badge text-uppercase" *ngIf="data != undefined"
@@ -197,6 +197,9 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div class="text-center p-3 text-muted" *ngIf="data.lMovimentacoes == undefined || data.lMovimentacoes.length == 0">
+                                        Esta tarefa não possui movimentações
+                                    </div>
                                 </div>
                             </ng-template>
                         </li>

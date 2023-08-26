@@ -37,6 +37,7 @@ export class UsuarioCrudComponent{
   options!: Array<BaseOptions>;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   addOnBlur = true;
+  porcentagem!: number;
   lSkill: Skill[] = [];
 
   constructor(private formBuilder: FormBuilder,private response: BaseService,private router: Router,private route: ActivatedRoute,private toastr: ToastrService) {
@@ -84,6 +85,8 @@ export class UsuarioCrudComponent{
               this.lSkill.push(element);
 
             });
+
+            this.porcentagem = this.calculatePercentageFilled();
 
             //Deixa de ser obrigatório na edição
             this.UserRegisterFormGroup.get('senha')?.clearValidators();
@@ -225,6 +228,22 @@ export class UsuarioCrudComponent{
 
   LimparCampoData(){
     this.UserRegisterFormGroup.get('dataNascimento')?.setValue(undefined);
+  }
+
+   //Campo Senha
+   ActiveEyePasswordLogin: boolean = false;
+
+   EyePasswordLogin = (): void => {
+     this.ActiveEyePasswordLogin = !this.ActiveEyePasswordLogin;
+   };
+
+  calculatePercentageFilled(): number {
+    debugger
+    const totalFields = Object.keys(this.UserRegisterFormGroup.controls).length;
+    const filledFields = Object.values(this.UserRegisterFormGroup.controls).filter(control => control.value !== null && control.value !== undefined && control.value !== '').length;
+
+    const percentageFilled = (filledFields / totalFields) * 100;
+    return Math.round(percentageFilled);
   }
 
   //Interação das abas

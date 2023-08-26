@@ -365,9 +365,20 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
 
       //Estando na aba semanas ou dias
       let repetidos = 0;
+      let alteracaoTamanho = false;
+      let indexInicial = -1;
+      let tamanhoAnterior = 0;
+      let tamanhoNovo = parseInt(objAtv.escalaTempoAtividade ?? '0');
       this.lCronograma.forEach(element => {
         for (let index = 0; index < element.listAtividades.length; index++) {
           if(element.listAtividades[index].position == objAtv.position){
+            if(element.listAtividades[index].escalaTempoAtividade != objAtv.escalaTempoAtividade){
+              if(indexInicial == -1){
+                tamanhoAnterior = element.listAtividades[index].escalaTempoAtividade;
+                indexInicial = index;
+              }
+              alteracaoTamanho = true;
+            }
             element.listAtividades[index].escalaTempoAtividade = objAtv.escalaTempoAtividade;
             element.listAtividades[index].atividade = objAtv.atividade;
             element.listAtividades[index].listTarefas = objAtv.listTarefas;
@@ -381,6 +392,50 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
           
         }
       });
+
+      if(alteracaoTamanho){
+        if(tamanhoNovo > tamanhoAnterior){
+          let indexExcede = 0;
+
+          if(indexInicial + tamanhoNovo > (this.lCronograma.length - 1)){
+            indexExcede = (indexInicial + tamanhoNovo) - (this.lCronograma.length - 1);
+          }else{
+            indexInicial = indexInicial - 1;
+          }
+          
+          if(indexExcede < 0){
+            indexInicial = indexInicial - indexExcede + 1;
+          }
+
+          let indexFim = indexInicial + tamanhoNovo;
+          for (let index = 0; index < this.lCronograma.length; index++) {
+            let indexListAtividade = this.lCronograma[index].listAtividades.findIndex(x => x.atividade == objAtv.atividade);
+
+            if(index < indexInicial || index > indexFim){
+              if(indexListAtividade != -1){
+                this.lCronograma[index].listAtividades.splice(index,1)
+              }
+            }else{
+              if(indexListAtividade == -1){
+                this.lCronograma[index].listAtividades.push(objAtv)
+              }
+            }
+          }
+        }
+        else{
+          debugger
+          for (let index = 0; index < this.lCronograma.length; index++) {
+            let indexListAtividade = this.lCronograma[index].listAtividades.findIndex(x => x.atividade == objAtv.atividade);
+            let indexFim = indexInicial +  tamanhoNovo -1;
+
+            if(index < indexInicial || index > indexFim){
+              if(indexListAtividade != -1){
+                this.lCronograma[index].listAtividades.splice(index,1)
+              }
+            }
+          }
+        }
+      }
 
       //Estando na aba atividades
       for (let index = 0; index < this.lAtividadesCronograma.length; index++) {

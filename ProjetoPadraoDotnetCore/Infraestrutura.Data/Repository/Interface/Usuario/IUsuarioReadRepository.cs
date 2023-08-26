@@ -6,5 +6,6 @@ public interface IUsuarioReadRepository : IBaseReadRepository<Entity.Usuario>
 {
     public Entity.Usuario GetByIdWithInclude(int id);
     public IQueryable<Entity.Usuario>? GetTarefaUsuarioWithInclude();
+    public IQueryable<Entity.ContatoChat> GetAllContatoWithInclude();
 
 }

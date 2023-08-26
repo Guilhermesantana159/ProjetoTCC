@@ -31,9 +31,21 @@ public class AuthApp : IAuthApp
     {
         var retorno = new LoginResponse();
 
-        var usuario = UsuarioService.GetAllList()
+        Usuario? usuario;
+        
+        if (isRecuperacaoSenha)
+        { 
+            usuario = UsuarioService.GetAllList()
+                .FirstOrDefault(x => x.Email == request.EmailLogin && x.Senha ==
+                    request.SenhaLogin);
+        }
+        else
+        {
+            usuario = UsuarioService.GetAllList()
                 .FirstOrDefault(x => x.Email == request.EmailLogin && x.Senha ==
                     new HashCripytograph().Hash(request.SenhaLogin));
+        }
+     
 
         if (usuario == null)
             retorno.Autenticado = false;
@@ -80,7 +92,7 @@ public class AuthApp : IAuthApp
         if (string.IsNullOrEmpty(corpo))
             throw new Exception("Arquivo html recupere sua senha não encontrado!");
         
-        var email = EmailHelper.EnviarEmail(usuario,"Projeto Padrão - Recuperação de senha",corpo);
+        var email = EmailHelper.EnviarEmail(usuario,"TaskMaster - Recuperação de senha",corpo);
         
         if(!email)
             retorno.LErrors.Add("Não foi possível enviar o código ao email informado!");

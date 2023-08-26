@@ -30,7 +30,7 @@ export class KambamGridTarefasComponent{
         Parametros: {
           Controller: 'Projeto',
           Metodo: 'ConsultarGridProjeto',
-          PaginatorSizeOptions: [10,15,20],
+          PaginatorSizeOptions: [10,50,100],
           PageSize: 10,
           MultiModal: false,
           UrlRelatorio: 'Projeto/GerarRelatorioGridProjeto',

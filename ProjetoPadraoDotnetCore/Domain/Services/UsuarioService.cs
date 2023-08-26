@@ -85,4 +85,10 @@ public class UsuarioService : IUsuarioService
         return ReadRepository
             .GetTarefaUsuarioWithInclude();    
     }
+    
+    public IQueryable<ContatoChat> GetAllUsuarioContato()
+    {
+        return ReadRepository
+            .GetAllContatoWithInclude();    
+    }
 }

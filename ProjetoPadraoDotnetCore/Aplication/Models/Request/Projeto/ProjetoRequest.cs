@@ -8,8 +8,8 @@ public class ProjetoRequest
     public int IdUsuarioCadastro { get; set; }
     public string? Titulo { get; set; }
     public string? Foto { get; set; }
-    public DateTime? DataInicio { get; set; }
-    public DateTime? DataFim { get; set; }
+    public DateTime DataInicio { get; set; }
+    public DateTime DataFim { get; set; }
     public string? Descricao { get; set; }
     public bool EmailProjetoAtrasado { get; set; }
     public bool PortalProjetoAtrasado { get; set; }
@@ -25,8 +25,8 @@ public class ProjetoRequest
     {
         public int? IdAtividade { get; set; }
         public string? Atividade { get; set; }
-        public DateTime? DataInicial { get; set; }
-        public DateTime? DataFim { get; set; }
+        public DateTime DataInicial { get; set; }
+        public DateTime DataFim { get; set; }
         public EStatusAtividade StatusAtividade { get; set; }
         public List<TarefaRequest>? ListTarefas { get; set; }
     }

@@ -168,5 +168,13 @@ public class Mapping : Profile
             map => map.MapFrom(src => DateTime.Now));
 
         #endregion
+
+        #region ContatoMensagem
+        
+        CreateMap<ContatoMensagemRequest, ContatoMensagem>()
+            .ForMember(dst => dst.DataCadastro,
+            map => map.MapFrom(src => DateTime.Now));
+        
+        #endregion
     }
 }

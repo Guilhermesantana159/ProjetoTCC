@@ -23,6 +23,7 @@ using Infraestrutura.Repository.Interface.Base;
 using Infraestrutura.Repository.Interface.CategoriaTemplate;
 using Infraestrutura.Repository.Interface.ComentarioTarefa;
 using Infraestrutura.Repository.Interface.ContatoChat;
+using Infraestrutura.Repository.Interface.ContatoMensagem;
 using Infraestrutura.Repository.Interface.Feedback;
 using Infraestrutura.Repository.Interface.MensagemChat;
 using Infraestrutura.Repository.Interface.Menu;
@@ -153,6 +154,9 @@ namespace CrossCutting.IOC
             
             services.AddScoped<IFeedbackReadRepository, FeedbackReadRepository>();
             services.AddScoped<IFeedbackWriteRepository, FeedbackWriteRepository>();
+            
+            services.AddScoped<IContatoMensagemReadRepository, ContatoMensagemReadRepository>();
+            services.AddScoped<IContatoMensagemWriteRepository, ContatoMensagemWriteRepository>();
 
             #endregion
 
@@ -161,7 +165,7 @@ namespace CrossCutting.IOC
             services.AddScoped<IUsuarioGridBuildReport, UsuarioGridBuildReport>();
             services.AddScoped<IReportsService, ReportsService>();
             #endregion
-            
+
             //Context
             services.AddDbContext<Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);

@@ -1,5 +1,5 @@
 ﻿//Criar Migration
-dotnet ef migrations add FeedBack
+dotnet ef migrations add ContatoMensagem
 
 //Remover ultimo migration
 dotnet ef migrations remove 

@@ -37,4 +37,5 @@ public class Context : DbContext
     public DbSet<TagTarefaTemplate> TagTarefaTemplate { get; set; } = null!;
     public DbSet<Feedback> Feedback { get; set; } = null!;
     public DbSet<MensagemChat> MensagemChat { get; set; } = null!;
+    public DbSet<ContatoMensagem> ContatoMensagem { get; set; } = null!;
 }

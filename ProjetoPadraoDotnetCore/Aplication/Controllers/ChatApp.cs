@@ -132,13 +132,16 @@ public class ChatApp : IChatApp
         
         foreach (var item in lUsuario)
         {
-            listIdUsuario.Add(item.IdUsuarioMandante == id ? item.IdUsuarioRecebe : item.IdUsuarioMandante);
+            var idList = item.IdUsuarioMandante == id ? item.IdUsuarioRecebe : item.IdUsuarioMandante;
+            if (!listIdUsuario.Contains(idList))
+            {
+                listIdUsuario.Add(idList);
+            }
         }
 
         var retorno = UsuarioService
                 .GetAllUsuarioContato()
-                .Where(x => listIdUsuario.Contains(x.UsuarioContato.IdUsuario))
-                .Distinct()
+                .Where(x => listIdUsuario.Contains(x.UsuarioContato.IdUsuario) && x.IdUsuarioCadastro == id)
                 .Select(x => new ContatoResponse()
                 {
                     Nome = x.UsuarioContato.Nome,

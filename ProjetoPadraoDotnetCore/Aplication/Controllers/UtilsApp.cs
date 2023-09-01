@@ -55,4 +55,14 @@ public class UtilsApp : IUtilsApp
             Estrela5 = feedback.Count(x => x.Rating == 5)
         };
     }
+
+    public void ContatoMensagem(ContatoMensagemRequest request)
+    {
+        UtilsService.ContatoMensagem(Mapper.Map<ContatoMensagem>(request));
+    }
+
+    public List<ContatoMensagem> ConsultarContatoMensagem()
+    {
+        return UtilsService.GetAllContatoMensagem();
+    }
 }

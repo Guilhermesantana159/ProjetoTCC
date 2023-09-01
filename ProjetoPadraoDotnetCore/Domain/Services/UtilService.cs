@@ -4,6 +4,7 @@ using Domain.DTO.Correios;
 using Domain.Interfaces;
 using Infraestrutura.Entity;
 using Infraestrutura.Repository.External;
+using Infraestrutura.Repository.Interface.ContatoMensagem;
 using Infraestrutura.Repository.Interface.Feedback;
 
 namespace Domain.Services;
@@ -11,14 +12,18 @@ namespace Domain.Services;
 public class UtilService : IUtilsService
 {
     protected readonly IExternalRepository External;
+    protected readonly IContatoMensagemWriteRepository ContatoMensagemWrite;
+    protected readonly IContatoMensagemReadRepository ContatoMensagemRead;
     protected readonly IFeedbackWriteRepository FeedbackWriteRepository;
 
     private readonly IConfiguration _configuration;
-    public UtilService(IExternalRepository external,IConfiguration config, IFeedbackWriteRepository feedbackWriteRepository)
+    public UtilService(IExternalRepository external,IConfiguration config, IFeedbackWriteRepository feedbackWriteRepository, IContatoMensagemWriteRepository contatoMensagemWrite, IContatoMensagemReadRepository contatoMensagemRead)
     {
         External = external;
         _configuration = config;
-        this.FeedbackWriteRepository = feedbackWriteRepository;
+        FeedbackWriteRepository = feedbackWriteRepository;
+        ContatoMensagemWrite = contatoMensagemWrite;
+        ContatoMensagemRead = contatoMensagemRead;
     }
     public async Task<EnderecoExternalReponse> ConsultarEnderecoCep(string cep)
     {
@@ -59,5 +64,15 @@ public class UtilService : IUtilsService
     public void SalvarFeedback(Feedback feedback)
     {
         FeedbackWriteRepository.Add(feedback);
+    }
+
+    public void ContatoMensagem(ContatoMensagem request)
+    {
+        ContatoMensagemWrite.Add(request);
+    }
+
+    public List<ContatoMensagem> GetAllContatoMensagem()
+    {
+        return ContatoMensagemRead.GetAll().OrderByDescending(x => x.DataCadastro).ToList();
     }
 }

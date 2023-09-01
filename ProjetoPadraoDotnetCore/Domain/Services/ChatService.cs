@@ -58,7 +58,7 @@ public class ChatService : IChatService
     public IQueryable<MensagemChat> GetMensagens(int idUsuarioMandante,int idUsuarioRecebe)
     {
         return MensagemChatReadRepository.GetAll()
-            .Where(x => ( x.IdUsuarioRecebe == idUsuarioRecebe) 
+            .Where(x => (x.IdUsuarioMandante ==  idUsuarioMandante && x.IdUsuarioRecebe == idUsuarioRecebe) 
             || (x.IdUsuarioMandante ==  idUsuarioRecebe && x.IdUsuarioRecebe == idUsuarioMandante) && x.IdUsuarioExclusao != idUsuarioMandante);
     }
     

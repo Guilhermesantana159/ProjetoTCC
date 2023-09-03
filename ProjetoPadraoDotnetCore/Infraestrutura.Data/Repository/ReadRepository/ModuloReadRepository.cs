@@ -14,8 +14,9 @@ public class ModuloReadRepository : BaseReadRepository<Modulo>,IModuloReadReposi
 
     public IQueryable<Modulo> GetWithInclude()
     {
-        return Context.Modulo                
+        return Context.Modulo
             .AsNoTracking()
-            .Include(x => x.lMenus);
+            .Include(x => x.LSubModulo)
+            .ThenInclude(x => x.LMenus);
     }
 }

@@ -9,14 +9,14 @@ using Aplication.Models.Response.Usuario;
 using Aplication.Utils.FilterDynamic;
 using Aplication.Utils.HashCripytograph;
 using Aplication.Utils.Helpers;
-using Aplication.Utils.Obj;
+using Aplication.Utils.Objeto;
 using Aplication.Validators.Usuario;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Interfaces;
 using Infraestrutura.Entity;
 using Infraestrutura.Enum;
-using Infraestrutura.Reports.Usuario.Obj;
+using Infraestrutura.Reports.Usuario.Objeto;
 
 namespace Aplication.Controllers;
 public class UsuarioApp : IUsuarioApp
@@ -69,8 +69,6 @@ public class UsuarioApp : IUsuarioApp
         {
             var usuario = Mapper.Map<UsuarioRequest,Usuario>(request);
             
-            //Hash da senha
-            usuario.Senha = new HashCripytograph().Hash(request.Senha);
             var cadastro = Service.CadastrarComRetorno(usuario);
             
             //Enviar Notificação de bem-vindo
@@ -117,7 +115,7 @@ public class UsuarioApp : IUsuarioApp
                 DataCadastro = DateTime.Now,
                 Lido = ESimNao.Nao,
                 ClassficacaoMensagem = EMensagemNotificacao.MensagemBemVindo,
-                Corpo = $"Seja bem vindo {usuario.Nome} este é um futuro software de gestão de projeto aproveite as funcionalidades!",
+                Corpo = "Seja bem vindo ao TaskMaster, aproveite as funcionalidades!",
                 Titulo = "Seja bem vindo",
                 DataVisualização = null,
             };
@@ -126,6 +124,7 @@ public class UsuarioApp : IUsuarioApp
 
             response.DataUsuario = new LoginResponse()
             {
+                IdUsuario = responseCadastro.IdUsuario,
                 SessionKey = Jwt.GerarToken(responseCadastro.Cpf),
                 Nome = usuario.Nome,
                 Autenticado = true,
@@ -133,7 +132,8 @@ public class UsuarioApp : IUsuarioApp
                     ? usuario.Genero == EGenero.Masculino 
                         ? _configuration.GetSection("ImageDefaultUser:Masculino").Value 
                         : _configuration.GetSection("ImageDefaultUser:Feminino").Value     
-                    : usuario.Foto
+                    : usuario.Foto,
+                Perfil = usuario.PerfilAdministrador
             };
         }
 
@@ -148,7 +148,8 @@ public class UsuarioApp : IUsuarioApp
     public ValidationResult Editar(UsuarioRequest request)
     {
         var validation = Validation.ValidacaoCadastro(request);
-        var lUsuario = Service.GetAllList();
+        var lUsuario = Service.GetAllQuery();
+        var usuarioOld = Service.GetById(request.IdUsuario ?? 0);
 
         if (lUsuario.Any(x => x.Email == request.Email && x.IdUsuario != request.IdUsuario))
             validation.LErrors.Add("Email já vinculado a outro usuário");
@@ -156,7 +157,10 @@ public class UsuarioApp : IUsuarioApp
         if(validation.IsValid())
         {
             var usuario = Mapper.Map<UsuarioRequest,Usuario>(request);
-            
+
+            if (string.IsNullOrEmpty(request.Senha) && usuarioOld != null)
+                usuario.Senha = usuarioOld.Senha;
+
             Service.Editar(usuario);
         }
 
@@ -212,8 +216,7 @@ public class UsuarioApp : IUsuarioApp
                     ImagemUsuario = x.Foto == null ? x.Genero == EGenero.Masculino 
                             ? _configuration.GetSection("ImageDefaultUser:Masculino").Value 
                             : _configuration.GetSection("ImageDefaultUser:Feminino").Value     
-                        : x.Foto,
-                    Dedicacao = x.Dedicacao 
+                        : x.Foto
                 }).ToList(),
             
             TotalItens = itens.Count()
@@ -266,6 +269,11 @@ public class UsuarioApp : IUsuarioApp
     public Usuario? GetById(int? id)
     {
         return Service.GetById(id ?? 0);
+    }
+    
+    public IQueryable<Usuario>? GetUsuarioTarefa()
+    {
+        return Service.GetUsuarioTarefa();
     }
 }
 

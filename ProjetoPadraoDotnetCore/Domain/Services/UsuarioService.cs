@@ -73,4 +73,22 @@ public class UsuarioService : IUsuarioService
     {
         WriteRepository.DeleteById(id);
     }
+    
+    public IQueryable<Usuario>? GetTarefaByUsuario(List<int> list)
+    {
+        return ReadRepository
+            .GetTarefaUsuarioWithInclude();
+    }
+
+    public IQueryable<Usuario>? GetUsuarioTarefa()
+    {
+        return ReadRepository
+            .GetTarefaUsuarioWithInclude();    
+    }
+    
+    public IQueryable<ContatoChat> GetAllUsuarioContato()
+    {
+        return ReadRepository
+            .GetAllContatoWithInclude();    
+    }
 }

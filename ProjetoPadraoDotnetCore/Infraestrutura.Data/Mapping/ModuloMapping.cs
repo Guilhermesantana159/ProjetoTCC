@@ -12,8 +12,5 @@ public class ModuloMapping : IEntityTypeConfiguration<Modulo>
         
         builder.HasKey(o => o.IdModulo);
         builder.Property(t => t.Nome).HasColumnName("Nome").IsRequired();
-        builder.Property(t => t.Icone).HasColumnName("Icone").IsRequired();
-        builder.Property(t => t.DescricaoLabel).HasColumnName("DescricaoLabel").IsRequired();
-        builder.Property(t => t.DescricaoModulo).HasColumnName("DescricaoModulo").IsRequired(false);
     }
 }

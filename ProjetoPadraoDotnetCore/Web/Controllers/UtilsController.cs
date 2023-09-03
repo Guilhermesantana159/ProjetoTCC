@@ -1,5 +1,5 @@
 using Aplication.Interfaces;
-using Aplication.Models.Request.Profissao;
+using Aplication.Models.Request.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Controllers.Base;
@@ -37,67 +37,49 @@ public class UtilsController : DefaultController
         }
     }
     
+    [HttpPost]
+    [Authorize]
+    [Route("CadastrarFeedback")]
+    public JsonResult CadastrarFeedback(FeedbackRequest request)
+    {
+        try
+        {
+            var retorno = UtilsApp.CadastrarFeedback(request);
+
+            return ResponderSucesso("Obrigado pela sua avaliação!",retorno);
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
+    [HttpPost]
+    [Route("CadastrarContatoMensagem")]
+    public JsonResult CadastrarContatoMensagem(ContatoMensagemRequest request)
+    {
+        try
+        {
+            UtilsApp.ContatoMensagem(request);
+            return ResponderSucesso("Agradecemos seu contato, qualquer coisa entraremos em contato com o email informado!");
+        }
+        catch (Exception e)
+        {
+            return ResponderErro(e.Message);
+        }
+    }
+    
     [HttpGet]
     [Authorize]
-    [Route("ConsultarProfissoes")]
-    public JsonResult ConsultarProfissoes()
+    [Route("ConsultarContatoMensagem")]
+    public JsonResult ConsultarContatoMensagem()
     {
         try
         {
-            var retorno = UtilsApp.ConsultarProfissoes();
-
-            return ResponderSucesso(retorno);
-        }
-        catch (Exception e)
-        {
-            return ResponderErro(e.Message);
-        }
-    }
-    
-    [HttpPost]
-    [Authorize]
-    [Route("CadastrarProfissao")]
-    public JsonResult CadastrarProfissao(ProfissaoCadastrarRequest request)
-    {
-        try
-        {
-            UtilsApp.CadastrarProfissao(request);
-
-            return ResponderSucesso("Profissão cadastrada com sucesso!");
-        }
-        catch (Exception e)
-        {
-            return ResponderErro(e.Message);
-        }
-    }
-    
-    [HttpPost]
-    [Authorize]
-    [Route("EditarProfissao")]
-    public JsonResult EditarProfissao(ProfissaoEditarRequest request)
-    {
-        try
-        {
-            UtilsApp.EditarProfissao(request);
-
-            return ResponderSucesso("Profissão editada com sucesso!");
-        }
-        catch (Exception e)
-        {
-            return ResponderErro(e.Message);
-        }
-    }
-    
-    [HttpPost]
-    [Authorize]
-    [Route("DeletarProfissaoPorId")]
-    public JsonResult DeletarProfissaoPorId(int id)
-    {
-        try
-        {
-            UtilsApp.DeletarProfissaoPorId(id);
-
-            return ResponderSucesso("Profissão apagada com sucesso!");
+            return ResponderSucesso(new
+            {
+                Data = UtilsApp.ConsultarContatoMensagem()
+            });
         }
         catch (Exception e)
         {

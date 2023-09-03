@@ -4,5 +4,5 @@ namespace Infraestrutura.Repository.Interface.Modulo;
 
 public interface IModuloReadRepository : IBaseReadRepository<Entity.Modulo>
 {
-    public IQueryable<Entity.Modulo> GetWithInclude();
+    IQueryable<Entity.Modulo> GetWithInclude();
 }

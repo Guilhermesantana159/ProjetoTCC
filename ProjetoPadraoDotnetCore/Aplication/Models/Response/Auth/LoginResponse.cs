@@ -7,4 +7,5 @@ public class LoginResponse
     public string Nome { get; set; }
     public object SessionKey { get; set; }
     public string Foto { get; set; }
+    public bool Perfil { get; set; }
 }

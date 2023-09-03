@@ -1,15 +1,14 @@
-﻿using Aplication.Models.Request.Profissao;
-using Aplication.Models.Response;
-using Aplication.Models.Response.Base;
+﻿using Aplication.Models.Request.Utils;
+using Aplication.Models.Response.Projeto;
 using Aplication.Models.Response.Usuario;
+using Infraestrutura.Entity;
 
 namespace Aplication.Interfaces;
 
 public interface IUtilsApp
 {
     public EnderecoResponse ConsultarEnderecoCep(string cep);
-    public void CadastrarProfissao(ProfissaoCadastrarRequest request);
-    public List<SelectBaseResponse> ConsultarProfissoes();
-    public void EditarProfissao(ProfissaoEditarRequest profissao);
-    public void DeletarProfissaoPorId(int id);
+    public FeedbackDataDashboard CadastrarFeedback(FeedbackRequest request);
+    public void ContatoMensagem(ContatoMensagemRequest request);
+    public List<ContatoMensagem> ConsultarContatoMensagem();
 }

@@ -1,5 +1,6 @@
 using System.Text;
 using Aplication.AutoMapper;
+using Aplication.Utils.Signalr;
 using CrossCutting.IOC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -11,9 +12,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Projeto Padrão",
+        Title = "TaskMaster",
         Version = "v1",
-        Description = "Aplicação Projeto Padrão"
+        Description = "Aplicação TaskMaster"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -67,7 +68,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSignalR();
 //Injeção de dependência
 builder.Services.Injectory(builder);
 
@@ -90,12 +91,14 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
     .WithExposedHeaders("*")
+    .WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 );
 
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<SignalrHub>("/chat");
 
 app.MapControllers();
 

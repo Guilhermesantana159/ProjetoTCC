@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="LinqBuilder.OrderBy" Version="0.16.1" />
+        <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.4.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -28,6 +29,10 @@
 
     <ItemGroup>
       <Content Remove="appsettings.Development.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Content\RecupereSuaSenha.html~" />
     </ItemGroup>
 
 </Project>

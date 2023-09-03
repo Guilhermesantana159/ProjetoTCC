@@ -15,4 +15,7 @@ public interface IUsuarioService
     public void EditarListaUsuario(List<Usuario> lUsuario);
     public void DeleteById(int id);
     public Usuario GetByIdWithInclude(int id);
+    public IQueryable<Usuario>? GetTarefaByUsuario(List<int> list);
+    public IQueryable<Usuario>? GetUsuarioTarefa();
+    public IQueryable<ContatoChat> GetAllUsuarioContato();
 }

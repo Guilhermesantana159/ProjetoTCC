@@ -6,7 +6,7 @@ namespace Web.Controllers.Base;
 
 public class DefaultController : ControllerBase
 {
-    protected JsonResult ResponderSucesso(string mensagem,object objeto)
+    protected JsonResult ResponderSucesso(string mensagem,object? objeto)
     {
         var retorno = new Retorno()
         {
@@ -30,7 +30,7 @@ public class DefaultController : ControllerBase
         return new JsonResult(retorno);
     }
     
-    protected JsonResult ResponderSucesso(object objeto)
+    protected JsonResult ResponderSucesso(object? objeto)
     {
         var retorno = new Retorno()
         {
@@ -42,7 +42,7 @@ public class DefaultController : ControllerBase
         return new JsonResult(retorno);
     }
     
-    protected JsonResult ResponderErro(string mensagem,object objeto)
+    protected JsonResult ResponderErro(string mensagem,object? objeto)
     {
         var retorno = new Retorno()
         {
@@ -67,7 +67,7 @@ public class DefaultController : ControllerBase
         return new JsonResult(retorno);
     }
     
-    protected JsonResult ResponderErro(object objeto)
+    protected JsonResult ResponderErro(object? objeto)
     {
         var retorno = new Retorno()
         {

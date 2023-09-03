@@ -4,24 +4,26 @@ using Domain.DTO.Correios;
 using Domain.Interfaces;
 using Infraestrutura.Entity;
 using Infraestrutura.Repository.External;
-using Infraestrutura.Repository.Interface.Profissao;
+using Infraestrutura.Repository.Interface.ContatoMensagem;
+using Infraestrutura.Repository.Interface.Feedback;
 
 namespace Domain.Services;
 
 public class UtilService : IUtilsService
 {
     protected readonly IExternalRepository External;
-    protected readonly IProfissaoReadRepository ProfissaoReadRepository;
-    protected readonly IProfissaoWriteRepository ProfissaoWriteRepository;
-
+    protected readonly IContatoMensagemWriteRepository ContatoMensagemWrite;
+    protected readonly IContatoMensagemReadRepository ContatoMensagemRead;
+    protected readonly IFeedbackWriteRepository FeedbackWriteRepository;
 
     private readonly IConfiguration _configuration;
-    public UtilService(IExternalRepository external,IConfiguration config, IProfissaoReadRepository profissaoReadRepository, IProfissaoWriteRepository profissaoWriteRepository)
+    public UtilService(IExternalRepository external,IConfiguration config, IFeedbackWriteRepository feedbackWriteRepository, IContatoMensagemWriteRepository contatoMensagemWrite, IContatoMensagemReadRepository contatoMensagemRead)
     {
         External = external;
         _configuration = config;
-        ProfissaoReadRepository = profissaoReadRepository;
-        ProfissaoWriteRepository = profissaoWriteRepository;
+        FeedbackWriteRepository = feedbackWriteRepository;
+        ContatoMensagemWrite = contatoMensagemWrite;
+        ContatoMensagemRead = contatoMensagemRead;
     }
     public async Task<EnderecoExternalReponse> ConsultarEnderecoCep(string cep)
     {
@@ -59,28 +61,18 @@ public class UtilService : IUtilsService
         return retorno;
     }
 
-    public IQueryable<Profissao> ConsultarProfissoes()
+    public void SalvarFeedback(Feedback feedback)
     {
-        return ProfissaoReadRepository.GetAll();
+        FeedbackWriteRepository.Add(feedback);
     }
-    
-    public void CadastrarProfissao(Profissao profissao)
-    { 
-        ProfissaoWriteRepository.Add(profissao);
+
+    public void ContatoMensagem(ContatoMensagem request)
+    {
+        ContatoMensagemWrite.Add(request);
     }
-    
-    public void EditarProfissao(Profissao profissao)
-    { 
-        ProfissaoWriteRepository.Update(profissao);
-    }
-    
-    public Profissao? GetProfissaoById(int id)
-    { 
-        return ProfissaoReadRepository.GetById(id);
-    }
-    
-    public void DeletarProfissaoPorId(int id)
-    { 
-        ProfissaoWriteRepository.DeleteById(id);
+
+    public List<ContatoMensagem> GetAllContatoMensagem()
+    {
+        return ContatoMensagemRead.GetAll().OrderByDescending(x => x.DataCadastro).ToList();
     }
 }

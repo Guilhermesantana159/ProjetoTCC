@@ -7,4 +7,7 @@ public interface INotificacaoApp
 {
     public List<Notificacao> GetNotificaçõesByUser(int id);
     public void NotificacaoLida(NotificacaolidaRequest request);
+    public void NotificarProjetosAtrasados();
+    public void NotificarAtividadesAtrasadas();
+
 }

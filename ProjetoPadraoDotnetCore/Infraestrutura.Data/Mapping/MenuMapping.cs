@@ -13,12 +13,12 @@ public class MenuMapping : IEntityTypeConfiguration<Menu>
         builder.HasKey(o => o.IdMenu);
         builder.Property(t => t.Nome).HasColumnName("Nome").IsRequired();
         builder.Property(t => t.Link).HasColumnName("Link").IsRequired();
-        builder.Property(t => t.DescricaoMenu).HasColumnName("DescricaoMenu").IsRequired(false);
+        builder.Property(t => t.OnlyAdmin).HasColumnName("OnlyAdmin").IsRequired();
 
         builder
-            .HasOne(p => p.Modulo)
-            .WithMany(b => b.lMenus)
-            .HasForeignKey(p => p.IdModulo)
+            .HasOne(p => p.SubModulo)
+            .WithMany(b => b.LMenus)
+            .HasForeignKey(p => p.IdSubModulo)
             .IsRequired();
     }
 }

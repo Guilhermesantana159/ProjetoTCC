@@ -1,4 +1,4 @@
-﻿using ValidationResult = Aplication.Utils.Obj.ValidationResult;
+﻿using ValidationResult = Aplication.Utils.Objeto.ValidationResult;
 
 namespace Aplication.Validators.Utils;
 

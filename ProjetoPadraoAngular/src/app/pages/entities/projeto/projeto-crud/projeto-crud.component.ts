@@ -65,6 +65,9 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
   atividade!: Observable<any>;
   position: number = 0;
   editTarefa: boolean = false;
+  tarefaFormGroup!: FormGroup;
+  ltags:Array<string> = []
+
 
   //Aba Principal
   paramsConsultaUsuario: ConsultaModalParams;
@@ -135,6 +138,14 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       responsavel: [undefined, [Validators.required]],
       idResponsavel: [undefined, [Validators.required]],
       position: [undefined]
+    });
+
+    this.tarefaFormGroup = this.formBuilder.group({
+      descricao: [undefined, [Validators.required]],
+      prioridade: ["0"],
+      descricaoTarefa: [undefined],
+      atividade: [undefined, [Validators.required]],
+      lTagsTarefa: [[]]
     });
 
     this.ProjetoRegisterFormGroup.get('idTemplate')?.valueChanges.subscribe((newIdTemplate) => {
@@ -240,6 +251,70 @@ export class ProjetoCrudComponent implements OnInit,OnDestroy{
       this.dataSource.disconnect(); 
       this.dataSourcelTarefaFuncoes.disconnect(); 
     }
+  }
+
+  
+  openModalcomplementar(content: any,tarefa: any,atividade:string) {
+    this.ResetCamposTarefa();
+
+    //Edição
+    this.tarefaFormGroup.get('descricao')?.setValue(tarefa.descricao);
+    this.tarefaFormGroup.get('prioridade')?.setValue(tarefa.prioridade);
+    this.tarefaFormGroup.get('descricaoTarefa')?.setValue(tarefa.descricaoTarefa);
+    this.tarefaFormGroup.get('atividade')?.setValue(atividade);
+    this.tarefaFormGroup.get('lTagsTarefa')?.setValue(tarefa.lTagsTarefa);
+
+    if(tarefa.lTagsTarefa != undefined){
+      this.ltags = tarefa.lTagsTarefa;
+    }
+
+    this.modalService.open(content, { size: 'md', centered: true });
+  }
+
+  ComplementarTarefa(form:FormGroup){
+    for (let index = 0; index < this.dataSource.data.length; index++) {
+       if(this.dataSource.data[index].atividade == form.get('atividade')?.value){
+         this.dataSource.data[index].listTarefas.forEach(element => {
+             if(element.descricao == form.get('descricao')?.value){
+               element.prioridade = form.get('prioridade')?.value;
+               element.descricaoTarefa = form.get('descricaoTarefa')?.value;
+               element.lTagsTarefa = form.get('lTagsTarefa')?.value;
+             }
+         });
+       }
+     }    
+     this.modalService.dismissAll();
+     this.ResetCamposTarefa();
+   }
+
+   RemoveTag(tag: string): void {
+    const index = this.ltags.indexOf(tag);
+
+    if (index >= 0) {
+      this.ltags.splice(index, 1);
+    }
+
+    this.tarefaFormGroup.get('lTagsTarefa')?.setValue(this.ltags);
+  }
+
+  AddTags(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    if (value) {
+      this.ltags.push(value);
+    }
+
+    event.chipInput!.clear();
+    this.tarefaFormGroup.get('lTagsTarefa')?.setValue(this.ltags);
+  }
+
+  ResetCamposTarefa(){
+    this.tarefaFormGroup.get('descricao')?.setValue(undefined);
+    this.tarefaFormGroup.get('prioridade')?.setValue(undefined);
+    this.tarefaFormGroup.get('descricaoTarefa')?.setValue(undefined);
+    this.tarefaFormGroup.get('atividade')?.setValue(undefined);
+    this.tarefaFormGroup.get('lTagsTarefa')?.setValue([]);
+    this.ltags = [];
   }
 
   //Operacional tela

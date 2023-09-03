@@ -259,7 +259,7 @@
                                                             </div>
                                                             <strong>Tarefas a serem executadas:</strong>
                                                             <div class="list-tarefas" *ngFor="let tarefa of grid.listTarefas">
-                                                                <li class="list-tarefa-atividade list-inline-item text-muted">&bull; {{tarefa.descricao}}</li>
+                                                                <li class="list-tarefa-atividade list-inline-item text-muted" style="cursor: pointer;text-decoration: underline;" (click)="openModalcomplementar(contentComplementar,tarefa,grid.atividade)">&bull; {{tarefa.descricao}}</li>
                                                             </div>
                                                             <br>
                                                             <br>
@@ -546,3 +546,105 @@
         </div>
     </div>
 </div>
+<ng-template #contentComplementar role="document" let-modal>
+    <div class="modal-header p-3 bg-soft-info">
+        <h5 class="modal-title" id="exampleModalLabel">Complementar Tarefa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"
+            (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <form [formGroup]="tarefaFormGroup" class="tablelist-form" autocomplete="off">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="mb-3">
+                        <label class="col-lg-6" for="firstnameInput" class="form-label">                                
+                            Nome
+                        </label>
+                        <input class="col-lg-6" class="form-control input-form" type="text" readonly maxlength="100" formControlName="descricao" placeholder="Insira o nome da tarefa.."/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="mb-3">
+                        <label for="firstnameInput" class="form-label">                                
+                            Prioridade
+                        </label>
+                        <mat-select class="form-control" formControlName="prioridade" [disabled]="disabledAll">
+                            <mat-option value="0" [disabled]="disabledAll">
+                                <span class="badge bg-success text-uppercase" ngClass="bg-success">                                        
+                                    Não informado
+                                </span>
+                            </mat-option>
+                            <mat-option value="1" [disabled]="disabledAll">
+                                <span class="badge bg-info text-uppercase" ngClass="bg-info">
+                                    Baixa
+                                </span>
+                            </mat-option>
+                            <mat-option value="2" [disabled]="disabledAll">
+                                <span class="badge bg-warning text-uppercase" ngClass="bg-warning">
+                                    Média
+                                </span>
+                            </mat-option>
+                            <mat-option value="3" [disabled]="disabledAll">
+                                <span class="badge bg-danger text-uppercase" ngClass="bg-danger">
+                                    Alta
+                                </span>
+                            </mat-option>
+                        </mat-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="mb-3">
+                        <label for="countryInput" class="form-label">Tags</label>
+                        <div class="form-control">
+                            <mat-chip-grid #chipGrid aria-label="Enter keywords" [disabled]="disabledAll">
+                              <mat-chip-row *ngFor="let option of ltags" (removed)="RemoveTag(option)" [disabled]="disabledAll">
+                                {{option}}
+                                <button matChipRemove aria-label="'remove ' + keyword">
+                                  <mat-icon>cancel</mat-icon>
+                                </button>
+                              </mat-chip-row>
+                            </mat-chip-grid>
+                            <input placeholder="Adicione suas habilidades.."
+                                    [matChipInputFor]="chipGrid"
+                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    matChipInputAddOnBlur="true"
+                                    (matChipInputTokenEnd)="AddTags($event)"/>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="mb-3">
+                        <label  class="form-label">Descrição</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea" [readonly]="disabledAll"
+                            placeholder="Descrição do projeto..." maxlength="500" formControlName="descricaoTarefa"
+                            rows="3">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-soft-dark" (click)="modal.dismiss('Cross click')">Voltar</button>
+                        <button type="button" class="btn btn-success btn-load" [disabled]="loading" (click)="ComplementarTarefa(tarefaFormGroup)" [disabled]="disabledAll">
+                            <span class="d-flex align-items-center">
+                                <span class="spinner-border flex-shrink-0" role="status" [hidden]="!loading">
+                                    <span class="visually-hidden" ></span>
+                                </span>
+                                <span class="flex-grow-1 ms-2" [hidden]="loading">
+                                    {{IsNew != true ? 'Editar' : 'Salvar'}}
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>

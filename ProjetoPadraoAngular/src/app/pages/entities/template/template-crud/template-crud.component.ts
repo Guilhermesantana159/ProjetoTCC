@@ -363,87 +363,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
         } 
       }
 
-      //Estando na aba semanas ou dias
-      let repetidos = 0;
-      let alteracaoTamanho = false;
-      let indexInicial = -1;
-      let tamanhoAnterior = 0;
-      let tamanhoNovo = parseInt(objAtv.escalaTempoAtividade ?? '0');
-      this.lCronograma.forEach(element => {
-        for (let index = 0; index < element.listAtividades.length; index++) {
-          if(element.listAtividades[index].position == objAtv.position){
-            if(element.listAtividades[index].escalaTempoAtividade != objAtv.escalaTempoAtividade){
-              if(indexInicial == -1){
-                tamanhoAnterior = element.listAtividades[index].escalaTempoAtividade;
-                indexInicial = index;
-              }
-              alteracaoTamanho = true;
-            }
-            element.listAtividades[index].escalaTempoAtividade = objAtv.escalaTempoAtividade;
-            element.listAtividades[index].atividade = objAtv.atividade;
-            element.listAtividades[index].listTarefas = objAtv.listTarefas;
-
-            repetidos = repetidos + 1;
-
-            if(repetidos > parseInt(objAtv.escalaTempoAtividade ?? '0')){
-              element.listAtividades.splice(index,1)
-            }
-          }
-          
-        }
-      });
-
-      if(alteracaoTamanho){
-        if(tamanhoNovo > tamanhoAnterior){
-          let indexExcede = 0;
-
-          if(indexInicial + tamanhoNovo > (this.lCronograma.length - 1)){
-            indexExcede = (indexInicial + tamanhoNovo) - (this.lCronograma.length - 1);
-          }else{
-            indexInicial = indexInicial - 1;
-          }
-          
-          if(indexExcede < 0){
-            indexInicial = indexInicial - indexExcede + 1;
-          }
-
-          let indexFim = indexInicial + tamanhoNovo;
-          for (let index = 0; index < this.lCronograma.length; index++) {
-            let indexListAtividade = this.lCronograma[index].listAtividades.findIndex(x => x.atividade == objAtv.atividade);
-
-            if(index < indexInicial || index > indexFim){
-              if(indexListAtividade != -1){
-                this.lCronograma[index].listAtividades.splice(index,1)
-              }
-            }else{
-              if(indexListAtividade == -1){
-                this.lCronograma[index].listAtividades.push(objAtv)
-              }
-            }
-          }
-        }
-        else{
-          debugger
-          for (let index = 0; index < this.lCronograma.length; index++) {
-            let indexListAtividade = this.lCronograma[index].listAtividades.findIndex(x => x.atividade == objAtv.atividade);
-            let indexFim = indexInicial +  tamanhoNovo -1;
-
-            if(index < indexInicial || index > indexFim){
-              if(indexListAtividade != -1){
-                this.lCronograma[index].listAtividades.splice(index,1)
-              }
-            }
-          }
-        }
-      }
-
-      //Estando na aba atividades
-      for (let index = 0; index < this.lAtividadesCronograma.length; index++) {
-        if(this.dataSource.data[index].position == objAtv.position){          
-          this.lAtividadesCronograma[index] = objAtv;
-          break;
-        } 
-      }
+      this.ChangePeriodoCronograma(objAtv);
     }
 
     //Operação
@@ -453,6 +373,89 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
     //Reset Campos
     this.ResetarCamposAtividades();
     this.editTarefa = false;
+  }
+
+  ChangePeriodoCronograma(objAtv: GridAtvTarefas){
+    //Estando na aba semanas ou dias
+    let repetidos = 0;
+    let alteracaoTamanho = false;
+    let indexInicial = -1;
+    let tamanhoAnterior = 0;
+    let tamanhoNovo = parseInt(objAtv.escalaTempoAtividade ?? '0');
+    this.lCronograma.forEach(element => {
+      for (let index = 0; index < element.listAtividades.length; index++) {
+        if(element.listAtividades[index].position == objAtv.position){
+          if(element.listAtividades[index].escalaTempoAtividade != objAtv.escalaTempoAtividade){
+            if(indexInicial == -1){
+              tamanhoAnterior = element.listAtividades[index].escalaTempoAtividade;
+              indexInicial = index;
+            }
+            alteracaoTamanho = true;
+          }
+          element.listAtividades[index].escalaTempoAtividade = objAtv.escalaTempoAtividade;
+          element.listAtividades[index].atividade = objAtv.atividade;
+          element.listAtividades[index].listTarefas = objAtv.listTarefas;
+
+          repetidos = repetidos + 1;
+
+          if(repetidos > parseInt(objAtv.escalaTempoAtividade ?? '0')){
+            element.listAtividades.splice(index,1)
+          }
+        }
+        
+      }
+    });
+
+    if(alteracaoTamanho){
+      if(tamanhoNovo > tamanhoAnterior){
+        let indexExcede = 0;
+
+        if(indexInicial + tamanhoNovo > (this.lCronograma.length - 1)){
+          indexExcede = (indexInicial + tamanhoNovo) - (this.lCronograma.length - 1);
+        }else{
+          indexInicial = indexInicial - 1;
+        }
+        
+        if(indexExcede < 0){
+          indexInicial = indexInicial - indexExcede + 1;
+        }
+
+        let indexFim = indexInicial + tamanhoNovo;
+        for (let index = 0; index < this.lCronograma.length; index++) {
+          let indexListAtividade = this.lCronograma[index].listAtividades.findIndex(x => x.atividade == objAtv.atividade);
+
+          if(index < indexInicial || index > indexFim){
+            if(indexListAtividade != -1){
+              this.lCronograma[index].listAtividades.splice(index,1)
+            }
+          }else{
+            if(indexListAtividade == -1){
+              this.lCronograma[index].listAtividades.push(objAtv)
+            }
+          }
+        }
+      }
+      else{
+        for (let index = 0; index < this.lCronograma.length; index++) {
+          let indexListAtividade = this.lCronograma[index].listAtividades.findIndex(x => x.atividade == objAtv.atividade);
+          let indexFim = indexInicial +  tamanhoNovo -1;
+
+          if(index < indexInicial || index > indexFim){
+            if(indexListAtividade != -1){
+              this.lCronograma[index].listAtividades.splice(index,1)
+            }
+          }
+        }
+      }
+    }
+
+    //Estando na aba atividades
+    for (let index = 0; index < this.lAtividadesCronograma.length; index++) {
+      if(this.dataSource.data[index].position == objAtv.position){          
+        this.lAtividadesCronograma[index] = objAtv;
+        break;
+      } 
+    }
   }
 
   DeletarAtividade(Atv: GridAtvTarefas){
@@ -668,7 +671,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
   VerificarValor(){
     if(this.TemplateRegisterFormGroup.get('quantidade')?.value == "e" || this.TemplateRegisterFormGroup.get('quantidade')?.value == undefined){
       this.TemplateRegisterFormGroup.get('quantidade')?.setValue(undefined);
-      return
+      return;
     }
 
     let value = parseInt(this.TemplateRegisterFormGroup.get('quantidade')?.value);
@@ -684,7 +687,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
     if(value > 999){
       this.TemplateRegisterFormGroup.get('quantidade')?.setValue(999);
       this.toastr.warning('<small>Valor máximo de '+ escala +' é 999!</small>', 'Mensagem:');
-      return
+      return;
     }
 
     let valueAtividade = parseInt(this.AtividadeRegisterFormGroup.get('escalaTempoAtividade')?.value);
@@ -703,6 +706,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
         });
       }
     }else{
+      debugger
       this.lCronograma = [];
       this.lAtividadesCronograma = [];
 
@@ -717,7 +721,6 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
       this.dataSource.data.forEach(element => {
         this.lAtividadesCronograma.push(element);
       });
-
     }
   }
 
@@ -751,6 +754,7 @@ export class TemplateCrudComponent implements OnInit,OnDestroy{
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
     else if (event.previousContainer.id != "Atividades" && event.container.id != "Atividades") {
+      this.toastr.warning('Para movimentar a atividade retorne-a ao quadro "Atividades" e após arraste para o período que deseja!', 'Mensagem:');
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
     else {

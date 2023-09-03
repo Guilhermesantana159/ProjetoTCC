@@ -162,6 +162,7 @@ public class ProjetoApp : IProjetoApp
         var validation = Validation.ValidacaoCadastro(request);
         var lUsuario = UsuarioService.GetAllQuery();
         var projetoOld = _service.GetByIdWithIncludes(request.IdProjeto ?? 0);
+        var lAtividadeId = new List<int>();
 
         Projeto projeto = null!;
 
@@ -190,6 +191,19 @@ public class ProjetoApp : IProjetoApp
                             TarefaService.DeletarTarefasUsuario(tarefaUsuario.TarefaUsuario.ToList());
                         }
                     }
+                    
+                    lAtividadeId.Add(item.IdAtividade);
+                }
+            }
+            
+            var lTarefas = TarefaService.GetTarefaWithInclude()
+                .Where(x => lAtividadeId.Contains(x.IdAtividade)).ToList();
+
+            foreach (var tarefa in lTarefas)
+            {
+                if (tarefa.TagTarefa.Any())
+                {
+                    TarefaService.DeletarTagsAntigos(tarefa.TagTarefa.ToList());
                 }
             }
             
@@ -527,6 +541,7 @@ public class ProjetoApp : IProjetoApp
                 {
                     Descricao = x.Descricao,
                     IdTarefa = x.IdTarefa,
+                    LTagsTarefa = new List<string?>(),
                     DescricaoTarefa = x.DescricaoTarefa,
                     Prioridade = x.Prioridade.GetHashCode().ToString()
                 }).ToList()
@@ -542,15 +557,32 @@ public class ProjetoApp : IProjetoApp
         
         //AdicionarAtividade
         var lTarefas = TarefaService.GetTarefaWithInclude()
-            .Where(x => lIdsAtividade.Contains(x.IdAtividade))
-            .Select(x => x.IdTarefa);
+            .Where(x => lIdsAtividade.Contains(x.IdAtividade));
+        
+        var lTarefasId = lTarefas.Select(x => x.IdTarefa);
 
         var lUsuarioTarefa = TarefaService
             .GetTarefaUsuario()
-            .Where(x => lTarefas.Contains(x.IdTarefa ?? 0))
+            .Where(x => lTarefasId.Contains(x.IdTarefa ?? 0))
             .ToList()
             .GroupBy(x => x.Usuario);
 
+        if (retorno.ListAtividade != null)
+        {
+            foreach (var atv in retorno.ListAtividade)
+            {
+                if (atv.ListTarefas == null) continue;
+                
+                foreach (var tarefa in atv.ListTarefas)
+                {
+                    var lTags = lTarefas.FirstOrDefault(x => x.IdTarefa == tarefa.IdTarefa)?.TagTarefa
+                        .Select(y => y.Descricao).ToList();
+
+                    if (lTags != null) tarefa.LTagsTarefa.AddRange(lTags);
+                }
+            }
+        }
+        
         foreach (var userTarefa in lUsuarioTarefa)
         {
             if (userTarefa.Key?.TarefaUsuario != null)

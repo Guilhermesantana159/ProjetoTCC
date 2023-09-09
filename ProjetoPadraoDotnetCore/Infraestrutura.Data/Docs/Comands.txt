@@ -1,5 +1,5 @@
 ﻿//Criar Migration
-dotnet ef migrations add ContatoMensagem
+dotnet ef migrations add RetiredRequiredIdContatoChat
 
 //Remover ultimo migration
 dotnet ef migrations remove 

@@ -6,7 +6,7 @@ public class MensagemChat
   public int IdMensagemChat { get; set; }
   public int IdUsuarioMandante { get; set; }
   public int IdUsuarioRecebe { get; set; }
-  public int IdContatoRecebe { get; set; }
+  public int? IdContatoRecebe { get; set; }
   public string? Message { get; set; }
   public DateTime DataCadastro { get; set; }
   public string? ReplayName { get; set; }

@@ -125,7 +125,7 @@ public class ChatApp : IChatApp
     public ContatoListaResponse ConsultarMensagensDireta(int id)
     {
         var lUsuario = ChatService.GetAllMensagens()
-            .Where(x => x.IdUsuarioMandante == id || x.IdUsuarioRecebe == id)
+            .Where(x => (x.IdUsuarioMandante == id || x.IdUsuarioRecebe == id) && x.IdUsuarioExclusao != id)
             .OrderByDescending(x => x.DataCadastro);
 
         var listIdUsuario = new List<int>();
@@ -156,6 +156,31 @@ public class ChatApp : IChatApp
                         ? x.UsuarioContato.DataNascimento.Value.FormatDateBr()
                         : null
                 }).ToList();
+
+        //Mensagens sem contato
+        if (listIdUsuario.Count != retorno.Count)
+        {
+            var lUsuarioSemContato = listIdUsuario.AsQueryable()
+                .Where(x => !retorno.Select(y => y.IdUsuarioContato).Contains(x)).ToList();
+
+            var lUsuarioSemContatoList = UsuarioService
+                .GetAllQuery()
+                .Where(x => lUsuarioSemContato.Contains(x.IdUsuario))
+                .Select(x => new ContatoResponse()
+                {
+                    Nome = x.Nome,
+                    Foto = x.Foto,
+                    IdUsuarioContato = x.IdUsuario,
+                    Sobre = x.Observacao,
+                    Email = x.Email,
+                    Telefone = x.Telefone,
+                    DataNascimento = x.DataNascimento.HasValue
+                        ? x.DataNascimento.Value.FormatDateBr()
+                        : null
+                }).ToList();
+
+            retorno.AddRange(lUsuarioSemContatoList);
+        }
 
         return new ContatoListaResponse()
         {

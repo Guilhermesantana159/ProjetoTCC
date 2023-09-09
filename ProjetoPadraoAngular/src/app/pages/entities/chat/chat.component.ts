@@ -554,6 +554,13 @@ export class ChatComponent implements OnInit {
       item.remove();
     })
 
+    debugger
+    let index = this.lMensagensDireta.findIndex(x => x.idContatoChat == this.userChat?.idContatoChat)
+    if(index != -1){
+      if(this.userChat != undefined){
+        this.lMensagensDireta.splice(index, 1);
+      }
+    };
 
     let listIdsMensagens: Array<number> = [];
 

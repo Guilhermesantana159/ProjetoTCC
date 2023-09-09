@@ -13,14 +13,13 @@ public class MensagemChatMapping : IEntityTypeConfiguration<MensagemChat>
         builder.HasKey(o => o.IdMensagemChat);
         builder.Property(o => o.IdUsuarioMandante).IsRequired();
         builder.Property(o => o.IdUsuarioRecebe).IsRequired();
-        builder.Property(o => o.IdContatoRecebe).IsRequired();
+        builder.Property(o => o.IdContatoRecebe).IsRequired(false);
         builder.Property(o => o.Message).IsRequired();
         builder.Property(o => o.DataCadastro).IsRequired();
         builder.Property(o => o.ReplayName);
         builder.Property(o => o.IdUsuarioExclusao).IsRequired(false);
         builder.Property(o => o.ReplayMessage);
         builder.Property(o => o.StatusMessage).IsRequired();
-        builder.Property(o => o.IdContatoRecebe);
 
         builder
             .HasOne(t => t.UsuarioMandante)
